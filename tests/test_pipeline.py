@@ -20,6 +20,8 @@ CHUNKS = [
           "Any employee may make a written complaint to the Inquiry Committee about harassment at the workplace.", "u"),
     Chunk("h:s8", "h", "Toy Harassment Act", "pakistan", "harassment", "8", "Ombudsperson",
           "The Ombudsperson shall enquire into complaints of harassment and may impose penalties.", "u"),
+    Chunk("p:s1", "p", "Punjab Women's Property Act", "punjab", "property", "1", "Short title, extent and commencement .‎–‎ (1) This Act may be cited as",
+          "This Act may be cited as the Toy Women's Property Act and extends to the whole of Punjab.", "u"),
     Chunk("p:s4", "p", "Punjab Women's Property Act", "punjab", "property", "4", "Complaint to Ombudsperson",
           "A woman deprived of ownership or possession of property may file a complaint with the Ombudsperson.", "u"),
 ]
@@ -125,7 +127,34 @@ def test_danger_works_without_api_key():
     """With no key configured, danger messages must still return help lines (no model needed)."""
     from backend.app.main import build_pipeline
 
-    client = TestClient(create_app(pipeline=build_pipeline(Settings(anthropic_api_key="")), settings=Settings()))
+    client = TestClient(create_app(pipeline=build_pipeline(Settings(anthropic_api_key="", gemini_api_key="", groq_api_key="")), settings=Settings()))
     r = client.post("/api/ask", json={"question": "mera shohar mujhe maar peet karta hai"})
     assert r.status_code == 200 and r.json()["status"] == "danger"
     assert client.post("/api/ask", json={"question": "minimum wage in Lahore"}).status_code == 503
+
+
+def property_analysis():
+    return Analysis(language="en", english_query="woman deprived of property complaint ombudsperson",
+                    search_terms=["property", "ombudsperson", "deprived"], topic="property", jurisdiction="punjab")
+
+
+def test_short_title_section_is_dropped_when_a_substantive_section_is_cited():
+    comp = Composition("اردو", "English", ["p:s1", "p:s4"], "high")
+    res = make_pipeline(FakeLLM(property_analysis(), comp)).ask(AskRequest(question="my brothers keep my land in Punjab"))
+    assert res.status == "answered"
+    assert [c.chunk_id for c in res.citations] == ["p:s4"]
+
+
+def test_boilerplate_only_citation_is_kept_so_the_answer_is_not_left_ungrounded():
+    comp = Composition("اردو", "English", ["p:s1"], "high")
+    res = make_pipeline(FakeLLM(property_analysis(), comp)).ask(AskRequest(question="my brothers keep my land in Punjab"))
+    assert [c.chunk_id for c in res.citations] == ["p:s1"]
+
+
+def test_definitions_are_not_treated_as_boilerplate():
+    from backend.app.pipeline import _is_boilerplate
+
+    defs = Chunk("x:s2", "x", "Act", "pakistan", "harassment", "2", "Definitions.‎–‎ In this Act:", "t", "u")
+    assert not _is_boilerplate(defs)
+    for heading in ("Short title, extent and commencement", "Repeal and Savings. (1) The Ordinance", "Power to make rules", "Rules"):
+        assert _is_boilerplate(Chunk("x:s9", "x", "Act", "pakistan", "wages", "9", heading, "t", "u"))
