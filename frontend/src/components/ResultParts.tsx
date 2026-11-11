@@ -26,6 +26,24 @@ export function cleanHeading(h: string): string {
   return t.length > 90 ? `${t.slice(0, 87).trimEnd()}…` : t;
 }
 
+/** "s.8" for numbered sections, plain "Schedule" otherwise. */
+export function sectionLabel(section: string): string {
+  return /^\d/.test(section) ? `s.${section}` : section;
+}
+
+/** The same section can be retrieved as several excerpts; show it once with all of them. */
+export function groupCitations(cs: Citation[]): Citation[] {
+  const out: Citation[] = [];
+  for (const c of cs) {
+    const prev = out.find((x) => x.act === c.act && x.section === c.section);
+    if (!prev) out.push({ ...c });
+    else if (!prev.excerpt.includes(c.excerpt)) prev.excerpt = `${prev.excerpt}
+
+${c.excerpt}`;
+  }
+  return out;
+}
+
 export function NotVerified() {
   return <span className="hq-chip chip-caution"><Bi inline ur={T.notVerified} en={T.notVerifiedEn} /></span>;
 }
@@ -50,10 +68,10 @@ export function CitationChip({ c }: { c: Citation }) {
   return (
     <details className="hq-cite">
       <summary>
-        <span className="hq-chip cite-chip"><IconDoc />{c.act}, s.{c.section}</span>
+        <span className="hq-chip cite-chip"><IconDoc />{c.act}, {sectionLabel(c.section)}</span>
       </summary>
       <div className="hq-quote">
-        {cleanHeading(c.heading) && <div className="hq-ref-name">s.{c.section}: {cleanHeading(c.heading)}</div>}
+        {cleanHeading(c.heading) && cleanHeading(c.heading) !== c.section && <div className="hq-ref-name">{sectionLabel(c.section)}: {cleanHeading(c.heading)}</div>}
         <p className="hq-quote-label"><Bi inline ur={T.exactText} en={T.exactTextEn} /></p>
         <blockquote className="hq-excerpt" lang="en" dir="ltr">{c.excerpt}</blockquote>
         {href ? (

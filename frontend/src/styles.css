@@ -106,7 +106,7 @@ h2 .bi, h3 .bi { align-items: flex-start; text-align: start; }
 .result-body > p.hq-ur, .result-body > p.hq-en, .hq-banner p { white-space: pre-line; }
 .hq-quote { display: grid; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-inline-start: 4px solid var(--brand); background: var(--surface-300); border-radius: var(--radius-md); }
 .hq-quote-label { margin: 0; font: 600 14px/20px var(--font-sans); color: var(--muted); }
-blockquote.hq-excerpt { margin: 0; }
+blockquote.hq-excerpt { margin: 0; white-space: pre-line; }
 .hq-ref-name { font: 600 16px/24px var(--font-sans); }
 .hq-ref-note { font: 400 14px/20px var(--font-sans); color: var(--muted); margin: 0; }
 .wage-card { display: grid; gap: 2px; justify-items: start; padding: var(--space-4) var(--space-6); border-radius: var(--radius-md); border: 2px solid var(--accent); background: var(--surface-100); }

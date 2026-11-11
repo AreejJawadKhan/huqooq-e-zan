@@ -3,6 +3,7 @@ import { downloadLetter } from "../api";
 import type { AskResponse } from "../types";
 import { T } from "../strings";
 import Bi from "./Bi";
+import { groupCitations, sectionLabel } from "./ResultParts";
 
 /** Bilingual field label; required fields get a visible marker in both languages. */
 function Lbl({ k, req = false }: { k: keyof typeof T.f; req?: boolean }) {
@@ -41,7 +42,7 @@ export default function LetterDialog({ r, question, open, onClose }: { r: AskRes
         city: f.city || undefined,
         facts: f.facts.trim(),
         relief: f.relief || undefined,
-        legal_basis: r.citations.map((c) => `${c.act}, s.${c.section}`),
+        legal_basis: groupCitations(r.citations).map((c) => `${c.act}, ${sectionLabel(c.section)}`),
       });
       setMsg("ok");
     } catch (ex) {
@@ -67,7 +68,7 @@ export default function LetterDialog({ r, question, open, onClose }: { r: AskRes
         <label className="hq-label"><Lbl k="relief" /><textarea className="hq-input" dir="auto" value={f.relief} onChange={set("relief")} /></label>
         <div className="hq-hint">
           <Bi ur={T.legalBasisAdded} en={T.legalBasisAddedEn} />
-          <p dir="ltr" lang="en" style={{ margin: "4px 0" }}>{r.citations.map((c) => `${c.act}, s.${c.section}`).join("; ")}</p>
+          <p dir="ltr" lang="en" style={{ margin: "4px 0" }}>{groupCitations(r.citations).map((c) => `${c.act}, ${sectionLabel(c.section)}`).join("; ")}</p>
           <p style={{ margin: 0 }}><span lang="ur" dir="rtl">{T.letterPrivacy}</span> {T.letterPrivacyEn}</p>
         </div>
         <div aria-live="polite">

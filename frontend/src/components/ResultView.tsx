@@ -4,7 +4,7 @@ import { En } from "../prefs";
 import Bi from "./Bi";
 import SpeakButton from "./SpeakButton";
 import { IconDoc } from "./Icons";
-import { CaveatNote, CitationChip, ReferralList, StatusBar, WageChip } from "./ResultParts";
+import { CaveatNote, CitationChip, ReferralList, StatusBar, WageChip, groupCitations } from "./ResultParts";
 
 function Disclaimer({ r }: { r: AskResponse }) {
   return (
@@ -83,7 +83,7 @@ export default function ResultView({
         )}
         <div>
           <h3 className="hq-section-title"><Bi ur={T.basedOn} en={T.basedOnEn} /></h3>
-          <div className="hq-stack">{r.citations.map((c) => <CitationChip key={c.chunk_id} c={c} />)}</div>
+          <div className="hq-stack">{groupCitations(r.citations).map((c) => <CitationChip key={c.chunk_id} c={c} />)}</div>
         </div>
         <ReferralList items={r.where_to_go} />
         {r.letter_type && (
