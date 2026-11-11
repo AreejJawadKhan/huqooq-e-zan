@@ -9,13 +9,55 @@ export const PROVINCES: { value: Jurisdiction; en: string; ur: string }[] = [
   { value: "ict", en: "Islamabad", ur: "اسلام آباد" },
 ];
 
+
 export const EXAMPLES: string[] = [
   "میرا مینیجر مجھے کام پر تنگ کرتا ہے، میں کیا کر سکتی ہوں؟",
   "پنجاب میں کم از کم اجرت کتنی ہے؟",
   "میرے بھائی مجھے والد کی زمین میں حصہ نہیں دے رہے",
 ];
 
+export const TOPIC_CARDS = [
+  { key: "harassment", icon: "shield", ur: "کام کی جگہ پر ہراسانی", en: "Workplace harassment", descUr: "دفتر، کارخانے یا گھر میں ناپسندیدہ رویہ؟ جانیں شکایت کہاں اور کیسے کریں۔", descEn: "Unwelcome behaviour at work? Learn where and how to complain.", q: EXAMPLES[0] },
+  { key: "wages", icon: "coin", ur: "کم از کم اجرت", en: "Minimum wage", descUr: "کیا آپ کو پوری اجرت مل رہی ہے؟ اپنے صوبے کی اجرت معلوم کریں۔", descEn: "Are you being paid in full? Find your province's minimum wage.", q: EXAMPLES[1] },
+  { key: "property", icon: "home", ur: "جائیداد اور وراثت", en: "Property and inheritance", descUr: "کیا آپ کا حصہ روکا جا رہا ہے؟ قانون آپ کو کیا حق دیتا ہے۔", descEn: "Is your share being withheld? See what the law gives you.", q: EXAMPLES[2] },
+] as const;
+
+export const STEPS = [
+  { ur: "اپنا سوال بولیں یا لکھیں", en: "Ask by voice or text" },
+  { ur: "قانون کی دفعہ کے ساتھ جواب پائیں", en: "Get an answer with the law cited" },
+  { ur: "کہاں جانا ہے اور شکایتی خط", en: "See where to go and draft a letter" },
+] as const;
+
+export const TRUST = [
+  { ur: "ہر جواب قانون کی دفعہ کے ساتھ", en: "Every answer cites the law" },
+  { ur: "ہم آپ کے سوال محفوظ نہیں کرتے", en: "We do not store your questions" },
+  { ur: "یہ قانونی معلومات ہیں، مشورہ نہیں", en: "Legal information, not legal advice" },
+] as const;
+
 export const T = {
+  heroTitle: "حقوقِ زن",
+  heroLead: "اپنے قانونی حقوق جانیں، اپنی زبان میں",
+  heroLeadEn: "Know your legal rights, in your own language",
+  micPrompt: "بولنے کے لیے دبائیں",
+  micListening: "سن رہی ہوں… بولیے",
+  orType: "یا یہاں لکھیں",
+  englishToggle: "English",
+  themeLight: "روشن",
+  themeDark: "تاریک",
+  howTitle: "یہ کیسے کام کرتا ہے",
+  howTitleEn: "How it works",
+  topicsTitle: "آپ کس بارے میں جاننا چاہتی ہیں؟",
+  topicsTitleEn: "What would you like to know about?",
+  trustTitle: "ہمارا وعدہ",
+  askThis: "یہ پوچھیں",
+  statusAnswered: "قانونی معلومات",
+  statusAnsweredEn: "Legal information",
+  statusNotFound: "جواب نہیں ملا",
+  statusNotFoundEn: "Not found",
+  statusScope: "یہ موضوع ہمارے دائرے میں نہیں",
+  statusScopeEn: "Outside what we cover",
+  statusDanger: "آپ کی حفاظت پہلے",
+  statusDangerEn: "Your safety comes first",
   listen: "جواب سنیں",
   stopListening: "رکیں",
   exactText: "قانون کا اصل متن",

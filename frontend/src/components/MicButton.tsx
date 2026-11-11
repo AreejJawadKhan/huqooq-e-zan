@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { T } from "../strings";
+import { IconMic } from "./Icons";
 
 type SR = {
   lang: string; interimResults: boolean; continuous: boolean;
@@ -12,7 +13,7 @@ function recognitionCtor(): (new () => SR) | null {
   return w.SpeechRecognition || w.webkitSpeechRecognition || null;
 }
 
-/** Fills the question with an Urdu transcript. Hidden when the browser has no speech recognition. */
+/** Big hero microphone. Fills the question with an Urdu transcript; hidden when speech recognition is unavailable. */
 export default function MicButton({ onText, onHint }: { onText: (t: string) => void; onHint: (h: string) => void }) {
   const [listening, setListening] = useState(false);
   const [blocked, setBlocked] = useState(false);
@@ -47,11 +48,12 @@ export default function MicButton({ onText, onHint }: { onText: (t: string) => v
   }
 
   return (
-    <button type="button" className="hq-mic" aria-pressed={listening} aria-label={listening ? T.stop : T.speak} onClick={toggle}>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-        <rect x="9" y="3" width="6" height="11" rx="3" />
-        <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
-      </svg>
-    </button>
+    <div className="mic-wrap">
+      <button type="button" className={listening ? "hq-mic hq-mic-hero is-listening" : "hq-mic hq-mic-hero"}
+        aria-pressed={listening} aria-label={listening ? T.stop : T.speak} onClick={toggle}>
+        <IconMic size={44} />
+      </button>
+      <span className="mic-label" lang="ur" dir="rtl" aria-live="polite">{listening ? T.micListening : T.micPrompt}</span>
+    </div>
   );
 }

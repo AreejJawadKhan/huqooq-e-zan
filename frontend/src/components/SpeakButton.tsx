@@ -38,7 +38,7 @@ export default function SpeakButton({ text }: { text: string }) {
   }
 
   return (
-    <button type="button" className="hq-btn ghost" aria-pressed={speaking} onClick={toggle}>
+    <button type="button" className="hq-btn ghost speak-btn" aria-pressed={speaking} onClick={toggle}>
       <Bi inline ur={speaking ? T.stopListening : T.listen} en={speaking ? "Stop" : "Listen"} />
     </button>
   );

@@ -24,6 +24,11 @@
 }
 
 [data-theme="dark"] {
+  --brand-soft: #221a2b;
+  --brand-deep: #2a1745;
+  --brand-deep-2: #3d2161;
+  --on-deep: #f3eef7;
+  --on-deep-muted: #cdbbe0;
   --surface-100: #17121d;
   --surface-200: #221a2b;
   --surface-300: #120e17;
@@ -59,6 +64,10 @@
   --radius-full: 999px;
   --font-urdu: "Noto Nastaliq Urdu", "Noto Naskh Arabic", serif;
   --brand-soft: #f6f0fb;
+  --brand-deep: #3b1760;
+  --brand-deep-2: #5b2a86;
+  --on-deep: #ffffff;
+  --on-deep-muted: #e3d3f3;
   --font-urdu-ui: "Noto Naskh Arabic", "Noto Nastaliq Urdu", serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
