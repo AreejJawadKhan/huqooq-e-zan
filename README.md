@@ -1,129 +1,156 @@
-# Huqooq (حقوق)
+# Huqooq-e-Zan (حقوقِ زن)
 
-A voice-first, Urdu-first legal-information assistant for Pakistan. It explains what the law says on workplace
-harassment, minimum wage and women's property rights, cites the exact section, says where to go, and drafts a
-complaint letter. SDG 16 (access to justice), SDG 5 (gender equality), SDG 8 (decent work).
+**A voice-first, Urdu-first legal-information assistant for women in Pakistan.**
+Ask in Urdu, Roman Urdu, English, or the mix most people actually speak. Huqooq-e-Zan explains what the law says on
+**workplace harassment**, **minimum and unpaid wages**, and **women's property and inheritance rights**, cites the exact
+Act and section, tells you where to go, and drafts a complaint letter.
 
-It gives legal information, not legal advice, and it refuses to guess: if the laws it holds do not answer a
-question, it says so and points to a helpline.
+Live demo: https://huqooq.pages.dev · SDG 5 (gender equality) · SDG 8 (decent work) · SDG 16 (access to justice) ·
+Built for Build with Google (GDGoC CUI, FA'26).
+
+> **It is legal information, not legal advice.** It answers only from statute text it holds, never predicts the outcome
+> of a case, and says "I could not find this" instead of guessing.
+
+## What makes it different
+
+| Principle | How it is enforced |
+| --- | --- |
+| **Grounded, never guessed** | Answers are written only from retrieved statute sections. The model must cite section ids; citations are validated against what was retrieved. An answer with no valid citation becomes "not found". |
+| **Safety first, no model needed** | A deterministic detector (English, Urdu, Roman Urdu, Arabic-keyboard Urdu) catches violence, self-harm, sexual violence, blackmail and confinement *before* any model call and shows helplines instead of legal text. Self-harm has its own message and line. |
+| **Speaks the way people speak** | A lexicon understands Roman Urdu, Urdu script and English loanwords with spelling variants (`tankhwah`, `tankha`, `تنخواہ`). Roman Urdu in, Roman Urdu out. The Urdu-script answer is guaranteed free of Latin letters so text-to-speech reads it properly. |
+| **Works when the models do not** | Free model tiers get rate-limited. Requests have a deadline, global caps and a cache. If no model can answer, the app still returns the best-matching law text plus helplines (HTTP 200, flagged `X-Huqooq-Degraded`) and the UI says "busy" rather than "broken". |
+| **Honest about what is verified** | Wages and helplines carry a `verified` flag; the UI shows "Not yet verified" otherwise. Caveats state only what a source supports. |
+| **Fixed text where it matters** | Refusals, helplines, caveats and disclaimers come from data files you control, never from the model. |
+
+## How an answer is produced
+
+```
+question (typed or spoken)
+ 1. safety.py     deterministic danger / self-harm check            -> helplines, no model call
+ 2. lexicon.py    register (Urdu / Roman / English / mixed), topic, province hints, English search words
+ 3. analyze       small model: English query, legal search terms, topic, province, scope
+                  out of scope / prediction / harmful               -> fixed refusal
+ 4. retrieve      BM25 over statute sections, filtered by topic and province; wages from data/wages.json
+                  nothing relevant                                  -> fixed "not found" + referrals
+ 5. compose       stronger model: grounded Urdu + English (+ Roman Urdu) answer citing excerpt ids
+                  invalid or missing citations                      -> "not found"
+ 6. fixed parts   referrals, caveats, wage figure and disclaimers are added from data files
+ *  any model failure, deadline or cap: ask_degraded() answers from the law text alone, no model
+```
 
 ## Stack
 
-| Layer | Choice | Why |
-| --- | --- | --- |
-| Backend | Python 3.11+, FastAPI | Fast to write, typed contract, easy tests |
-| Retrieval | BM25 (`rank-bm25`) over section-level chunks | A few hundred sections; no model download; the analyzer translates Urdu questions into English legal keywords |
-| Models | Free Gemini or Groq key (paid Anthropic optional): small model for query analysis, stronger model for the grounded answer | Forced tool calls give structured JSON; provider and models are set in `.env`, with automatic fallback |
-| Letters | `python-docx` templates | Instant, predictable, no model call |
-| Frontend | Vite + React + TypeScript | Zero config, hot reload, `/api` proxied to the backend |
-| Voice | Browser Web Speech API (`ur-PK`) with typed fallback | No server cost; test it on the demo machine early |
+| Layer | Choice |
+| --- | --- |
+| Backend | Python 3.12, FastAPI. Rate limit, global admission caps, per-request deadline, answer cache. |
+| Retrieval | BM25 (`rank-bm25`) over section-level chunks (no model download) |
+| Models | Gemini and Groq (free tiers), Anthropic optional. **Per-stage routing:** the analyzer runs Groq first (about 1 s), the answer runs Gemini first (best Urdu); each falls back to the other. Forced tool calls give structured JSON. |
+| Letters | `python-docx` templates: instant, predictable, no model call |
+| Frontend | Vite + React + TypeScript, bilingual RTL/LTR layout, mock mode (`?mock=1`) |
+| Voice | Browser Web Speech API with an Urdu / Roman-English choice, read-aloud for answers, typed fallback |
+| Hosting | Cloudflare Pages (static site + `/api` proxy function) in front of the FastAPI backend (see `docs/DEPLOY.md`) |
 
 ## Quick start
 
 ```bash
 make setup                 # venv, Python deps, npm install, creates .env
-# put a free GEMINI_API_KEY or GROQ_API_KEY in .env
-# download the legal PDFs listed in data/sources.yaml into data/raw/ (see "Data" below)
+# put a GEMINI_API_KEY and/or GROQ_API_KEY in .env
 make ingest                # builds data/processed/chunks.jsonl and prints a report
-make dev-backend           # http://localhost:8000  (docs at /docs)
-make dev-frontend          # http://localhost:5173  (in a second terminal)
+make dev-backend           # http://127.0.0.1:8000
+make dev-frontend          # http://localhost:5173 (second terminal)
 make test                  # offline tests, no API key needed
-make eval                  # the 15 acceptance questions against the real models
 make check-models          # one real call per configured model: catches retired model names
-make eval-save             # eval on the shipped models, records data/eval_baseline.json (the eval gate)
+make eval                  # the 15 acceptance questions against the real models
+make eval-save             # record data/eval_baseline.json (the eval gate)
+make demo-cache            # pre-compute answers for the rehearsed demo questions
 ```
 
-Check `http://localhost:8000/api/health`: `chunks_indexed` must be above 0.
+The Makefile uses `.venv/bin`. On Windows run the same commands directly, for example
+`.venv\Scripts\python.exe -m pytest -q` and `.venv\Scripts\uvicorn.exe backend.app.main:app --host 127.0.0.1 --port 8000`.
 
-## How an answer is produced
+Check `http://127.0.0.1:8000/api/health`: `chunks_indexed` must be above 0. With no frontend you can still use
+`?mock=1` to see every UI state.
 
-```
-question
-  1. safety.py: deterministic danger check (English, Urdu, Roman Urdu) -> help lines, no model call
-  2. analyze (small model): language, English query + legal search terms, topic, province, scope flags
-        out of scope / prediction / harmful -> fixed refusal
-  3. retrieve: BM25 over statute sections, filtered by topic and province; wages come from data/wages.json
-        nothing relevant -> fixed "not found" + referrals (the model is never asked to guess)
-  4. compose (stronger model): grounded Urdu + English answer that must cite excerpt ids
-        citations are validated against what was retrieved; uncited answers become "not found"
-  5. referrals and caveats are added from data files, never by the model
-```
+## What it covers today
 
-Every refusal and every helpline is fixed text or data you control. Only step 2 and 4 use a model.
+| Topic | Sources (enabled) | Jurisdiction |
+| --- | --- | --- |
+| Workplace harassment | Protection against Harassment of Women at the Workplace Act, 2010 (amended 2022) | Pakistan |
+| Women's property | Punjab Enforcement of Women's Property Rights Act, 2021; Islamabad Act, 2020 (court-challenged: caveat shown) | Punjab, ICT |
+| Wages | Punjab Minimum Wages Act, 2019; Payment of Wages Act, 1936. Rates per province in `data/wages.json` | Punjab, Pakistan |
+
+**Not covered yet** (answered with a polite refusal): divorce and khula, maintenance and mehr, custody, dowry,
+domestic violence, tenancy. The law files for several of these are already in `data/raw/`; the steps to turn them into a
+working feature are in `docs/HANDOFF.md`.
 
 ## Repo map
 
 ```
-backend/app/     main.py (routes) · pipeline.py (the flow above) · llm.py + prompts.py (model layer)
-                 retrieval.py · safety.py · data.py · messages.py (fixed Urdu/English text) · letters.py
-data/            sources.yaml (what to download) · wages.json · referrals.json · raw/ (PDFs) · processed/ (chunks)
-scripts/         ingest.py · run_eval.py
-tests/           offline tests with a fake model + test_questions.yaml (the 15 acceptance questions)
-frontend/        Vite app: src/api.ts, src/types.ts, src/App.tsx (starter UI)
-docs/API.md      the contract between frontend and backend
+backend/app/   main.py (routes, rate limit, admission, cache)  pipeline.py (the flow above)
+               llm.py + prompts.py (model layer)  providers.py (Gemini/Groq/Anthropic, routing, health)
+               lexicon.py (Roman Urdu / mixed language)  safety.py (danger detection)
+               retrieval.py  limits.py  deadline.py  data.py  messages.py (fixed text)  letters.py
+data/          sources.yaml (manifest)  wages.json  referrals.json  demo_cache.json  raw/ (PDFs)  processed/ (chunks)
+scripts/       ingest.py  run_eval.py  check_models.py  build_demo_cache.py
+tests/         offline tests with a fake model; test_questions.yaml = the 15 acceptance questions
+frontend/      Vite app (src/, public/fixtures, functions/api = Cloudflare proxy, wrangler.toml)
+docs/          API.md (frontend/backend contract)  DEPLOY.md  EVAL.md  HANDOFF.md  SUBMISSION.md
 ```
 
-## Data: the part that decides the quality
+## Configuration
 
-1. Download each source in `data/sources.yaml` marked `enabled: true` into `data/raw/` with the exact `file` name.
-   Only `harassment_2010_fospah` was opened and read while planning; confirm every other link and prefer the
-   official text over a mirror.
-2. Run `make ingest` and read the report. A "WARNING: section numbers are not contiguous" or a very short
-   section means the PDF extraction is damaged. Fix by saving a corrected `<same-name>.txt` in `data/raw/`; it
-   wins over the PDF.
-3. Never enable two copies of the same Act (for example both harassment sources) or answers will cite duplicates.
-4. Fill the gaps: the provincial Minimum Wages Acts and the Payment of Wages Act were not located. Until they
-   are added, unpaid-wage questions (test 15) correctly return "not found".
-5. `data/wages.json` and `data/referrals.json` are hand-maintained. Everything is `verified: false` until someone
-   reads the official notification or confirms the number on an official page. The UI shows this.
+Copy `.env.example` to `.env`. The ones that matter:
 
-## Tuning
+| Variable | Purpose |
+| --- | --- |
+| `GEMINI_API_KEY`, `GROQ_API_KEY`, `ANTHROPIC_API_KEY` | At least one. Providers without a key are skipped. |
+| `LLM_PROVIDER`, `ANALYZER_PROVIDER`, `ANSWER_PROVIDER`, `LLM_FALLBACK` | Override the default per-stage routing. |
+| `GEMINI_ANALYZER_MODEL`, `GROQ_ANSWER_MODEL`, ... | Override model names. |
+| `DEMO_CACHE=1` | Serve pre-computed answers for rehearsed questions (survives a rate-limited free tier). |
+| `MIN_SCORE`, `TOP_K` | Retrieval tuning. |
+| `MAX_INFLIGHT`, `GLOBAL_RPM`, `REQUEST_DEADLINE_S`, `ANSWER_CACHE_TTL_S` | Quota protection and timeouts. |
+| `TRUSTED_PROXY_HOPS`, `PROXY_SECRET` | Client-IP trust behind a proxy (see `docs/DEPLOY.md`). |
+| `CORS_ORIGINS`, `DEBUG`, `HEALTH_DEEP` | Origins, debug endpoints (also enables `/docs`), live model health check. |
 
-- Too many "not found": lower `MIN_SCORE` in `.env`, or improve the search terms in `ANALYZER_SYSTEM` (`prompts.py`).
-- Wrong sections retrieved: set `DEBUG=1` and call `/api/debug/search?q=...&topic=harassment` to see scores.
-- Answers too long or too legalistic: edit `ANSWER_SYSTEM` in `prompts.py`. No other code needs to change.
+### Model names expire: check them
 
-## Before the demo
+Providers retire model names without warning (Gemini 2.5 and Groq Llama 3.x both disappeared). Safeguards:
 
-- Have a native Urdu speaker review every Urdu string in `backend/app/messages.py` and test answers 1 to 15.
-- Re-check the Islamabad property Act status (it was challenged in court; the UI shows a caveat).
-- Re-verify wage figures and helplines, then set `verified: true` and update `as_of`.
-- Rehearse the voice flow on the demo laptop; record a backup video.
+1. `make check-models` makes one real tool call per configured model (being *listed* proves nothing). HTTP 429 is
+   reported as "rate-limited", not "dead".
+2. `GET /api/health` shows the provider order and model per stage plus live counters (`ok`, `fail`,
+   `served_as_fallback`, `last_error`). A `FALLBACK USED` warning is logged whenever a fallback serves a request.
+3. **Eval gate:** `data/eval_baseline.json` records the 15-question result with fingerprints of the default models,
+   prompts and retrieval settings. `tests/test_eval_baseline.py` fails if any of them change without a new
+   `make eval-save`. (Skipped until the first baseline is committed.)
+
+## Data: the part that decides quality
+
+1. Each source in `data/sources.yaml` with `enabled: true` must exist in `data/raw/` under its `file` name.
+2. Run `make ingest` and read the report. Non-contiguous section numbers or very short sections mean damaged PDF
+   extraction: save a corrected `<same-name>.txt` in `data/raw/` (it wins over the PDF) and add a test.
+3. Never enable two copies of the same Act, or answers cite duplicates.
+4. `data/wages.json` and `data/referrals.json` are hand-maintained. Set `verified: true` only after reading the
+   official notification or confirming a number on an official page, and keep `source_url` honest.
+
+## Before a demo or launch
+
+- Native Urdu and Roman Urdu review of `frontend/src/strings.ts`, `backend/app/messages.py` and sample answers.
+- Lawyer review of the letter templates and caveats. Confirm the Islamabad Act's current court status.
+- Confirm every helpline and wage figure, including the Umang self-harm line.
+- Run `make check-models`, then `make eval-save`, then `make demo-cache`, and rehearse the voice flow on the demo laptop.
+- Use a paid or no-training model tier for real users: free-tier prompts may be used by the provider.
 
 ## Known limits
 
-- Retrieval is keyword-based. If paraphrased questions miss, add search terms or swap in embeddings behind
+- Retrieval is keyword-based (BM25, no stemming). Paraphrases can miss; add search terms or swap in embeddings behind
   `Retriever.search` (same signature).
-- No user data is stored. Questions go to the model API for processing.
-- The Urdu strings and the Urdu model output have not been reviewed by a native speaker or a lawyer.
+- No user data is stored by the app. Questions are sent to the model provider to be answered.
+- Urdu and Roman Urdu output has not been reviewed by a native speaker or a lawyer.
+- Only the three topics above are covered. Family law (divorce, khula, maintenance, custody) needs a "Muslim personal
+  law" caveat and legal review before it is enabled.
 
-## Choosing a model provider
+## Documentation
 
-Put at least one key in `.env`. With two or more keys the app routes each pipeline stage to the provider that suits it:
-
-| Stage | What it does | Default order | Why |
-| --- | --- | --- | --- |
-| Analyzer | classifies the question, finds the province, writes English search terms | Groq `openai/gpt-oss-20b` -> Gemini `gemini-3.5-flash-lite` | small structured job; Groq answers in about 1 s |
-| Answer | writes the grounded Urdu and English answer | Gemini `gemini-3.5-flash` -> Groq `openai/gpt-oss-120b` | best Urdu |
-
-Anthropic (`claude-haiku-5-5` / `claude-sonnet-5-5`, paid) is the last fallback for both stages when `ANTHROPIC_API_KEY` is set. Providers without a key are skipped.
-
-| Provider | Key | Cost | Notes |
-| --- | --- | --- | --- |
-| Gemini | `GEMINI_API_KEY` ([AI Studio](https://aistudio.google.com/apikey)) | Free tier | Free-tier prompts may be used to improve Google products: demo with synthetic questions only. `gemini-3.5-flash` has a very small free quota. |
-| Groq | `GROQ_API_KEY` ([console](https://console.groq.com/keys)) | Free plan | Fast; weaker Urdu (sometimes Latin letters inside Urdu text). |
-| Anthropic | `ANTHROPIC_API_KEY` | Paid | Use for real user data. |
-
-Override the routing with `LLM_PROVIDER` (one chain for both stages), `ANALYZER_PROVIDER` / `ANSWER_PROVIDER` (`auto`, `same`, or a provider name) and `LLM_FALLBACK`. Override model names with `GEMINI_ANALYZER_MODEL`, `GROQ_ANSWER_MODEL` and friends (see `.env.example`).
-
-### Model names expire. Do not trust them: check them
-
-Providers retire model names without warning (Gemini 2.5 and Groq Llama 3.x both disappeared, and the dead Groq fallback went unnoticed). Three safeguards:
-
-1. `make check-models` makes one real tool call per configured model (a model being *listed* proves nothing: `gemini-2.5-flash-lite` is listed but returns 404). `--list` shows what each provider offers. HTTP 429 is reported as "rate-limited", not "dead".
-2. `GET /api/health` shows the model and provider order per stage, plus live counters per provider and stage (`ok`, `fail`, `served_as_fallback`, `last_error`). Set `HEALTH_DEEP=1` to allow `GET /api/health?deep=1`, which runs the check live (cached for 60 s). Whenever a fallback provider has to serve a request, the log gets a `FALLBACK USED` warning: a dead or struggling primary is visible instead of hidden behind answers that still arrive.
-3. **Eval gate.** `data/eval_baseline.json` records the 15-question result together with fingerprints of the default models, the prompts and the retrieval settings. `tests/test_eval_baseline.py` fails when any of them changes without a new `make eval-save`, so a new model or an edited prompt cannot change answers unnoticed. `make eval-save` refuses to record a run in which a fallback provider answered (the result would mix models); on a free tier it paces requests, because a 429 turns into a fallback answer. Until the first baseline is committed the gate is skipped with a loud message.
-
-## Hackathon notes
-
-Built for Build with Google (GDGoC CUI, FA'26). See `docs/SUBMISSION.md` for the title, problem statement, SDG alignment, stack, responsible-AI disclosure and limitations.
+`docs/API.md` (contract) · `docs/DEPLOY.md` (Cloudflare) · `docs/EVAL.md` (evaluation) · `docs/HANDOFF.md` (state and
+to-do list) · `docs/SUBMISSION.md` (hackathon submission text).
