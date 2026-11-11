@@ -20,10 +20,11 @@ class WageTable:
         row = self._rows.get(jurisdiction)
         if not row:
             return None
-        return WageInfo(as_of=self.as_of, **row)
+        d = {"as_of": self.as_of, **row}
+        return WageInfo(**d)
 
     def all(self) -> list[WageInfo]:
-        return [WageInfo(as_of=self.as_of, **r) for r in self._rows.values()]
+        return [WageInfo(**{"as_of": self.as_of, **r}) for r in self._rows.values()]
 
 
 class ReferralTable:

@@ -13,7 +13,8 @@
         "all"
       ],
       "source_url": "https://hrcp-web.org/hrcpweb/complaints-cell/",
-      "verified": false
+      "verified": true,
+      "as_of": "2026-11-11"
     },
     {
       "name": "Punjab Women's Toll-Free Helpline",
@@ -28,7 +29,8 @@
         "punjab"
       ],
       "source_url": "https://pcsw.punjab.gov.pk/node/61",
-      "verified": false
+      "verified": true,
+      "as_of": "2026-11-11"
     },
     {
       "name": "Ministry of Human Rights helpline",
@@ -77,24 +79,26 @@
         "all"
       ],
       "source_url": "https://pcsw.punjab.gov.pk/node/44",
-      "verified": false
+      "verified": true,
+      "as_of": "2026-11-11"
     },
     {
       "name": "Punjab Women Protection Authority",
-      "number": "1737",
-      "note": "Violence against women, Punjab.",
+      "number": "080001737",
+      "note": "Violence against women, Punjab helpline.",
       "topics": [
         "danger"
       ],
       "jurisdictions": [
         "punjab"
       ],
-      "source_url": "https://www.af.org.pk/Resouce%20Directory/DIRECTORY%20OF%20SERVICE%20PROVIDERS-updated.pdf",
-      "verified": false
+      "source_url": "https://pwpa.punjab.gov.pk/",
+      "verified": true,
+      "as_of": "2026-11-11"
     },
     {
       "name": "Ombudsperson Punjab (workplace harassment and women's property rights)",
-      "number": "042 9923 3348 to 50",
+      "number": "042-9923-3348-50",
       "note": "Complaints under the harassment Act and the Punjab women's property Act.",
       "topics": [
         "harassment",
@@ -103,13 +107,14 @@
       "jurisdictions": [
         "punjab"
       ],
-      "source_url": "https://www.af.org.pk/Resouce%20Directory/DIRECTORY%20OF%20SERVICE%20PROVIDERS-updated.pdf",
-      "verified": false
+      "source_url": "https://ombudspersonpunjab.gov.pk/",
+      "verified": true,
+      "as_of": "2026-11-11"
     },
     {
       "name": "Federal Ombudsperson (FOSPAH), Islamabad",
       "number": null,
-      "note": "Workplace harassment complaints and Islamabad women's property complaints. Phone number not collected: check the website.",
+      "note": "Workplace harassment complaints and Islamabad women's property complaints. Online filing at fospah.gov.pk.",
       "topics": [
         "harassment",
         "property"
@@ -117,8 +122,9 @@
       "jurisdictions": [
         "ict"
       ],
-      "source_url": "https://fospah.gov.pk/Detail/ZTRhMjVhYTgtODY0MC00NzQ0LWFkNTctNWUyZWVhMWNmYmNm",
-      "verified": false
+      "source_url": "https://fospah.gov.pk/",
+      "verified": true,
+      "as_of": "2026-11-11"
     },
     {
       "name": "Provincial Labour Department",
@@ -130,7 +136,7 @@
       "jurisdictions": [
         "all"
       ],
-      "source_url": "",
+      "source_url": "https://labour.punjab.gov.pk/",
       "verified": false
     }
   ]
