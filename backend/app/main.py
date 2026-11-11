@@ -69,6 +69,20 @@ def create_app(pipeline: Optional[Pipeline] = None, settings: Optional[Settings]
     admission = Admission(settings.max_inflight, settings.global_rpm)
     answers = AnswerCache(settings.answer_cache_ttl_s, settings.answer_cache_size)
 
+    @app.get("/")
+    def root():
+        """Make accidentally opening the API port helpful during local development."""
+        return {
+            "service": "Huqooq API",
+            "status": "ok",
+            "frontend": "http://127.0.0.1:5173/",
+            "api_health": "/api/health",
+        }
+
+    @app.get("/favicon.ico", include_in_schema=False)
+    def favicon():
+        return Response(status_code=204)
+
     @app.middleware("http")
     async def guard(request: Request, call_next):
         if request.method == "POST" and request.url.path in _RATE_PATHS:
