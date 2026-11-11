@@ -9,7 +9,27 @@ async function errorText(res: Response): Promise<string> {
   }
 }
 
+/** `?mock=1` serves the sample responses in public/fixtures so the UI works without a backend. */
+export const MOCK = new URLSearchParams(window.location.search).get("mock") === "1";
+
+function mockFixture(q: string): string {
+  if (/danger|beat|hit me|kill|threat|suicide|خطر|مار|دھمک/i.test(q)) return "ask_danger";
+  if (/wage|salary|pay|تنخواہ|اجرت/i.test(q)) return "ask_answered_wage";
+  if (/property|inherit|land|share|جائیداد|زمین|وراثت|حصہ/i.test(q)) return "ask_answered_property";
+  if (/province|which law/i.test(q)) return "ask_needs_province";
+  if (/xyz/i.test(q)) return "ask_not_found";
+  if (/cook|recipe|weather|football|کھانا/i.test(q)) return "ask_out_of_scope";
+  return "ask_answered";
+}
+
 export async function ask(req: AskRequest): Promise<AskResponse> {
+  if (MOCK) {
+    await new Promise((r) => setTimeout(r, 600));
+    const res = await fetch(`/fixtures/${mockFixture(req.question)}.json`);
+    const body: AskResponse = await res.json();
+    // "nocite" simulates an answer that arrived without citations (must render as not found).
+    return /nocite/i.test(req.question) ? { ...body, citations: [] } : body;
+  }
   const res = await fetch("/api/ask", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -19,19 +39,26 @@ export async function ask(req: AskRequest): Promise<AskResponse> {
   return res.json();
 }
 
+function save(blob: Blob, name: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 /** Posts the form and triggers a browser download of the generated .docx letter. */
 export async function downloadLetter(req: LetterRequest): Promise<void> {
+  if (MOCK) {
+    save(new Blob([`MOCK LETTER\n\n${JSON.stringify(req, null, 2)}`], { type: "text/plain" }), "huqooq_letter_mock.txt");
+    return;
+  }
   const res = await fetch("/api/letter", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(req),
   });
   if (!res.ok) throw new Error(await errorText(res));
-  const blob = await res.blob();
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `huqooq_${req.letter_type}.docx`;
-  a.click();
-  URL.revokeObjectURL(url);
+  save(await res.blob(), `huqooq_${req.letter_type}.docx`);
 }

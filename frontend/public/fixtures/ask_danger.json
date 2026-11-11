@@ -1,0 +1,42 @@
+{
+  "status": "danger",
+  "answer_ur": "اگر آپ کو فوری خطرہ ہے تو ابھی 15 پر کال کریں۔ [نمونہ جواب]",
+  "answer_en": "If you are in immediate danger, call 15 now. [sample answer]",
+  "confidence": "none",
+  "citations": [],
+  "where_to_go": [
+    {
+      "name": "Police emergency",
+      "number": "15",
+      "note": "If anyone is in immediate danger.",
+      "source_url": "",
+      "verified": false
+    },
+    {
+      "name": "Punjab Women's Toll-Free Helpline",
+      "number": "1043",
+      "note": "24/7. Discrimination, harassment, violence and denied legal rights. Punjab residents.",
+      "source_url": "https://pcsw.punjab.gov.pk/node/61",
+      "verified": false
+    },
+    {
+      "name": "Ministry of Human Rights helpline",
+      "number": "1099",
+      "note": "Legal advice and referrals. Hours 10am to 10pm.",
+      "source_url": "",
+      "verified": false
+    }
+  ],
+  "wage": null,
+  "caveats": [],
+  "needs_province": false,
+  "letter_type": null,
+  "detected": {
+    "language": "en",
+    "topic": "other",
+    "jurisdiction": null,
+    "english_query": ""
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ قوانین بدلتے رہتے ہیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. Laws change."
+}

@@ -1,0 +1,28 @@
+{
+  "status": "not_found",
+  "answer_ur": "ہمارے پاس موجود قوانین میں اس سوال کا جواب نہیں ملا۔ ہم اندازہ نہیں لگائیں گے۔ نیچے دی گئی ہیلپ لائنز سے رابطہ کریں۔ [نمونہ جواب]",
+  "answer_en": "We could not find this in the laws we hold, and we will not guess. Please try the helplines below. [sample answer]",
+  "confidence": "none",
+  "citations": [],
+  "where_to_go": [
+    {
+      "name": "Ministry of Human Rights helpline",
+      "number": "1099",
+      "note": "Legal advice and referrals. Hours 10am to 10pm.",
+      "source_url": "",
+      "verified": false
+    }
+  ],
+  "wage": null,
+  "caveats": [],
+  "needs_province": false,
+  "letter_type": null,
+  "detected": {
+    "language": "en",
+    "topic": "wages",
+    "jurisdiction": null,
+    "english_query": "domestic worker minimum wage"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ قوانین بدلتے رہتے ہیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. Laws change."
+}
