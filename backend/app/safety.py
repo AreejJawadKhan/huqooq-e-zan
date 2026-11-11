@@ -36,7 +36,10 @@ _PATTERNS: dict[str, str] = {
     # ---------------- English ----------------
     "en_violence": (
         r"\b(beat|beats|beating|beaten|hit|hits|hurt|hurts|slap\w*|choke\w*|burn\w*)\s+(me|my|us)\b"
-        r"|\b(kill|kills|killing)\s+(me|us|myself)\b|\bthreaten\w*|\bacid\b|\bdomestic violence\b"
+        r"|\b(kill|kills|killing)\s+(me|us|myself)\b|\bacid\b|\bdomestic violence\b"
+        r"|\bthreaten\w*\s+(me\s+|us\s+|her\s+)?(with\s+(a\s+)?(gun|knife|pistol|death|violence|acid)|to\s+(kill|hurt|beat|harm|murder|burn|shoot|stab|rape|attack|kidnap|abduct|expose|leak|post|share))"
+        r"|\b(pushed|shoved|kicked|punched|dragged|strangled)\s+me\b(?!\s+(to|into|for|about|toward|towards|out|off|back|aside|hard\s+to))"
+        r"|\bstalk\w*|\bfollow(ed|ing)\s+me\s+(home|around|everywhere)\b"
         r"|\b(will|going to|gonna|'ll)\s+(kill|hurt|beat|murder)\b"
         r"|\b(stab\w*|strangl\w*|suffocat\w*)\b|\b(shoot|shot|shooting)\s+(me|us)\b"
     ),
@@ -63,14 +66,15 @@ _PATTERNS: dict[str, str] = {
         r"\b(maar\s*peet|marpeet|maarta|marta\s+hai|marti\s+hai|maarte|peet\w*|pitai|tashaddud|qatl)\b"
         r"|\bma+r+\s*(pe+t|pi+t)\w*"
         r"|\bmaa?r\s*(dal|dun|denge|dengi|dega|degi|doon|doonga|dungi|dunga|diya|dala)\w*"
+        r"|\b(thapp?ar|thapad|tamacha|laat|dhakka)\s+(mar|laga|de)\w*"
     ),
-    "ru_threat": r"\bdhamk(i|ee)\w*|\bjaan\s+(ka|se|ko)\b|\bzabardasti\b",
+    "ru_threat": r"\bdhamk(i|ee)\w*|\bjaan\s+(ka|ko)\s+khatr\w*|\bjaan\s+se\s+(maar|haath|hath)\w*",
     "ru_selfharm": (
         r"\bkhud\s*kushi\b|\bkhud\s*ko\s+(khatam|maar)\w*|\bapni\s+jaan\b|\bmarna\s+chah\w*"
         r"|\bmar\s*(jana|jaana|jaon|jaun)\s+chah\w*|\bzindagi\s+khatam\w*|\b(jeena|jina)\s+nahi\w*"
     ),
     "ru_coercion": (
-        r"\bblack\s*mail\w*|\bkamre\s+(mein|me)\s+band\w*|\bjabri\s+shadi\b|\bzabardasti\s+(ki\s+)?shadi\b"
+        r"\bqaid\s+(kar|mein|me)\b|\bblack\s*mail\w*|\bkamre\s+(mein|me)\s+band\w*|\bjabri\s+shadi\b|\bzabardasti\s+(ki\s+)?shadi\b"
         r"|\bizzat\s+lut\w*|\brape\b|\bmolest\w*"
     ),
     # ---------------- Urdu script (letters already normalised to the Urdu forms) ----------------
@@ -78,7 +82,7 @@ _PATTERNS: dict[str, str] = {
         r"مار\s*پیٹ|مارتا|مارتی|مارتے|پٹائی|تشدد|قتل|قاتلانہ|تیزاب"
         r"|مار\s*(ڈال|دو|دے|دوں|دیں|دیا)\w*|جان\s*سے\s*مار|گلا\s*(گھونٹ|دبا)\w*|جلا\s*(دیا|دوں|دے)\w*"
     ),
-    "ur_threat": r"دھمکی|دھمکیاں|دھمکا\w*|جان\s*(کو|سے|کا)|زبردستی",
+    "ur_threat": r"دھمکی|دھمکیاں|دھمکا\w*|جان\s*(کو|کا)\s*خطر\w*|جان\s*سے\s*(مار|ہاتھ)\w*",
     "ur_selfharm": (
         r"خودکشی|مرنا\s*چاہ\w*|مر\s*جانا\s*چاہ\w*|مر\s*جاؤں|جان\s*دے\s*د\w*|جینا\s*نہیں"
         r"|زندگی\s*ختم|اپنی\s*جان|خود\s*کو\s*(ختم|مار)\w*"
@@ -101,10 +105,22 @@ def normalize(text: str) -> str:
     return _SPACES.sub(" ", t).strip()
 
 
+_RETALIATION = re.compile(
+    r"\b(naukri|nokri|job|fire[ds]?|firing|terminat\w*|nikal\w*|nikaal\w*|dismiss\w*|resign\w*|salary|tankhwa\w*|promotion|transfer)\b"
+    r"|نوکری|ملازمت|نکال|برطرف|تنخواہ|استعفیٰ|ٹرانسفر"
+)
+_THREAT_ONLY = frozenset({"ru_threat", "ur_threat"})
+
+
 def detect_danger(text: str) -> list[str]:
     """Return the labels of matched danger patterns (empty list = no signal)."""
     t = normalize(text)
-    return [label for label, rx in _COMPILED.items() if rx.search(t)]
+    labels = [label for label, rx in _COMPILED.items() if rx.search(t)]
+    # A bare "dhamki" (threat) next to a job or salary word is a retaliation threat ("complain and I will fire you"):
+    # a harassment question the app can answer. Any violence, self-harm, sexual or coercion signal still wins.
+    if labels and set(labels) <= _THREAT_ONLY and _RETALIATION.search(t):
+        return []
+    return labels
 
 
 def is_danger(text: str) -> bool:

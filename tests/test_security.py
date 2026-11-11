@@ -67,3 +67,10 @@ def test_cors_rejects_unlisted_origin():
 def test_letter_survives_control_characters():
     r = client().post("/api/letter", json={**LETTER, "complainant_name": "A\x00B", "facts": "hello\x0b there"})
     assert r.status_code == 200 and r.content[:2] == b"PK"
+
+
+def test_api_docs_are_hidden_unless_debug():
+    c = client()
+    assert c.get("/docs").status_code == 404 and c.get("/openapi.json").status_code == 404
+    dbg = TestClient(create_app(pipeline=make_pipeline(FakeLLM(harassment_analysis())), settings=Settings(anthropic_api_key="x", debug=True)))
+    assert dbg.get("/openapi.json").status_code == 200

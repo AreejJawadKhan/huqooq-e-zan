@@ -55,7 +55,9 @@ def build_pipeline(settings: Settings) -> Pipeline:
 
 def create_app(pipeline: Optional[Pipeline] = None, settings: Optional[Settings] = None) -> FastAPI:
     settings = settings or get_settings()
-    app = FastAPI(title="Huqooq API", version="0.1.0")
+    # The interactive docs and schema describe every endpoint; expose them only in debug mode, not on a public backend.
+    docs = {} if settings.debug else {"docs_url": None, "redoc_url": None, "openapi_url": None}
+    app = FastAPI(title="Huqooq API", version="0.1.0", **docs)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,

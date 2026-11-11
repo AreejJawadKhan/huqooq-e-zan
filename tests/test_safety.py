@@ -35,6 +35,16 @@ def test_normal_questions_not_flagged(text):
 # ---- Added after a review found 11 of 12 serious phrasings undetected (Arabic-keyboard Urdu, self-harm,
 # ---- sexual violence, coercion, Roman Urdu threats). Every line here must raise the danger banner.
 MUST_FLAG = [
+    # added in the final review: physical violence and stalking phrasings that were missed
+    "mere shohar ne mujhe thappar mara aur ghar se nikal diya",
+    "usne mujhe thapar mara",
+    "he pushed me down the stairs",
+    "he shoved me against the wall",
+    "I am being stalked and followed home by my manager",
+    "ghar walay mujhe qaid kar ke rakhte hain",
+    "he threatened to kill me",
+    "he threatened me with a knife",
+    "وہ مجھے جان سے مارنے کی دھمکی دیتا ہے",
     # Urdu
     "وہ مجھے مار ڈالے گا",
     "میں مرنا چاہتی ہوں",
@@ -65,6 +75,15 @@ MUST_FLAG = [
 
 # Ordinary questions inside the app's scope. Flagging these would hide the legal answer behind a danger banner.
 MUST_NOT_FLAG = [
+    # added in the final review: these hid the legal answer on the app's most common scenarios
+    "malik ne zabardasti mujhe naukri se nikal diya, tankhwah nahi di",
+    "bhai ne zabardasti zameen par qabza kar liya",
+    "مجھے زبردستی نوکری سے نکال دیا گیا اور تنخواہ نہیں ملی",
+    "he threatened to fire me if I complain about harassment",
+    "manager ne dhamki di ke complaint ki to naukri se nikal dunga",
+    "boss ne mujhe tang kiya aur jaan se zyada kaam karwaya",
+    "my manager pushed me to finish the report and kicked me out of the meeting",
+    "colleague hit on me and keeps asking me out",
     "He sexually harassed me at work. What can I do?",
     "My employer forced me to resign without notice",
     "My manager forced me to work overtime without pay",

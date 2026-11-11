@@ -54,6 +54,12 @@ export default function MicButton({ onText, onHint }: { onText: (t: string) => v
       onText(text);
     };
     rec.onerror = (e: any) => {
+      // Silence ("no-speech") and a manual stop ("aborted") are normal: the session restarts in onend. Anything else
+      // (permission denied, network, no microphone) is fatal: stop the restart loop, or it would retry every 120 ms forever.
+      if (e.error === "no-speech" || e.error === "aborted") return;
+      activeRef.current = false;
+      if (restartRef.current !== null) window.clearTimeout(restartRef.current);
+      setListening(false);
       if (e.error === "not-allowed" || e.error === "service-not-allowed") { setBlocked(true); onHint(T.micDenied); }
       else onHint(T.micFailed);
     };
