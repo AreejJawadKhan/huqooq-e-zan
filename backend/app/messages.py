@@ -21,6 +21,7 @@ DANGER_UR = (
 )
 
 # Used when no model could answer (all rate-limited, out of time, or not configured). Fixed text, never model-written.
+URDU_UNAVAILABLE_UR = "اردو جواب تیار نہیں ہو سکا۔ براہِ کرم نیچے دیا گیا جواب اور قانونی دفعات دیکھیں۔"
 BUSY_EN = "The answering service is not available right now. Please try again in a few minutes, or contact one of the helplines below."
 BUSY_UR = "جواب تیار کرنے والی سروس ابھی دستیاب نہیں۔ براہِ کرم چند منٹ بعد دوبارہ کوشش کریں، یا نیچے دی گئی ہیلپ لائنز سے رابطہ کریں۔"
 BUSY_ROMAN = "Jawab tayyar karne wali service abhi dastiyab nahi. Barah-e-karam kuch minute baad dobara koshish karein, ya neeche di gayi helplines se rabta karein."

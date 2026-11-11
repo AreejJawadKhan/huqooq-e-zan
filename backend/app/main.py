@@ -1,6 +1,7 @@
 """FastAPI app. Run from the repo root:  uvicorn backend.app.main:app --reload --port 8000"""
 from __future__ import annotations
 
+import hmac
 import io
 import logging
 import time
@@ -73,11 +74,15 @@ def create_app(pipeline: Optional[Pipeline] = None, settings: Optional[Settings]
         if request.method == "POST" and request.url.path in _RATE_PATHS:
             # X-Forwarded-For is only trusted for the hops our own proxies add (TRUSTED_PROXY_HOPS); by default the
             # socket address is used, so a spoofed header cannot reset the limit.
-            who = client_ip(
-                request.headers.get("x-forwarded-for", ""),
-                request.client.host if request.client else "unknown",
-                settings.trusted_proxy_hops,
-            )
+            who = None
+            if settings.proxy_secret and hmac.compare_digest(request.headers.get("x-huqooq-proxy-key", ""), settings.proxy_secret):
+                who = request.headers.get("x-huqooq-client-ip", "").strip() or None
+            if who is None:
+                who = client_ip(
+                    request.headers.get("x-forwarded-for", ""),
+                    request.client.host if request.client else "unknown",
+                    settings.trusted_proxy_hops,
+                )
             now = time.monotonic()
             q = hits[who]
             while q and now - q[0] > RATE_WINDOW_S:

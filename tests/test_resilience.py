@@ -293,3 +293,23 @@ def test_scope_messages_do_not_claim_tenancy_and_do_not_use_a_gendered_first_per
     assert "tenancy" not in M.OUT_OF_SCOPE_EN.lower() and "کرایہ" not in M.OUT_OF_SCOPE_UR
     for text in (M.OUT_OF_SCOPE_UR, M.PREDICTION_UR):
         assert "سکتا ہوں" not in text and "سکتی ہوں" not in text
+
+
+def test_proxy_secret_lets_the_pages_proxy_state_the_real_client_ip_and_nobody_else():
+    import backend.app.main as main
+
+    def make():
+        llm = FakeLLM(harassment_analysis(), Composition("ا", "e", ["h:s3"], "high"))
+        return TestClient(create_app(pipeline=make_pipeline(llm), settings=Settings(anthropic_api_key="x", proxy_secret="s3cret", answer_cache_ttl_s=0)))
+
+    q = {"question": "manager harassment complaint"}
+    c = make()
+    # with the right key, each visitor IP has its own budget: filling visitor A's does not block visitor B
+    for _ in range(main.RATE_LIMIT + 1):
+        r = c.post("/api/ask", json=q, headers={"x-huqooq-proxy-key": "s3cret", "x-huqooq-client-ip": "198.51.100.1"})
+    assert r.status_code == 429
+    assert c.post("/api/ask", json=q, headers={"x-huqooq-proxy-key": "s3cret", "x-huqooq-client-ip": "198.51.100.2"}).status_code == 200
+    # a wrong or missing key means the claimed IP is ignored: all such requests share the socket address, so spoofing cannot reset it
+    c2 = make()
+    codes = [c2.post("/api/ask", json=q, headers={"x-huqooq-proxy-key": "wrong", "x-huqooq-client-ip": f"203.0.113.{i}"}).status_code for i in range(main.RATE_LIMIT + 2)]
+    assert codes[-1] == 429

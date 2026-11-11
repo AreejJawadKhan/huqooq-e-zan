@@ -45,6 +45,9 @@ class Settings:
     # ignored and the socket address is used; Cloud Run = 1). MAX_INFLIGHT / GLOBAL_RPM cap model-backed requests for all
     # clients together; beyond them, requests are answered from the law text without a model. REQUEST_DEADLINE_S is the
     # total time one /api/ask may spend on model calls.
+    # PROXY_SECRET: shared with the Cloudflare Pages proxy. A request carrying the matching X-Huqooq-Proxy-Key may state the
+    # visitor's real IP in X-Huqooq-Client-IP; without the secret that header is ignored (so it cannot be spoofed).
+    proxy_secret: str = field(default_factory=lambda: os.getenv("PROXY_SECRET", ""))
     trusted_proxy_hops: int = field(default_factory=lambda: int(os.getenv("TRUSTED_PROXY_HOPS", "0")))
     max_inflight: int = field(default_factory=lambda: int(os.getenv("MAX_INFLIGHT", "6")))
     global_rpm: int = field(default_factory=lambda: int(os.getenv("GLOBAL_RPM", "90")))
