@@ -71,11 +71,29 @@ def test_answer_cache_expires_evicts_and_returns_copies(monkeypatch):
     assert c.get("b") is None  # expired
 
 
-def test_danger_and_unknown_statuses_are_never_cached():
+def test_only_validated_answers_are_cached_never_refusals_or_danger():
     c = AnswerCache(ttl_s=60, max_size=10)
-    c.put("d", _resp("danger"))
-    assert c.get("d") is None
+    for status in ("danger", "not_found", "out_of_scope"):
+        c.put(status, _resp(status))
+        assert c.get(status) is None, status  # a one-off model "not found" must not be repeated for an hour
+    c.put("ok", _resp("answered"))
+    assert c.get("ok") is not None
     assert AnswerCache(ttl_s=0, max_size=10).get("x") is None
+
+
+def test_a_flaky_not_found_is_not_served_again_on_the_next_identical_question():
+    class Flaky(FakeLLM):
+        def compose(self, question, analysis, chunks, wages):
+            self.compose_calls += 1
+            if self.compose_calls == 1:
+                return Composition("", "", [], "none")  # the model gives up this time
+            return Composition("اردو", "English", ["h:s3"], "high")
+
+    llm = Flaky(harassment_analysis())
+    c = TestClient(create_app(pipeline=make_pipeline(llm), settings=Settings(anthropic_api_key="x")))
+    q = {"question": "manager harassment complaint"}
+    assert c.post("/api/ask", json=q).json()["status"] == "not_found"
+    assert c.post("/api/ask", json=q).json()["status"] == "answered"  # retried for real, not served from cache
 
 
 def test_repeated_question_is_served_from_cache_without_calling_the_model_again():

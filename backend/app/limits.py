@@ -52,9 +52,14 @@ class Admission:
 
 
 class AnswerCache:
-    """LRU with a time limit for real answers to repeated questions. Danger and degraded answers are never stored."""
+    """LRU with a time limit for answers to repeated questions.
 
-    CACHEABLE = ("answered", "not_found", "out_of_scope")
+    Only status "answered" is stored: those passed citation validation. "not_found" and "out_of_scope" can be a model's
+    one-off misjudgement (a rate-limited fallback model once answered "not found" to a question that is answered fine a
+    minute later), and caching one would repeat the mistake for everyone for the whole TTL. Danger and degraded
+    (no-model) answers are never stored either."""
+
+    CACHEABLE = ("answered",)
 
     def __init__(self, ttl_s: float, max_size: int):
         self._ttl = ttl_s
