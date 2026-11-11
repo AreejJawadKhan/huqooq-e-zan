@@ -7,6 +7,7 @@ import pytest
 from backend.app.config import Settings
 from backend.app.llm import Analysis
 from backend.app.providers import (
+    DEFAULT_MODELS,
     FallbackLLM,
     GeminiLLM,
     OpenAICompatLLM,
@@ -202,3 +203,47 @@ def test_model_env_override(monkeypatch):
     monkeypatch.setenv("GEMINI_ANSWER_MODEL", "my-model")
     s = Settings(gemini_api_key="x")
     assert s.models_for("gemini")[1] == "my-model"
+
+
+def _openai_ok():
+    return httpx.Response(
+        200,
+        json={"choices": [{"finish_reason": "tool_calls", "message": {"tool_calls": [{"function": {"name": "report_analysis", "arguments": json.dumps(ANALYSIS_ARGS)}}]}}]},
+    )
+
+
+def test_groq_defaults_are_the_verified_models_not_the_retired_llama_names():
+    analyzer, answer = DEFAULT_MODELS["groq"]
+    assert (analyzer, answer) == ("openai/gpt-oss-20b", "openai/gpt-oss-120b")
+    assert not any("llama-3" in m for pair in DEFAULT_MODELS.values() for m in pair)  # retired on Groq, model_not_found
+    assert not any("gemini-2.5" in m for m in DEFAULT_MODELS["gemini"])  # 404 for new users
+
+
+def test_openai_compat_gives_reasoning_models_headroom_and_low_effort():
+    seen = {}
+
+    def handler(request: httpx.Request):
+        seen["body"] = json.loads(request.content)
+        return _openai_ok()
+
+    OpenAICompatLLM("g", "openai/gpt-oss-20b", "openai/gpt-oss-120b", client=client(handler)).analyze("q", None)
+    assert seen["body"]["reasoning_effort"] == "low"
+    assert seen["body"]["max_tokens"] > 600  # analyze asks for 600; hidden reasoning tokens need room on top
+
+
+def test_openai_compat_does_not_send_reasoning_effort_to_other_models():
+    seen = {}
+
+    def handler(request: httpx.Request):
+        seen["body"] = json.loads(request.content)
+        return _openai_ok()
+
+    OpenAICompatLLM("g", "some/other-model", "some/other-model", client=client(handler)).analyze("q", None)
+    assert "reasoning_effort" not in seen["body"]
+
+
+def test_openai_compat_error_reports_the_finish_reason():
+    resp = httpx.Response(200, json={"choices": [{"finish_reason": "length", "message": {"content": None}}]})
+    llm = OpenAICompatLLM("g", "m", "m", client=client(lambda r: resp))
+    with pytest.raises(ProviderError, match="finish_reason=length"):
+        llm.analyze("q", None)

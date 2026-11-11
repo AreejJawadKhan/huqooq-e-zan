@@ -1,4 +1,4 @@
-.PHONY: setup ingest dev-backend dev-frontend test eval
+.PHONY: setup ingest dev-backend dev-frontend test eval demo-cache check-models
 
 setup:
 	python3 -m venv .venv
@@ -24,3 +24,6 @@ eval:
 
 demo-cache:
 	.venv/bin/python scripts/build_demo_cache.py
+
+check-models:
+	.venv/bin/python scripts/check_models.py
