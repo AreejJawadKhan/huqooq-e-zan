@@ -51,7 +51,12 @@ export default function MicButton({ onText, onHint }: { onText: (t: string) => v
     setHeard("");
     onHint("");
     setListening(true);
-    rec.start();
+    try {
+      rec.start();
+    } catch {
+      setListening(false);
+      onHint(T.micFailed);
+    }
   }
 
   return (

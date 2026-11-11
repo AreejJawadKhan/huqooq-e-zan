@@ -67,9 +67,9 @@ textarea.hq-input { padding: var(--space-3); min-height: 120px; }
 @media (prefers-reduced-motion: reduce) { .hq-spinner { animation: none; } }
 
 /* ---- bilingual labels ---- */
-.bi { display: inline-flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.3; }
-.bi-ur { font-family: var(--font-urdu-ui); font-size: 1.05em; line-height: 1.7; }
-.bi-en { font-size: 0.85em; opacity: 0.9; }
+.bi { display: inline-flex; flex-direction: column; align-items: stretch; text-align: start; line-height: 1.3; gap: 2px; }
+.bi-ur { display: block; font-family: var(--font-urdu-ui); font-size: 1.05em; line-height: 1.7; direction: rtl; text-align: right; }
+.bi-en { display: block; font-size: 0.85em; opacity: 0.9; direction: ltr; text-align: left; }
 .bi-inline { flex-direction: row; gap: var(--space-2); }
 h2 .bi, h3 .bi { align-items: flex-start; text-align: start; }
 
@@ -176,7 +176,7 @@ dialog.hq-dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
 .hq-ltr { direction: ltr; unicode-bidi: isolate; }
 
 /* ---- alignment polish for mixed-direction content ---- */
-.page .hq-en, .page .bi-en { text-align: right; }
+.page .hq-en, .page .bi-en { text-align: left; direction: ltr; }
 .results { scroll-margin-top: 84px; }
 .speak-btn { justify-self: start; }
 .answer-en { border-inline-start: 0; padding-inline-start: 0; border-inline-end: 3px solid var(--line-soft); padding-inline-end: var(--space-3); }

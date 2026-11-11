@@ -26,7 +26,7 @@ export default function AskPanel({
       <div className="ask-or" aria-hidden="true"><span lang="ur">{T.orType}</span></div>
       <label className="hq-label">
         <span className="sr-only">{T.placeholder}</span>
-        <textarea id="question" className="hq-field" lang="ur" dir="rtl" value={question} maxLength={2000}
+        <textarea id="question" className="hq-field" lang="ur" dir="auto" value={question} maxLength={2000}
           placeholder={T.placeholder} onChange={(e) => setQuestion(e.target.value)} />
       </label>
       <div className="hq-chips" role="group" aria-label="مثال کے سوالات / Example questions">
