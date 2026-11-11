@@ -55,6 +55,61 @@ def test_gemini_without_tool_call_raises():
         llm.analyze("q", None)
 
 
+def _call_resp(args=None):
+    return httpx.Response(200, json={"candidates": [{"finishReason": "STOP", "content": {"parts": [{"functionCall": {"name": "report_analysis", "args": args or ANALYSIS_ARGS}}]}}]})
+
+
+def _max_tokens_resp():
+    # What Gemini 3.x returns when thinking used the whole output budget: no parts at all.
+    return httpx.Response(200, json={"candidates": [{"finishReason": "MAX_TOKENS", "content": {"role": "model"}}]})
+
+
+def test_gemini_turns_thinking_off_and_leaves_headroom():
+    seen = {}
+
+    def handler(request: httpx.Request):
+        seen["gen"] = json.loads(request.content)["generationConfig"]
+        return _call_resp()
+
+    GeminiLLM("k", "a", "b", client=client(handler)).analyze("q", None)
+    assert seen["gen"]["thinkingConfig"] == {"thinkingBudget": 0}
+    assert seen["gen"]["maxOutputTokens"] > 600  # analyze asks for 600; headroom is added on top
+
+
+def test_gemini_retries_once_with_more_room_on_max_tokens():
+    sizes = []
+
+    def handler(request: httpx.Request):
+        sizes.append(json.loads(request.content)["generationConfig"]["maxOutputTokens"])
+        return _max_tokens_resp() if len(sizes) == 1 else _call_resp()
+
+    a = GeminiLLM("k", "a", "b", client=client(handler)).analyze("q", None)
+    assert a.topic == "harassment" and len(sizes) == 2 and sizes[1] > sizes[0]
+
+
+def test_gemini_gives_up_after_the_retry_and_reports_finish_reason():
+    llm = GeminiLLM("k", "a", "b", client=client(lambda r: _max_tokens_resp()))
+    with pytest.raises(ProviderError, match="MAX_TOKENS"):
+        llm.analyze("q", None)
+
+
+def test_gemini_retries_without_thinking_config_if_model_rejects_it():
+    gens = []
+
+    def handler(request: httpx.Request):
+        gens.append(json.loads(request.content)["generationConfig"])
+        if "thinkingConfig" in gens[-1]:
+            # flash-lite answers with this generic message, which does not mention thinking
+            return httpx.Response(400, text='{"error": {"message": "Request contains an invalid argument.", "status": "INVALID_ARGUMENT"}}')
+        return _call_resp()
+
+    llm = GeminiLLM("k", "a", "b", client=client(handler))
+    a = llm.analyze("q", None)
+    assert a.topic == "harassment" and len(gens) == 2 and "thinkingConfig" not in gens[1]
+    llm.analyze("q", None)  # remembered: the second call goes straight to the working request
+    assert len(gens) == 3 and "thinkingConfig" not in gens[2]
+
+
 def test_openai_compat_parses_tool_arguments_string():
     def handler(request: httpx.Request):
         assert request.headers["authorization"] == "Bearer g"
