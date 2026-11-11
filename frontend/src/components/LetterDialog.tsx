@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { downloadLetter } from "../api";
 import type { AskResponse } from "../types";
 import { T } from "../strings";
+import Bi from "./Bi";
 
 export default function LetterDialog({ r, question, open, onClose }: { r: AskResponse; question: string; open: boolean; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -48,7 +49,7 @@ export default function LetterDialog({ r, question, open, onClose }: { r: AskRes
   return (
     <dialog ref={ref} className="hq hq-dialog" aria-labelledby="letter-title" onClose={onClose}>
       <form className="hq-stack" onSubmit={submit}>
-        <h2 id="letter-title" style={{ margin: 0 }}><span lang="ur">{T.letter}</span> / {T.letterEn}</h2>
+        <h2 id="letter-title" style={{ margin: 0 }}><Bi ur={T.letter} en={T.letterEn} /></h2>
         <label className="hq-label">Your full name *<input className="hq-input" required value={f.name} onChange={set("name")} autoComplete="name" /></label>
         <label className="hq-label">Address<input className="hq-input" value={f.address} onChange={set("address")} autoComplete="street-address" /></label>
         <label className="hq-label">CNIC<input className="hq-input" inputMode="numeric" value={f.cnic} onChange={set("cnic")} /></label>

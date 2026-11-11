@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ask } from "./api";
 import type { AskResponse, Jurisdiction } from "./types";
 import { T } from "./strings";
+import Bi from "./components/Bi";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import AskPanel from "./components/AskPanel";
@@ -39,7 +40,7 @@ export default function App() {
         {error && (
           <div className="hq-notice danger" role="alert">
             <p style={{ margin: "0 0 8px" }}>{error}</p>
-            <button type="button" className="hq-btn ghost" onClick={() => run(jurisdiction)}><span lang="ur">{T.retry}</span> / {T.retryEn}</button>
+            <button type="button" className="hq-btn ghost" onClick={() => run(jurisdiction)}><Bi inline ur={T.retry} en={T.retryEn} /></button>
           </div>
         )}
         {result && !loading && (

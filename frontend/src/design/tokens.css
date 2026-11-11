@@ -1,18 +1,18 @@
-/* Huqooq design tokens, generated from the Huqooq Design System (tokens.json). */
+/* Huqooq-e-Zan design tokens. Violet and gold echo the women's-rights movement; surfaces stay warm and calm. */
 
 :root,
 [data-theme="light"] {
-  --surface-100: #faf7f2;
+  --surface-100: #faf6f1;
   --surface-200: #ffffff;
-  --surface-300: #efe9df;
-  --line: #8a8f86;
-  --line-soft: #d9d1c3;
-  --ink: #1d2523;
-  --muted: #55605c;
-  --brand: #0f6b60;
+  --surface-300: #f1eaf3;
+  --line: #8a7d94;
+  --line-soft: #ddd3df;
+  --ink: #231a2b;
+  --muted: #5e5266;
+  --brand: #5b2a86;
   --on-brand: #ffffff;
-  --accent: #8a5200;
-  --info-bg: #e3f1ee;
+  --accent: #8a5a00;
+  --info-bg: #efe6f7;
   --caution-bg: #fff3d6;
   --caution-ink: #6b4300;
   --danger-bg: #fbe9e7;
@@ -24,17 +24,17 @@
 }
 
 [data-theme="dark"] {
-  --surface-100: #14201e;
-  --surface-200: #1c2b29;
-  --surface-300: #101a19;
-  --line: #7d8d86;
-  --line-soft: #34443f;
-  --ink: #eef2ef;
-  --muted: #aab7b1;
-  --brand: #5cc2b3;
-  --on-brand: #0b1715;
+  --surface-100: #17121d;
+  --surface-200: #221a2b;
+  --surface-300: #120e17;
+  --line: #8f819c;
+  --line-soft: #3d3149;
+  --ink: #f3eef7;
+  --muted: #bcb0c6;
+  --brand: #c7a2ee;
+  --on-brand: #1a0f26;
   --accent: #f0b45a;
-  --info-bg: #17332f;
+  --info-bg: #2d2140;
   --caution-bg: #3a2e10;
   --caution-ink: #f5cf85;
   --danger-bg: #3a1a18;
@@ -58,6 +58,7 @@
   --radius-lg: 20px;
   --radius-full: 999px;
   --font-urdu: "Noto Nastaliq Urdu", "Noto Naskh Arabic", serif;
+  --brand-soft: #f6f0fb;
   --font-urdu-ui: "Noto Naskh Arabic", "Noto Nastaliq Urdu", serif;
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;

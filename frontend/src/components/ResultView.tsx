@@ -1,5 +1,6 @@
 import type { AskResponse, Jurisdiction } from "../types";
 import { PROVINCES, T } from "../strings";
+import Bi from "./Bi";
 import { CaveatNote, CitationChip, ReferralList, WageChip } from "./ResultParts";
 
 function Disclaimer({ r }: { r: AskResponse }) {
@@ -17,7 +18,7 @@ function DangerBanner({ r }: { r: AskResponse }) {
       <div className="hq-banner" role="alert">
         <p className="hq-ur" lang="ur">{r.answer_ur}</p>
         <p className="hq-en">{r.answer_en}</p>
-        <a className="hq-btn danger" href="tel:15"><span lang="ur">{T.call15}</span> / {T.call15En}</a>
+        <a className="hq-btn danger" href="tel:15"><Bi ur={T.call15} en={T.call15En} /></a>
       </div>
       <div className="hq-card wide"><ReferralList items={r.where_to_go.filter((x) => x.number !== "15")} /></div>
     </div>
@@ -57,7 +58,7 @@ export default function ResultView({
       {r.wage && <WageChip w={r.wage} />}
       {r.needs_province && (
         <div className="hq-notice caution" role="group" aria-label="Province">
-          <p style={{ margin: "0 0 8px" }}><span lang="ur">{T.provincePrompt}</span> / {T.provincePromptEn}</p>
+          <p style={{ margin: "0 0 8px" }}><Bi ur={T.provincePrompt} en={T.provincePromptEn} /></p>
           <div className="hq-chips">
             {PROVINCES.map((p) => (
               <button key={p.value} type="button" className="hq-chip-btn" onClick={() => onProvince(p.value)}>{p.ur} / {p.en}</button>
@@ -66,12 +67,12 @@ export default function ResultView({
         </div>
       )}
       <div>
-        <h3 className="hq-section-title"><span lang="ur">{T.legalBasis}</span> / Legal basis</h3>
+        <h3 className="hq-section-title"><Bi ur={T.legalBasis} en="Legal basis" /></h3>
         <div className="hq-stack">{r.citations.map((c) => <CitationChip key={c.chunk_id} c={c} />)}</div>
       </div>
       <ReferralList items={r.where_to_go} />
       {r.letter_type && (
-        <button type="button" className="hq-btn" onClick={onLetter}><span lang="ur">{T.letter}</span> / {T.letterEn}</button>
+        <button type="button" className="hq-btn" onClick={onLetter}><Bi ur={T.letter} en={T.letterEn} /></button>
       )}
       <Disclaimer r={r} />
     </div>

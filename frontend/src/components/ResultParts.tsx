@@ -1,8 +1,24 @@
 import type { Caveat, Citation, Referral, WageInfo } from "../types";
 import { T } from "../strings";
+import Bi from "./Bi";
+
+/** Only http(s) links are rendered; anything else (javascript:, data:) is dropped. */
+export function safeUrl(u: string): string | null {
+  try {
+    const url = new URL(u);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Phone numbers may contain only digits, +, and spaces/dashes; otherwise no tel: link is made. */
+export function telHref(n: string): string | null {
+  return /^[0-9+\-\s()]{2,20}$/.test(n) ? `tel:${n.replace(/[^0-9+]/g, "")}` : null;
+}
 
 export function NotVerified() {
-  return <span className="hq-chip" style={{ background: "var(--caution-bg)", color: "var(--caution-ink)" }}>{T.notVerifiedEn} · {T.notVerified}</span>;
+  return <span className="hq-chip" style={{ background: "var(--caution-bg)", color: "var(--caution-ink)" }}><Bi inline ur={T.notVerified} en={T.notVerifiedEn} /></span>;
 }
 
 export function CitationChip({ c }: { c: Citation }) {
@@ -10,7 +26,7 @@ export function CitationChip({ c }: { c: Citation }) {
     <details className="hq-cite">
       <summary><span className="hq-chip">{c.act}, s.{c.section}{c.heading ? ` (${c.heading})` : ""}</span></summary>
       <div className="hq-excerpt">{c.excerpt}</div>
-      {c.source_url && <a href={c.source_url} target="_blank" rel="noreferrer">{T.source} / Source</a>}
+      {safeUrl(c.source_url) && <a href={safeUrl(c.source_url)!} target="_blank" rel="noopener noreferrer">{T.source} / Source</a>}
     </details>
   );
 }
@@ -39,7 +55,7 @@ export function ReferralList({ items }: { items: Referral[] }) {
   if (items.length === 0) return null;
   return (
     <div>
-      <h3 className="hq-section-title"><span lang="ur">{T.whereToGo}</span> / Where to go</h3>
+      <h3 className="hq-section-title"><Bi ur={T.whereToGo} en="Where to go" /></h3>
       <ul className="hq-list">
         {items.map((r) => (
           <li key={r.name}>
@@ -48,11 +64,13 @@ export function ReferralList({ items }: { items: Referral[] }) {
               {r.note && <p className="hq-ref-note">{r.note}</p>}
               {!r.verified && <NotVerified />}
             </div>
-            {r.number && (
-              <a className="hq-btn ghost" href={`tel:${r.number.replace(/\s/g, "")}`} aria-label={`${T.call} ${r.number}`}>
+            {r.number && (telHref(r.number) ? (
+              <a className="hq-btn ghost" href={telHref(r.number)!} aria-label={`${T.call} ${r.number}`}>
                 <bdi dir="ltr" className="hq-ltr">{r.number}</bdi>
               </a>
-            )}
+            ) : (
+              <bdi dir="ltr" className="hq-ltr">{r.number}</bdi>
+            ))}
           </li>
         ))}
       </ul>

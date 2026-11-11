@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Jurisdiction } from "../types";
 import { EXAMPLES, PROVINCES, T } from "../strings";
+import Bi from "./Bi";
 import MicButton from "./MicButton";
 
 export default function AskPanel({
@@ -40,9 +41,10 @@ export default function AskPanel({
       <div className="hq-actions">
         <MicButton onText={setQuestion} onHint={setHint} />
         <button type="submit" className="hq-btn grow" disabled={loading || !question.trim()}>
-          <span className="hq-ul">{T.ask}</span> <span>{T.askEn}</span>
+          <Bi inline ur={T.ask} en={T.askEn} />
         </button>
       </div>
+      <p className="hq-hint"><span lang="ur" dir="rtl">{T.privacy}</span> {T.privacyEn}</p>
       {hint && <p className="hq-hint" role="status">{hint}</p>}
       <div aria-live="polite">
         {loading && (

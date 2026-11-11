@@ -16,7 +16,14 @@ export const EXAMPLES: string[] = [
 ];
 
 export const T = {
-  tagline: "اپنے قانونی حقوق جانیں: کام کی جگہ پر ہراسانی، کم از کم اجرت، اور خواتین کی جائیداد۔",
+  topics: [
+    { ur: "ہراسانی", en: "Harassment" },
+    { ur: "اجرت", en: "Wages" },
+    { ur: "جائیداد", en: "Property" },
+  ],
+  privacy: "اپنا نام، پتہ یا فون نمبر سوال میں نہ لکھیں۔ ہم آپ کے سوال محفوظ نہیں کرتے۔",
+  privacyEn: "Do not put your name, address or phone number in the question. We do not store your questions.",
+  tagline: "اپنے حقوق جانیں: کام کی جگہ پر ہراسانی، کم از کم اجرت، اور خواتین کی جائیداد۔",
   taglineEn: "Know your rights: workplace harassment, minimum wage, women's property.",
   placeholder: "اپنا سوال اردو، رومن اردو یا انگریزی میں لکھیں یا بولیں",
   ask: "پوچھیں",
@@ -45,8 +52,8 @@ export const T = {
   provincePromptEn: "Choose your province for a precise answer.",
   letter: "شکایتی خط تیار کریں",
   letterEn: "Draft complaint letter",
-  covers: "Huqooq یہ موضوعات کور کرتا ہے: کام کی جگہ پر ہراسانی، کم از کم اجرت اور واجب الادا تنخواہ، خواتین کا جائیداد اور وراثت کا حق۔",
-  coversEn: "Huqooq covers: workplace harassment, minimum wage and unpaid wages, and women's property and inheritance rights.",
+  covers: "حقوقِ زن یہ موضوعات کور کرتا ہے: کام کی جگہ پر ہراسانی، کم از کم اجرت اور واجب الادا تنخواہ، خواتین کا جائیداد اور وراثت کا حق۔",
+  coversEn: "Huqooq-e-Zan covers: workplace harassment, minimum wage and unpaid wages, and women's property and inheritance rights.",
   notFoundTitle: "ہمیں اس کا جواب اپنے قوانین میں نہیں ملا",
   notFoundTitleEn: "We could not find this in the laws we hold.",
   call: "کال",
