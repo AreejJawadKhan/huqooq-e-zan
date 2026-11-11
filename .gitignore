@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+node_modules/
+frontend/dist/
+.DS_Store
+# Corrected text and chunks ARE tracked so both teammates index the same data
+data/processed/text/
+*.tsbuildinfo

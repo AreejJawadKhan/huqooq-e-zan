@@ -1,0 +1,56 @@
+{
+  "_comment": "Hand-maintained. Update as_of whenever you re-check. Set verified=true ONLY after reading the official gazette notification. status: notified_reported | proposed | unconfirmed.",
+  "as_of": "2026-11-11",
+  "rates": [
+    {
+      "jurisdiction": "punjab",
+      "monthly_pkr": 40000,
+      "status": "notified_reported",
+      "effective_from": "2025-07-01",
+      "notification_date": "2025-09-08",
+      "verified": false,
+      "source_url": "https://www.dawn.com/news/1940817",
+      "note": "For 26 working days (Rs1,538.46 a day). Reported unchanged for 2026-27. Reported deductions allowed for meals, transport and accommodation: confirm in the notification."
+    },
+    {
+      "jurisdiction": "sindh",
+      "monthly_pkr": 43000,
+      "status": "notified_reported",
+      "effective_from": "2026-07-01",
+      "notification_date": "2026-08-17",
+      "verified": false,
+      "source_url": "https://wageindicator.org/ai/work/minimum-wage/updates/2026/minimum-wage-increased-in-sindh-pakistan-from-1-july-2026-august-19-2026/",
+      "note": "Reported by WageIndicator; confirm against the Sindh Labour Department notification."
+    },
+    {
+      "jurisdiction": "ict",
+      "monthly_pkr": 40700,
+      "status": "notified_reported",
+      "effective_from": "2026-07-01",
+      "notification_date": "2026-08-19",
+      "verified": false,
+      "source_url": "https://wageindicator.org/ai/work/minimum-wage/updates/2026/minimum-wage-increased-in-islamabad-pakistan-from-01-july-2026-august-20-2026/",
+      "note": "Federal rate for Islamabad. Separate rates exist for skilled, semi-skilled, part-time and domestic workers: not loaded."
+    },
+    {
+      "jurisdiction": "kp",
+      "monthly_pkr": 45000,
+      "status": "proposed",
+      "effective_from": null,
+      "notification_date": null,
+      "verified": false,
+      "source_url": "https://tribune.com.pk/story/2614049/k-p-unveils-rs212tr-khushhal-khyber-pakhtunkhwa-budget-for-fy26-27",
+      "note": "Proposed in the 2026-27 budget of 19 Jun 2026. No final notification seen."
+    },
+    {
+      "jurisdiction": "balochistan",
+      "monthly_pkr": 40000,
+      "status": "unconfirmed",
+      "effective_from": null,
+      "notification_date": null,
+      "verified": false,
+      "source_url": "https://arynews.tv/kp-takes-lead-in-raising-minimum-wage",
+      "note": "Reported as maintained at Rs40,000. No notification seen."
+    }
+  ]
+}

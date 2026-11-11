@@ -1,0 +1,84 @@
+# Source manifest. `enabled: true` sources are ingested by scripts/ingest.py.
+# Put each file in data/raw/ under the exact `file` name. If you hand-correct the text, save it as
+# data/raw/<same-name>.txt and it will be used instead of the PDF.
+# `status`: opened = text was read and checked; found = link seen in search only (open and confirm).
+# Prefer official text (pakistancode.gov.pk, provincial law sites) over mirrors when they differ.
+
+sources:
+  # ---- Harassment (applies across Pakistan) -------------------------------------------------------
+  - id: harassment_2010_fospah
+    act: "Protection against Harassment of Women at the Workplace Act, 2010 (amended 2022)"
+    jurisdiction: pakistan
+    topic: harassment
+    file: harassment_2010_fospah.pdf
+    url: https://www.fospah.gov.pk/SiteImage/Misc/files/PAHAW_amend_2022.pdf
+    enabled: true
+    status: opened
+    notes: "Gazette footnotes mixed into body; s.7(2) garbled. Compare with the SJA copy below."
+
+  - id: harassment_2010_sja
+    act: "Protection against Harassment of Women at the Workplace Act, 2010 (amended 2022)"
+    jurisdiction: pakistan
+    topic: harassment
+    file: harassment_2010_sja.pdf
+    url: "https://sja.gos.pk/assets/Updated_Laws/Protection%20against%20Harassment%20of%20Women%20at%20the%20Workplace%20Act%2C%202010%20%28Amendments%20upto%20date%29.pdf"
+    enabled: false # enable this and disable the FOSPAH copy once you have compared them (never both)
+    status: found
+    notes: "Consolidated up to 25 Jan 2022; cleaner layout."
+
+  # ---- Women's property and inheritance -----------------------------------------------------------
+  - id: property_punjab_2021
+    act: "Punjab Enforcement of Women's Property Rights Act, 2021"
+    jurisdiction: punjab
+    topic: property
+    file: property_punjab_2021.pdf
+    url: http://punjablaws.gov.pk/laws/2789.html
+    enabled: true
+    status: found
+    notes: "Complaint to the Ombudsperson; decision preferably within 60 days. If only an HTML page exists, copy the text into property_punjab_2021.txt."
+
+  - id: property_ict_2020
+    act: "Enforcement of Women's Property Rights Act, 2020 (Islamabad Capital Territory)"
+    jurisdiction: ict
+    topic: property
+    file: property_ict_2020.pdf
+    url: "https://lpr.adb.org/sites/default/files/2024-07/pakistan-enforcement-of-women%27s-property-rights-act-2020.pdf"
+    enabled: true
+    status: found
+    notes: "Validity was challenged in the Islamabad High Court (WP 529/2021); ruling suspended 16 Mar 2023. Keep the caveat in the UI."
+
+  - id: property_kp_2019
+    act: "Khyber Pakhtunkhwa Enforcement of Women's Property Rights Act, 2019"
+    jurisdiction: kp
+    topic: property
+    file: property_kp_2019.pdf
+    url: https://kpcode.kp.gov.pk/homepage/lawDetails/1420
+    enabled: false # stretch goal
+    status: found
+    notes: ""
+
+  # ---- Tenancy (stretch) --------------------------------------------------------------------------
+  - id: tenancy_punjab_2009
+    act: "Punjab Rented Premises Act, 2009"
+    jurisdiction: punjab
+    topic: tenancy
+    file: tenancy_punjab_2009.pdf
+    url: https://thelex.live/wp-content/uploads/2025/03/THE_PUNJAB_RENTED_PREMISES_ACT_2009.doc.pdf
+    enabled: false # stretch goal; unofficial copy
+    status: found
+    notes: ""
+
+  - id: tenancy_sindh_1979
+    act: "Sindh Rented Premises Ordinance, 1979"
+    jurisdiction: sindh
+    topic: tenancy
+    file: tenancy_sindh_1979.pdf
+    url: "https://sja.gos.pk/assets/Updated_Laws/Sindh%20Rented%20Premises%20Ordinance,1979.pdf"
+    enabled: false # stretch goal
+    status: found
+    notes: ""
+
+  # ---- Wages: statute texts NOT located yet ------------------------------------------------------
+  # TODO (data owner): find the texts of the Punjab Minimum Wages Act 2019, Sindh Minimum Wages Act 2015,
+  # KP Minimum Wages Act 2013, Balochistan Minimum Wages Act 2021 and the Payment of Wages Act 1936, add them
+  # here with topic: wages, and enable them. Wage AMOUNTS live in data/wages.json, not here.

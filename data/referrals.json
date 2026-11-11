@@ -1,0 +1,77 @@
+{
+  "_comment": "Hand-maintained. verified=false until you have confirmed the number on an official page. topics: danger | harassment | property | wages | tenancy | fallback. jurisdictions: all | punjab | sindh | kp | balochistan | ict | pakistan.",
+  "referrals": [
+    {
+      "name": "Police emergency",
+      "number": "15",
+      "note": "If anyone is in immediate danger.",
+      "topics": ["danger"],
+      "jurisdictions": ["all"],
+      "source_url": "https://hrcp-web.org/hrcpweb/complaints-cell/",
+      "verified": false
+    },
+    {
+      "name": "Punjab Women's Toll-Free Helpline",
+      "number": "1043",
+      "note": "24/7. Discrimination, harassment, violence and denied legal rights. Punjab residents.",
+      "topics": ["danger", "harassment", "property"],
+      "jurisdictions": ["punjab"],
+      "source_url": "https://pcsw.punjab.gov.pk/node/61",
+      "verified": false
+    },
+    {
+      "name": "Ministry of Human Rights helpline",
+      "number": "1099",
+      "note": "Legal advice and referrals for human rights violations. WhatsApp 0333 9085709, 10am to 10pm.",
+      "topics": ["danger", "harassment", "property", "wages", "tenancy", "fallback"],
+      "jurisdictions": ["all"],
+      "source_url": "https://wdd.punjab.gov.pk/system/files/Referral%20Directory%20Punjab_UNTF_1.pdf",
+      "verified": false
+    },
+    {
+      "name": "Madadgaar national helpline",
+      "number": "1098",
+      "note": "Gender-based violence, women and children.",
+      "topics": ["danger", "harassment", "property"],
+      "jurisdictions": ["all"],
+      "source_url": "https://pcsw.punjab.gov.pk/node/44",
+      "verified": false
+    },
+    {
+      "name": "Punjab Women Protection Authority",
+      "number": "1737",
+      "note": "Violence against women, Punjab.",
+      "topics": ["danger"],
+      "jurisdictions": ["punjab"],
+      "source_url": "https://www.af.org.pk/Resouce%20Directory/DIRECTORY%20OF%20SERVICE%20PROVIDERS-updated.pdf",
+      "verified": false
+    },
+    {
+      "name": "Ombudsperson Punjab (workplace harassment and women's property rights)",
+      "number": "042 9923 3348 to 50",
+      "note": "Complaints under the harassment Act and the Punjab women's property Act.",
+      "topics": ["harassment", "property"],
+      "jurisdictions": ["punjab"],
+      "source_url": "https://www.af.org.pk/Resouce%20Directory/DIRECTORY%20OF%20SERVICE%20PROVIDERS-updated.pdf",
+      "verified": false
+    },
+    {
+      "name": "Federal Ombudsperson (FOSPAH), Islamabad",
+      "number": null,
+      "note": "Workplace harassment complaints and Islamabad women's property complaints. Phone number not collected: check the website.",
+      "topics": ["harassment", "property"],
+      "jurisdictions": ["ict"],
+      "source_url": "https://fospah.gov.pk/Detail/ZTRhMjVhYTgtODY0MC00NzQ0LWFkNTctNWUyZWVhMWNmYmNm",
+      "verified": false
+    },
+    {
+      "name": "Provincial Labour Department",
+      "number": null,
+      "note": "File a minimum wage or unpaid wage complaint with the labour office of your province or district.",
+      "topics": ["wages"],
+      "jurisdictions": ["all"],
+      "source_url": "",
+      "verified": false
+    }
+  ]
+}
