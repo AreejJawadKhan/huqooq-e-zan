@@ -14,6 +14,10 @@ load_dotenv(ROOT / ".env")
 
 PROVIDER_ORDER = ("gemini", "groq", "anthropic")
 
+# Retrieval defaults live here (not inline) so the eval gate can fingerprint them.
+DEFAULT_MIN_SCORE = 1.0
+DEFAULT_TOP_K = 5
+
 
 def _split(value: str) -> list[str]:
     return [v.strip().lower() for v in value.split(",") if v.strip()]
@@ -32,6 +36,23 @@ class Settings:
     # Empty = every other provider that has a key.
     llm_provider_setting: str = field(default_factory=lambda: os.getenv("LLM_PROVIDER", "").strip().lower())
     llm_fallback_setting: str = field(default_factory=lambda: os.getenv("LLM_FALLBACK", "").strip().lower())
+    # Per-stage provider. ANALYZER_PROVIDER / ANSWER_PROVIDER: empty or "auto" = the default routing in
+    # providers.DEFAULT_CHAINS (fast Groq for the analyzer, Gemini for the answer); "same" = follow LLM_PROVIDER;
+    # or a provider name to force that stage. Providers without a key are skipped.
+    analyzer_provider_setting: str = field(default_factory=lambda: os.getenv("ANALYZER_PROVIDER", "").strip().lower())
+    answer_provider_setting: str = field(default_factory=lambda: os.getenv("ANSWER_PROVIDER", "").strip().lower())
+    # Resilience. TRUSTED_PROXY_HOPS = how many reverse proxies sit in front of the app (0 = none: X-Forwarded-For is
+    # ignored and the socket address is used; Cloud Run = 1). MAX_INFLIGHT / GLOBAL_RPM cap model-backed requests for all
+    # clients together; beyond them, requests are answered from the law text without a model. REQUEST_DEADLINE_S is the
+    # total time one /api/ask may spend on model calls.
+    trusted_proxy_hops: int = field(default_factory=lambda: int(os.getenv("TRUSTED_PROXY_HOPS", "0")))
+    max_inflight: int = field(default_factory=lambda: int(os.getenv("MAX_INFLIGHT", "6")))
+    global_rpm: int = field(default_factory=lambda: int(os.getenv("GLOBAL_RPM", "90")))
+    request_deadline_s: float = field(default_factory=lambda: float(os.getenv("REQUEST_DEADLINE_S", "25")))
+    answer_cache_ttl_s: float = field(default_factory=lambda: float(os.getenv("ANSWER_CACHE_TTL_S", "3600")))
+    answer_cache_size: int = field(default_factory=lambda: int(os.getenv("ANSWER_CACHE_SIZE", "500")))
+    # HEALTH_DEEP=1 lets GET /api/health?deep=1 make one tiny real call per configured model (cached for 60 s).
+    health_deep: bool = field(default_factory=lambda: os.getenv("HEALTH_DEEP", "0") == "1")
     chunks_path: Path = field(
         default_factory=lambda: Path(os.getenv("CHUNKS_PATH", str(DATA_DIR / "processed" / "chunks.jsonl")))
     )
@@ -39,8 +60,8 @@ class Settings:
     referrals_path: Path = DATA_DIR / "referrals.json"
     # BM25 score below this means "nothing relevant found" -> refuse instead of guessing.
     # Tune with scripts/run_eval.py and GET /api/debug/search (needs DEBUG=1).
-    min_score: float = field(default_factory=lambda: float(os.getenv("MIN_SCORE", "1.0")))
-    top_k: int = field(default_factory=lambda: int(os.getenv("TOP_K", "5")))
+    min_score: float = field(default_factory=lambda: float(os.getenv("MIN_SCORE", str(DEFAULT_MIN_SCORE))))
+    top_k: int = field(default_factory=lambda: int(os.getenv("TOP_K", str(DEFAULT_TOP_K))))
     debug: bool = field(default_factory=lambda: os.getenv("DEBUG", "0") == "1")
     # DEMO_CACHE=1 serves pre-computed answers for the exact demo questions (data/demo_cache.json) so a
     # rate-limited or offline free tier cannot break the live demo. Danger messages never use the cache.
@@ -71,6 +92,18 @@ class Settings:
         if explicit:
             return explicit
         return [n for n in PROVIDER_ORDER if self.api_key_for(n) and n != self.llm_provider]
+
+    def stage_chain(self, stage: str) -> list[str]:
+        """Providers to try, in order, for a pipeline stage ("analyzer" or "answer"). Only providers with a key."""
+        from .providers import DEFAULT_CHAINS
+
+        explicit = {"analyzer": self.analyzer_provider_setting, "answer": self.answer_provider_setting}[stage]
+        if explicit in ("", "auto") and not self.llm_provider_setting:
+            order = list(DEFAULT_CHAINS[stage])
+        else:
+            lead = explicit if explicit not in ("", "auto", "same") else self.llm_provider
+            order = [lead, self.llm_provider, *self.llm_fallbacks]
+        return [n for n in dict.fromkeys(order) if self.api_key_for(n)]
 
     def models_for(self, name: str) -> tuple[str, str]:
         """(analyzer, answer) model names. Override with e.g. GEMINI_ANALYZER_MODEL / GEMINI_ANSWER_MODEL."""

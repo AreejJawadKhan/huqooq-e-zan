@@ -12,6 +12,7 @@ import json
 from dataclasses import dataclass, field
 from typing import Optional, Protocol
 
+from .deadline import MAX_CALL_S, MIN_CALL_BUDGET_S, time_left
 from .prompts import ANALYZER_SYSTEM, ANSWER_SYSTEM
 from .retrieval import Chunk
 from .schemas import WageInfo
@@ -28,6 +29,9 @@ class Analysis:
     jurisdiction: Optional[str] = None
     scope: str = "in_scope"  # in_scope | out_of_scope | prediction | harmful
     in_danger: bool = False
+    # Set by the pipeline from lexicon.detect_register (deterministic), not by the model:
+    register: str = ""  # urdu | roman | english: how the person wrote
+    code_mixed: bool = False  # Urdu and English words mixed
 
 
 @dataclass
@@ -38,6 +42,7 @@ class Composition:
     confidence: str = "low"
     needs_province: bool = False
     letter_type: Optional[str] = None
+    answer_roman: str = ""
 
 
 class LLM(Protocol):
@@ -74,6 +79,7 @@ _COMPOSE_TOOL = {
         "properties": {
             "answer_ur": {"type": "string"},
             "answer_en": {"type": "string"},
+            "answer_roman": {"type": "string"},
             "cited_chunk_ids": {"type": "array", "items": {"type": "string"}},
             "confidence": {"type": "string", "enum": ["high", "medium", "low", "none"]},
             "needs_province": {"type": "boolean"},
@@ -130,6 +136,7 @@ class ToolLLM:
         user = (
             f"<question>{question}</question>\n"
             f"<detected topic=\"{analysis.topic}\" jurisdiction=\"{analysis.jurisdiction or 'unknown'}\"/>\n"
+            f"<user_register script=\"{analysis.register or 'unknown'}\" code_mixed=\"{str(analysis.code_mixed).lower()}\"/>\n"
             f"<excerpts>\n{_format_excerpts(chunks)}\n</excerpts>\n"
             f"<wage_data>{wage_json}</wage_data>"
         )
@@ -138,6 +145,7 @@ class ToolLLM:
         return Composition(
             answer_ur=d.get("answer_ur", ""),
             answer_en=d.get("answer_en", ""),
+            answer_roman=d.get("answer_roman", "") or "",
             cited_chunk_ids=list(d.get("cited_chunk_ids", [])),
             confidence=d.get("confidence", "low"),
             needs_province=bool(d.get("needs_province", False)),
@@ -155,7 +163,11 @@ class AnthropicLLM(ToolLLM):
         self.client = anthropic.Anthropic(api_key=api_key)
 
     def _tool_call(self, model: str, system: str, user: str, tool: dict, max_tokens: int = 1500) -> dict:
+        left = time_left()
+        if left is not None and left < MIN_CALL_BUDGET_S:
+            raise RuntimeError("deadline exceeded before the call")
         resp = self.client.messages.create(
+            timeout=min(left, MAX_CALL_S) if left is not None else 60.0,
             model=model,
             max_tokens=max_tokens,
             system=system,

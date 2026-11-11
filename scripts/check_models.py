@@ -6,7 +6,8 @@ Groq Llama 3.x both vanished), and a dead fallback is invisible until the primar
     python scripts/check_models.py --list   # also print the model names each provider offers right now
 
 Being LISTED does not mean a model works for your key (gemini-2.5-flash-lite is listed but returns 404 for new
-accounts), so the smoke test is a real call. Exit code 1 if any configured model fails.
+accounts), so the smoke test is a real call. Exit code 1 if any configured model fails; HTTP 429 (quota exhausted) is
+reported separately because the name is fine. The same check is available live at /api/health?deep=1 (HEALTH_DEEP=1).
 """
 from __future__ import annotations
 
@@ -20,13 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from backend.app.config import PROVIDER_ORDER, get_settings  # noqa: E402
-from backend.app.providers import build_provider  # noqa: E402
-
-PING_TOOL = {
-    "name": "ping",
-    "description": "Report that the model is reachable.",
-    "input_schema": {"type": "object", "properties": {"ok": {"type": "boolean"}}, "required": ["ok"]},
-}
+from backend.app.providers import describe_stages, smoke_test  # noqa: E402
 
 
 def list_models(name: str, key: str) -> list[str]:
@@ -59,31 +54,34 @@ def main() -> int:
     args = ap.parse_args()
 
     settings = get_settings()
-    configured = [n for n in PROVIDER_ORDER if settings.api_key_for(n)]
-    if not configured:
+    if not settings.any_llm_key:
         print("No provider key set. Add GEMINI_API_KEY, GROQ_API_KEY or ANTHROPIC_API_KEY to .env.", file=sys.stderr)
         return 2
 
+    print("Routing (first = tried first):")
+    for stage, rows in describe_stages(settings).items():
+        print(f"  {stage:8s} " + " -> ".join(f"{r['provider']}:{r['model']}" for r in rows))
+    print()
+
+    rows = smoke_test(settings)
     failed = limited = 0
-    for name in configured:
-        analyzer, answer = settings.models_for(name)
-        role = "primary" if name == settings.llm_provider else "fallback"
-        print(f"{name} ({role})")
-        llm = build_provider(name, settings)
-        for stage, model in (("analyzer", analyzer), ("answer", answer)):
-            try:
-                out = llm._tool_call(model, "Call the ping tool with ok=true.", "ping", PING_TOOL, max_tokens=50)  # type: ignore[union-attr]
-                print(f"  OK    {stage:8s} {model}" + ("" if out.get("ok") is True else f"  (unexpected args {out})"))
-            except Exception as exc:  # noqa: BLE001 - report every failure, do not stop at the first
-                if "HTTP 429" in str(exc):
-                    # The name was accepted; the account is out of quota. Not a dead model, so not a failure.
-                    limited += 1
-                    print(f"  LIMIT {stage:8s} {model}  name is valid but the quota is exhausted (HTTP 429)")
-                    continue
-                failed += 1
-                print(f"  FAIL  {stage:8s} {model}  {type(exc).__name__}: {str(exc)[:160]!r}")
-        if args.list:
-            print("  offered:", ", ".join(list_models(name, settings.api_key_for(name))))
+    current = None
+    for r in rows:
+        if r["provider"] != current:
+            current = r["provider"]
+            print(current)
+        if r["status"] == "ok":
+            print(f"  OK    {r['stage']:8s} {r['model']}")
+        elif r["status"] == "limited":
+            limited += 1
+            print(f"  LIMIT {r['stage']:8s} {r['model']}  name is valid but the quota is exhausted (HTTP 429)")
+        else:
+            failed += 1
+            print(f"  FAIL  {r['stage']:8s} {r['model']}  {r.get('error', '')}")
+    if args.list:
+        for name in PROVIDER_ORDER:
+            if settings.api_key_for(name):
+                print(f"{name} offers:", ", ".join(list_models(name, settings.api_key_for(name))))
     if limited:
         print(f"{limited} model(s) are rate-limited right now: the names are fine, retry later or use another key/provider.")
     if failed:

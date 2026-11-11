@@ -52,8 +52,10 @@ def test_upstream_errors_do_not_leak_details():
         compose = analyze
 
     r = client(Boom()).post("/api/ask", json={"question": "manager harassment complaint"})
-    assert r.status_code == 502
-    assert "SECRET" not in r.text and "provider" not in r.text
+    # A model failure no longer surfaces as an error page: the answer is built from the law text, and the reason is a
+    # short code. Nothing from the exception reaches the browser.
+    assert r.status_code == 200 and r.headers["x-huqooq-degraded"] == "unavailable"
+    assert "SECRET" not in r.text and "provider" not in r.text and "SECRET" not in str(r.headers)
 
 
 def test_cors_rejects_unlisted_origin():

@@ -64,6 +64,8 @@ class AskResponse(BaseModel):
     status: Status
     answer_ur: str
     answer_en: str
+    # Roman Urdu version of the answer, only when the person wrote Roman Urdu (Urdu in Latin letters); "" otherwise.
+    answer_roman: str = ""
     confidence: Confidence = "none"
     citations: list[Citation] = []
     where_to_go: list[Referral] = []

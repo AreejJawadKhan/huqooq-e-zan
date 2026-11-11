@@ -1,12 +1,13 @@
 {
-  "_comment": "Hand-maintained. verified=false until you have confirmed the number on an official page. topics: danger | harassment | property | wages | tenancy | fallback. jurisdictions: all | punjab | sindh | kp | balochistan | ict | pakistan.",
+  "_comment": "Hand-maintained. verified=false until you have confirmed the number on an official page. topics: danger | selfharm | harassment | property | wages | tenancy | fallback. jurisdictions: all | punjab | sindh | kp | balochistan | ict | pakistan.",
   "referrals": [
     {
       "name": "Police emergency",
       "number": "15",
       "note": "If anyone is in immediate danger.",
       "topics": [
-        "danger"
+        "danger",
+        "selfharm"
       ],
       "jurisdictions": [
         "all"
@@ -39,7 +40,8 @@
         "property",
         "wages",
         "tenancy",
-        "fallback"
+        "fallback",
+        "selfharm"
       ],
       "jurisdictions": [
         "all"
@@ -47,6 +49,20 @@
       "source_url": "https://mohr.gov.pk/Detail/YWRiYjU0NzktMGE2Zi00NDYyLTljNzktMTA2N2M2MjBlZWZl",
       "verified": true,
       "as_of": "2026-11-11"
+    },
+    {
+      "name": "Umang Pakistan mental health helpline",
+      "number": "0311-7786264",
+      "note": "Mental health and suicide-prevention support. Reported as 24/7; hours not yet confirmed.",
+      "topics": [
+        "selfharm"
+      ],
+      "jurisdictions": [
+        "all"
+      ],
+      "source_url": "https://dawn.com/news/1692781/google-launches-suicide-hotline-for-pakistan",
+      "verified": false,
+      "verification_note": "NOT VERIFIED (2026-11-11). Dawn (3 Jun 2022) confirms Google launched a suicide hotline with Umang Pakistan but prints no number. 0311-7786264 appears in several press and helpline-directory pages; one page lists a different number. umang.com.pk served only a directory listing when fetched. A person must call and confirm the number and hours (or read them on Umang's own site), then set verified=true and update source_url."
     },
     {
       "name": "Madadgaar national helpline",
