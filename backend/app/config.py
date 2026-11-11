@@ -42,6 +42,10 @@ class Settings:
     min_score: float = field(default_factory=lambda: float(os.getenv("MIN_SCORE", "1.0")))
     top_k: int = field(default_factory=lambda: int(os.getenv("TOP_K", "5")))
     debug: bool = field(default_factory=lambda: os.getenv("DEBUG", "0") == "1")
+    # DEMO_CACHE=1 serves pre-computed answers for the exact demo questions (data/demo_cache.json) so a
+    # rate-limited or offline free tier cannot break the live demo. Danger messages never use the cache.
+    demo_cache: bool = field(default_factory=lambda: os.getenv("DEMO_CACHE", "0") == "1")
+    demo_cache_path: Path = DATA_DIR / "demo_cache.json"
     cors_origins: list[str] = field(
         default_factory=lambda: _split(os.getenv("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173"))
     )

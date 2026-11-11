@@ -60,3 +60,8 @@ def test_cors_rejects_unlisted_origin():
     c = client()
     r = c.options("/api/ask", headers={"Origin": "https://evil.example", "Access-Control-Request-Method": "POST"})
     assert "access-control-allow-origin" not in r.headers
+
+
+def test_letter_survives_control_characters():
+    r = client().post("/api/letter", json={**LETTER, "complainant_name": "A\x00B", "facts": "hello\x0b there"})
+    assert r.status_code == 200 and r.content[:2] == b"PK"

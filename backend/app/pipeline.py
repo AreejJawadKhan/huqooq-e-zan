@@ -11,6 +11,7 @@ Order matters and is the core of the safety story:
 """
 from __future__ import annotations
 
+import re
 from typing import Optional
 
 from . import messages as M
@@ -25,6 +26,36 @@ from .schemas import AskRequest, AskResponse, Citation, Detected
 def _excerpt(text: str, n: int = 420) -> str:
     t = " ".join(text.split())
     return t if len(t) <= n else t[: n - 1].rstrip() + "…"
+
+
+# Sections that say nothing about the person's problem. A model sometimes cites them because they are the first
+# excerpts it sees. They are dropped from the citations whenever a substantive section is also cited. "Definitions"
+# is deliberately NOT here: answers often rely on a defined term (for example the Schedule of harassment).
+_BOILERPLATE_HEADING = re.compile(
+    r"^(short title|extent|commencement|repeal|savings?|power to make rules|rules)\b", re.IGNORECASE
+)
+_DIRECTION_MARKS = re.compile("[\u200e\u200f\u202a-\u202e\uf02d]")
+
+
+def _is_boilerplate(chunk: Chunk) -> bool:
+    heading = _DIRECTION_MARKS.sub("", chunk.heading or "").strip()
+    return bool(_BOILERPLATE_HEADING.match(heading))
+
+
+def drop_boilerplate(cited: list[Chunk]) -> list[Chunk]:
+    """Remove short-title, commencement, repeal and rule-making sections unless they are all there is."""
+    substantive = [c for c in cited if not _is_boilerplate(c)]
+    return substantive or cited
+
+
+# The composer is told to write answer_ur entirely in Urdu. If it still adds English in brackets (for example
+# "(Minimum Wage)") the line order scrambles on phones, so such bracketed Latin-only runs are removed here.
+_LATIN_BRACKETS = re.compile(r"\s*[(\[]\s*[A-Za-z][A-Za-z0-9 ,.'\-/&]*[)\]]")
+
+
+def clean_urdu(text: str) -> str:
+    out = _LATIN_BRACKETS.sub("", text)
+    return re.sub(r"[ \t]{2,}", " ", out).strip()
 
 
 class Pipeline:
@@ -103,14 +134,14 @@ class Pipeline:
         # 5. compose, then validate citations
         comp = self.llm.compose(question, a, chunks, wage_rows)
         by_id = {c.id: c for c in chunks}
-        cited = [by_id[i] for i in dict.fromkeys(comp.cited_chunk_ids) if i in by_id]
+        cited = drop_boilerplate([by_id[i] for i in dict.fromkeys(comp.cited_chunk_ids) if i in by_id])
         grounded = bool(cited) or wage is not None
         if comp.confidence == "none" or (not grounded and not comp.needs_province):
             return self._static("not_found", M.NOT_FOUND_UR, M.NOT_FOUND_EN, detected, a.topic)
 
         return AskResponse(
             status="answered",
-            answer_ur=comp.answer_ur,
+            answer_ur=clean_urdu(comp.answer_ur),
             answer_en=comp.answer_en,
             confidence=comp.confidence,  # type: ignore[arg-type]
             citations=[

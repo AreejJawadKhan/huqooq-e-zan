@@ -21,3 +21,6 @@ test:
 
 eval:
 	.venv/bin/python scripts/run_eval.py -v
+
+demo-cache:
+	.venv/bin/python scripts/build_demo_cache.py

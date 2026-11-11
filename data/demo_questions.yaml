@@ -1,0 +1,14 @@
+# Questions rehearsed for the live demo. `make demo-cache` runs each through the real pipeline (needs a model key)
+# and stores the answer in data/demo_cache.json. These must match the example chips in frontend/src/strings.ts.
+# jurisdiction is optional (what the province picker sends).
+questions:
+  - q: "میرا مینیجر مجھے کام پر تنگ کرتا ہے، میں کیا کر سکتی ہوں؟"
+  - q: "پنجاب میں کم از کم اجرت کتنی ہے؟"
+  - q: "میرے بھائی مجھے والد کی زمین میں حصہ نہیں دے رہے"
+    jurisdiction: punjab
+  - q: "My manager keeps sending me unwelcome messages. What can I do?"
+  - q: "What is the minimum wage in Lahore?"
+  - q: "My brothers took my share of our father's land in Lahore."
+  - q: "My brothers took my share of our father's land in Karachi."
+  - q: "How much of the inheritance does each heir get?"
+  - q: "Will I win my case?"
