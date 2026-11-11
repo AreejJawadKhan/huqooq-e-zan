@@ -19,6 +19,13 @@ export function telHref(n: string): string | null {
   return /^[0-9+\-\s()]{2,20}$/.test(n) ? `tel:${n.replace(/[^0-9+]/g, "")}` : null;
 }
 
+/** Real ingested headings can carry invisible direction marks, a trailing " ." or the start of the section body after a dash. */
+export function cleanHeading(h: string): string {
+  const head = h.replace(/[‎‏‪-‮]/g, "").split(/\s*(?:[–—]|--)\s*/)[0];
+  const t = head.replace(/[-]/g, "").replace(/[\s.]+$/, "").trim();
+  return t.length > 90 ? `${t.slice(0, 87).trimEnd()}…` : t;
+}
+
 export function NotVerified() {
   return <span className="hq-chip chip-caution"><Bi inline ur={T.notVerified} en={T.notVerifiedEn} /></span>;
 }
@@ -46,7 +53,7 @@ export function CitationChip({ c }: { c: Citation }) {
         <span className="hq-chip cite-chip"><IconDoc />{c.act}, s.{c.section}</span>
       </summary>
       <div className="hq-quote">
-        {c.heading && <div className="hq-ref-name">s.{c.section}: {c.heading}</div>}
+        {cleanHeading(c.heading) && <div className="hq-ref-name">s.{c.section}: {cleanHeading(c.heading)}</div>}
         <p className="hq-quote-label"><Bi inline ur={T.exactText} en={T.exactTextEn} /></p>
         <blockquote className="hq-excerpt" lang="en" dir="ltr">{c.excerpt}</blockquote>
         {href ? (

@@ -87,6 +87,7 @@ export const T = {
   loadingEn: "Looking up the law…",
   slow: "ابھی کام جاری ہے، تھوڑا انتظار کریں۔",
   slowEn: "Still working. Please wait a little longer.",
+  errorTitle: "ابھی جواب نہیں مل سکا۔ تھوڑی دیر بعد دوبارہ کوشش کریں۔",
   retry: "دوبارہ کوشش کریں",
   retryEn: "Retry",
   call15: "15 پر کال کریں",

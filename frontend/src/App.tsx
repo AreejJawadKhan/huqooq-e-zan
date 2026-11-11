@@ -50,6 +50,7 @@ export default function App() {
         <main ref={resultRef} aria-live="polite" className="results">
           {error && (
             <div className="hq-notice danger" role="alert">
+              <p lang="ur" dir="rtl" className="hq-ul" style={{ margin: "0 0 8px" }}>{T.errorTitle}</p>
               <p style={{ margin: "0 0 8px" }}>{error}</p>
               <button type="button" className="hq-btn ghost" onClick={() => run(question, jurisdiction)}><Bi inline ur={T.retry} en={T.retryEn} /></button>
             </div>
