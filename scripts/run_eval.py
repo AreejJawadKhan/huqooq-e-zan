@@ -28,6 +28,8 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 from backend.app.config import get_settings  # noqa: E402
 from backend.app.main import build_pipeline  # noqa: E402
