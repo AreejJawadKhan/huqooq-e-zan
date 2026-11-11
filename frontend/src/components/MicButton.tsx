@@ -21,20 +21,32 @@ export default function MicButton({ onText, onHint }: { onText: (t: string) => v
   const [heard, setHeard] = useState("");
   const { micLang, setMicLang } = usePrefs();
   const ref = useRef<SR | null>(null);
+  const activeRef = useRef(false);
+  const restartRef = useRef<number | null>(null);
   const lastText = useRef("");
   const supported = recognitionCtor() !== null;
 
-  useEffect(() => () => ref.current?.stop(), []);
+  useEffect(() => () => {
+    activeRef.current = false;
+    if (restartRef.current !== null) window.clearTimeout(restartRef.current);
+    ref.current?.stop();
+  }, []);
   useEffect(() => { if (!supported) onHint(T.micUnsupported); }, [supported, onHint]);
   if (!supported || blocked) return null;
 
   function toggle() {
-    if (listening) { ref.current?.stop(); return; }
+    if (listening) {
+      activeRef.current = false;
+      if (restartRef.current !== null) window.clearTimeout(restartRef.current);
+      ref.current?.stop();
+      setListening(false);
+      return;
+    }
     const Ctor = recognitionCtor()!;
     const rec = new Ctor();
     rec.lang = micLang; // ur-PK hears Urdu and Urdu-English mixes best; en-IN is for speakers who mostly use English words
     rec.interimResults = true;
-    rec.continuous = false;
+    rec.continuous = true;
     rec.onresult = (e: any) => {
       let text = "";
       for (let i = 0; i < e.results.length; i++) text += e.results[i][0].transcript;
@@ -45,15 +57,28 @@ export default function MicButton({ onText, onHint }: { onText: (t: string) => v
       if (e.error === "not-allowed" || e.error === "service-not-allowed") { setBlocked(true); onHint(T.micDenied); }
       else onHint(T.micFailed);
     };
-    rec.onend = () => { setListening(false); setHeard(lastText.current.trim()); };
+    rec.onend = () => {
+      // Chrome ends recognition after a brief silence even with continuous=true.
+      // Keep the user session alive until they press the microphone button again.
+      if (activeRef.current) {
+        restartRef.current = window.setTimeout(() => {
+          try { rec.start(); } catch { /* already restarting */ }
+        }, 120);
+      } else {
+        setListening(false);
+        setHeard(lastText.current.trim());
+      }
+    };
     ref.current = rec;
     lastText.current = "";
+    activeRef.current = true;
     setHeard("");
     onHint("");
     setListening(true);
     try {
       rec.start();
     } catch {
+      activeRef.current = false;
       setListening(false);
       onHint(T.micFailed);
     }
