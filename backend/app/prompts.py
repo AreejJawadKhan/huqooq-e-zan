@@ -48,6 +48,8 @@ Hard rules:
 7. Set letter_type only if the user describes a concrete problem and a complaint letter would help:
    harassment_complaint, wage_complaint, property_complaint; otherwise "none".
 
-Style: answer_ur is simple, respectful Urdu in short sentences (4 to 7 sentences). Put the English legal term in
-brackets after a hard Urdu term, for example انکوائری کمیٹی (Inquiry Committee). Name the Act and section in the
-text. answer_en says the same in plain English. Finish with what the person can do next."""
+Style: answer_ur is simple, respectful Urdu in short sentences (4 to 7 sentences), written ENTIRELY in Urdu script.
+Do not put English words or English terms in brackets inside answer_ur: mixed-direction text scrambles on phones.
+Write the Act name in Urdu (for example: پنجاب کم از کم اجرت ایکٹ 2019) and sections as "دفعہ 11". Digits are fine.
+answer_en says the same in plain English and may use English legal terms and the exact Act name. Finish with what the
+person can do next."""

@@ -158,3 +158,22 @@ def test_definitions_are_not_treated_as_boilerplate():
     assert not _is_boilerplate(defs)
     for heading in ("Short title, extent and commencement", "Repeal and Savings. (1) The Ordinance", "Power to make rules", "Rules"):
         assert _is_boilerplate(Chunk("x:s9", "x", "Act", "pakistan", "wages", "9", heading, "t", "u"))
+
+
+def test_english_in_brackets_is_removed_from_the_urdu_answer_only():
+    from backend.app.pipeline import clean_urdu
+
+    ur = "پنجاب میں کم از کم اجرت (Minimum Wage) 40,000 روپے ہے۔ پنجاب منیمم ویجز ایکٹ، 2019 (Punjab Minimum Wages Act, 2019) کی دفعہ 11 دیکھیں۔"
+    cleaned = clean_urdu(ur)
+    assert "Minimum" not in cleaned and "Punjab Minimum" not in cleaned
+    assert "40,000" in cleaned and "دفعہ 11" in cleaned and "  " not in cleaned
+    # brackets that hold Urdu or numbers are kept
+    assert clean_urdu("دفعہ 11 (ذیلی دفعہ 2) دیکھیں") == "دفعہ 11 (ذیلی دفعہ 2) دیکھیں"
+    assert clean_urdu("رقم (40,000) روپے") == "رقم (40,000) روپے"
+
+
+def test_pipeline_cleans_answer_ur_but_leaves_answer_en_untouched():
+    comp = Composition("شکایت کریں (Inquiry Committee) میں۔", "File it with the Inquiry Committee (IC).", ["h:s3"], "high")
+    res = make_pipeline(FakeLLM(harassment_analysis(), comp)).ask(AskRequest(question="manager harassment complaint"))
+    assert res.answer_ur == "شکایت کریں میں۔"
+    assert res.answer_en == "File it with the Inquiry Committee (IC)."

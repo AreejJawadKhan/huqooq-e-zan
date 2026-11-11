@@ -48,6 +48,16 @@ def drop_boilerplate(cited: list[Chunk]) -> list[Chunk]:
     return substantive or cited
 
 
+# The composer is told to write answer_ur entirely in Urdu. If it still adds English in brackets (for example
+# "(Minimum Wage)") the line order scrambles on phones, so such bracketed Latin-only runs are removed here.
+_LATIN_BRACKETS = re.compile(r"\s*[(\[]\s*[A-Za-z][A-Za-z0-9 ,.'\-/&]*[)\]]")
+
+
+def clean_urdu(text: str) -> str:
+    out = _LATIN_BRACKETS.sub("", text)
+    return re.sub(r"[ \t]{2,}", " ", out).strip()
+
+
 class Pipeline:
     def __init__(
         self, llm: LLM, retriever: Retriever, wages: WageTable, referrals: ReferralTable, settings: Settings
@@ -131,7 +141,7 @@ class Pipeline:
 
         return AskResponse(
             status="answered",
-            answer_ur=comp.answer_ur,
+            answer_ur=clean_urdu(comp.answer_ur),
             answer_en=comp.answer_en,
             confidence=comp.confidence,  # type: ignore[arg-type]
             citations=[
