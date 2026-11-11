@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 import io
+import logging
+import time
+from collections import defaultdict, deque
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 
 from .config import Settings, get_settings
 from .data import ReferralTable, WageTable
@@ -15,6 +18,14 @@ from .pipeline import Pipeline
 from .providers import build_llm
 from .retrieval import Retriever
 from .schemas import AskRequest, AskResponse, LetterRequest, Referral, WageInfo
+
+
+log = logging.getLogger("huqooq.api")
+
+# Per-client request budget for the model-backed and letter endpoints (protects the free API keys).
+RATE_LIMIT = 20
+RATE_WINDOW_S = 60
+_RATE_PATHS = {"/api/ask", "/api/letter"}
 
 
 class _NoKeyLLM:
@@ -43,11 +54,34 @@ def create_app(pipeline: Optional[Pipeline] = None, settings: Optional[Settings]
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_methods=["GET", "POST"],
+        allow_headers=["Content-Type"],
         expose_headers=["Content-Disposition"],
     )
     app.state.pipeline = pipeline
+    hits: dict[str, deque] = defaultdict(deque)
+
+    @app.middleware("http")
+    async def guard(request: Request, call_next):
+        if request.method == "POST" and request.url.path in _RATE_PATHS:
+            # Behind a proxy set the first X-Forwarded-For hop; otherwise the socket peer.
+            fwd = request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+            who = fwd or (request.client.host if request.client else "unknown")
+            now = time.monotonic()
+            q = hits[who]
+            while q and now - q[0] > RATE_WINDOW_S:
+                q.popleft()
+            if len(q) >= RATE_LIMIT:
+                return JSONResponse({"detail": "Too many requests. Please wait a minute and try again."}, status_code=429, headers={"Retry-After": str(RATE_WINDOW_S)})
+            q.append(now)
+            if len(hits) > 5000:  # bound memory
+                for k in [k for k, v in hits.items() if not v or now - v[-1] > RATE_WINDOW_S]:
+                    hits.pop(k, None)
+        response = await call_next(request)
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("Referrer-Policy", "no-referrer")
+        response.headers.setdefault("Cache-Control", "no-store")
+        return response
 
     def get_pipeline() -> Pipeline:
         if app.state.pipeline is None:
@@ -72,7 +106,10 @@ def create_app(pipeline: Optional[Pipeline] = None, settings: Optional[Settings]
         except HTTPException:
             raise
         except Exception as exc:  # surface model/API failures as a clean 502 for the UI
-            raise HTTPException(status_code=502, detail=f"Upstream error: {exc}") from exc
+            # Never echo provider errors to the browser (they can contain request details). Log server-side only.
+            log.error("ask failed: %s", type(exc).__name__)
+            log.debug("ask failure detail", exc_info=True)
+            raise HTTPException(status_code=502, detail="The answer service is temporarily unavailable. Please try again in a moment.") from exc
 
     @app.post("/api/letter")
     def letter(req: LetterRequest):

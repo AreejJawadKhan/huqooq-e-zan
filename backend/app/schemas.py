@@ -1,7 +1,7 @@
 """API contract. The frontend's src/types.ts mirrors these models (see docs/API.md)."""
 from __future__ import annotations
 
-from typing import Literal, Optional
+from typing import Annotated, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -78,13 +78,13 @@ class AskResponse(BaseModel):
 
 class LetterRequest(BaseModel):
     letter_type: LetterType
-    complainant_name: str
-    complainant_address: str = ""
-    complainant_cnic: str = ""
-    respondent_name: str = ""
-    respondent_details: str = ""
-    city: str = ""
+    complainant_name: str = Field(min_length=1, max_length=120)
+    complainant_address: str = Field("", max_length=300)
+    complainant_cnic: str = Field("", max_length=20)
+    respondent_name: str = Field("", max_length=120)
+    respondent_details: str = Field("", max_length=300)
+    city: str = Field("", max_length=80)
     facts: str = Field(min_length=5, max_length=6000)
-    relief: str = ""
+    relief: str = Field("", max_length=1500)
     # e.g. ["Protection against Harassment of Women at the Workplace Act 2010, s.8"]
-    legal_basis: list[str] = []
+    legal_basis: list[Annotated[str, Field(max_length=250)]] = Field(default_factory=list, max_length=10)
