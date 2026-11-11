@@ -3,8 +3,8 @@
 1. analyze: small model -> language, English query + legal search terms, topic, jurisdiction, scope flags.
 2. compose: stronger model -> grounded Urdu + English answer that must cite the retrieved excerpts.
 
-Both use forced tool calls so the output is always structured JSON. Tests swap this class for a fake
-(see tests/test_pipeline.py), so nothing else in the app imports the Anthropic SDK.
+Both use forced tool calls so the output is always structured JSON. Tests swap the LLM for a fake
+(see tests/test_pipeline.py). Provider-specific code lives in providers.py; nothing else imports a model SDK.
 """
 from __future__ import annotations
 
@@ -97,27 +97,17 @@ def _format_excerpts(chunks: list[Chunk]) -> str:
     return "\n".join(parts) if parts else "(none)"
 
 
-class AnthropicLLM:
-    def __init__(self, api_key: str, analyzer_model: str, answer_model: str):
-        import anthropic  # imported lazily so tests run without the SDK configured
+class ToolLLM:
+    """Shared analyze/compose logic. Subclasses implement only `_tool_call` for their provider API."""
 
-        self.client = anthropic.Anthropic(api_key=api_key)
+    name = "base"
+
+    def __init__(self, analyzer_model: str, answer_model: str):
         self.analyzer_model = analyzer_model
         self.answer_model = answer_model
 
     def _tool_call(self, model: str, system: str, user: str, tool: dict, max_tokens: int = 1500) -> dict:
-        resp = self.client.messages.create(
-            model=model,
-            max_tokens=max_tokens,
-            system=system,
-            messages=[{"role": "user", "content": user}],
-            tools=[tool],
-            tool_choice={"type": "tool", "name": tool["name"]},
-        )
-        for block in resp.content:
-            if block.type == "tool_use":
-                return dict(block.input)
-        raise RuntimeError(f"Model returned no tool call for {tool['name']}")
+        raise NotImplementedError
 
     def analyze(self, question: str, jurisdiction_hint: Optional[str]) -> Analysis:
         user = f"<jurisdiction_hint>{jurisdiction_hint or 'none'}</jurisdiction_hint>\n<question>{question}</question>"
@@ -153,3 +143,27 @@ class AnthropicLLM:
             needs_province=bool(d.get("needs_province", False)),
             letter_type=None if lt in (None, "none") else lt,
         )
+
+
+class AnthropicLLM(ToolLLM):
+    name = "anthropic"
+
+    def __init__(self, api_key: str, analyzer_model: str, answer_model: str):
+        super().__init__(analyzer_model, answer_model)
+        import anthropic  # imported lazily so tests run without the SDK configured
+
+        self.client = anthropic.Anthropic(api_key=api_key)
+
+    def _tool_call(self, model: str, system: str, user: str, tool: dict, max_tokens: int = 1500) -> dict:
+        resp = self.client.messages.create(
+            model=model,
+            max_tokens=max_tokens,
+            system=system,
+            messages=[{"role": "user", "content": user}],
+            tools=[tool],
+            tool_choice={"type": "tool", "name": tool["name"]},
+        )
+        for block in resp.content:
+            if block.type == "tool_use":
+                return dict(block.input)
+        raise RuntimeError(f"Model returned no tool call for {tool['name']}")

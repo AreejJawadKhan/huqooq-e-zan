@@ -13,7 +13,7 @@ question, it says so and points to a helpline.
 | --- | --- | --- |
 | Backend | Python 3.11+, FastAPI | Fast to write, typed contract, easy tests |
 | Retrieval | BM25 (`rank-bm25`) over section-level chunks | A few hundred sections; no model download; the analyzer translates Urdu questions into English legal keywords |
-| Models | Anthropic API: small model for query analysis, stronger model for the grounded answer | Forced tool calls give structured JSON; swap models in `.env` |
+| Models | Free Gemini or Groq key (paid Anthropic optional): small model for query analysis, stronger model for the grounded answer | Forced tool calls give structured JSON; provider and models are set in `.env`, with automatic fallback |
 | Letters | `python-docx` templates | Instant, predictable, no model call |
 | Frontend | Vite + React + TypeScript | Zero config, hot reload, `/api` proxied to the backend |
 | Voice | Browser Web Speech API (`ur-PK`) with typed fallback | No server cost; test it on the demo machine early |
@@ -22,7 +22,7 @@ question, it says so and points to a helpline.
 
 ```bash
 make setup                 # venv, Python deps, npm install, creates .env
-# put ANTHROPIC_API_KEY in .env
+# put a free GEMINI_API_KEY or GROQ_API_KEY in .env
 # download the legal PDFs listed in data/sources.yaml into data/raw/ (see "Data" below)
 make ingest                # builds data/processed/chunks.jsonl and prints a report
 make dev-backend           # http://localhost:8000  (docs at /docs)
@@ -94,3 +94,15 @@ docs/API.md      the contract between frontend and backend
   `Retriever.search` (same signature).
 - No user data is stored. Questions go to the model API for processing.
 - The Urdu strings and the Urdu model output have not been reviewed by a native speaker or a lawyer.
+
+## Choosing a model provider
+
+Put at least one key in `.env`. The first provider with a key is used; any other provider with a key becomes the automatic fallback if the first one rate-limits or fails.
+
+| Provider | Key | Cost | Notes |
+| --- | --- | --- | --- |
+| Gemini | `GEMINI_API_KEY` ([AI Studio](https://aistudio.google.com/apikey)) | Free tier | Default. Free-tier prompts may be used to improve Google products, so demo with synthetic questions only. |
+| Groq | `GROQ_API_KEY` ([console](https://console.groq.com/keys)) | Free plan | Good fallback; its per-minute token limit is small. |
+| Anthropic | `ANTHROPIC_API_KEY` | Paid | Use for real user data. |
+
+Set `LLM_PROVIDER` and `LLM_FALLBACK` to force an order. Model names change often: override them with `GEMINI_ANSWER_MODEL` and friends (see `.env.example`). Run `make eval` with each provider and keep the one that passes more of the 15 questions in Urdu.

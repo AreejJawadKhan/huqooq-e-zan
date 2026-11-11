@@ -11,8 +11,8 @@ from fastapi.responses import StreamingResponse
 from .config import Settings, get_settings
 from .data import ReferralTable, WageTable
 from .letters import build_letter
-from .llm import AnthropicLLM
 from .pipeline import Pipeline
+from .providers import build_llm
 from .retrieval import Retriever
 from .schemas import AskRequest, AskResponse, LetterRequest, Referral, WageInfo
 
@@ -21,16 +21,13 @@ class _NoKeyLLM:
     """Used when no API key is set. Danger messages still work (they never call a model)."""
 
     def _fail(self, *_a, **_k):
-        raise HTTPException(status_code=503, detail="ANTHROPIC_API_KEY is not set. Copy .env.example to .env.")
+        raise HTTPException(status_code=503, detail="No model API key is set. Add GEMINI_API_KEY or GROQ_API_KEY to .env (see .env.example).")
 
     analyze = compose = _fail
 
 
 def build_pipeline(settings: Settings) -> Pipeline:
-    if settings.anthropic_api_key:
-        llm = AnthropicLLM(settings.anthropic_api_key, settings.analyzer_model, settings.answer_model)
-    else:
-        llm = _NoKeyLLM()
+    llm = build_llm(settings) or _NoKeyLLM()
     return Pipeline(
         llm=llm,
         retriever=Retriever.from_jsonl(settings.chunks_path),
@@ -63,7 +60,8 @@ def create_app(pipeline: Optional[Pipeline] = None, settings: Optional[Settings]
         return {
             "status": "ok",
             "chunks_indexed": n,
-            "api_key_set": bool(settings.anthropic_api_key) or app.state.pipeline is not None,
+            "api_key_set": settings.any_llm_key or app.state.pipeline is not None,
+            "provider": settings.llm_provider if settings.any_llm_key else None,
             "hint": None if n else "No chunks yet: put source files in data/raw and run `make ingest`.",
         }
 
