@@ -28,7 +28,9 @@ GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 # Model names change often. Check AI Studio / Groq console and override with the *_MODEL env vars.
 DEFAULT_MODELS = {
     "gemini": ("gemini-3.5-flash-lite", "gemini-3.5-flash"),  # verified working 2026-11-11; 2.5 names return 404
-    "groq": ("llama-3.1-8b-instant", "llama-3.3-70b-versatile"),
+    # Groq retired the Llama 3.x names above (model_not_found, 2026-11-11). gpt-oss-20b/120b verified working with
+    # forced tool calls; qwen/qwen3.8-27b was tried and rejected (invented a tool name). Re-check with scripts/check_models.py.
+    "groq": ("openai/gpt-oss-20b", "openai/gpt-oss-120b"),
     "anthropic": ("claude-haiku-5-5", "claude-sonnet-5-5"),
 }
 PROVIDERS = tuple(DEFAULT_MODELS)
@@ -146,11 +148,16 @@ class OpenAICompatLLM(ToolLLM):
         self.url = url
         self.client = client or httpx.Client(timeout=60)
 
+    # Reasoning models (gpt-oss) count their hidden reasoning against max_tokens, exactly like Gemini 3.x thinking:
+    # a long think can leave no room for the forced tool call. Keep headroom, and ask gpt-oss for low effort (faster).
+    OUTPUT_HEADROOM = 1500
+    MAX_OUTPUT_CAP = 8192
+
     def _tool_call(self, model: str, system: str, user: str, tool: dict, max_tokens: int = 1500) -> dict:
         body = {
             "model": model,
             "temperature": 0,
-            "max_tokens": max_tokens,
+            "max_tokens": min(max_tokens + self.OUTPUT_HEADROOM, self.MAX_OUTPUT_CAP),
             "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
             "tools": [
                 {
@@ -164,17 +171,26 @@ class OpenAICompatLLM(ToolLLM):
             ],
             "tool_choice": {"type": "function", "function": {"name": tool["name"]}},
         }
+        if "gpt-oss" in model:
+            body["reasoning_effort"] = "low"
         resp = _post_with_retry(
             self.client,
             self.url,
             headers={"authorization": f"Bearer {self.api_key}", "content-type": "application/json"},
             json=body,
         )
+        data = resp.json()
         try:
-            call = resp.json()["choices"][0]["message"]["tool_calls"][0]["function"]
+            call = data["choices"][0]["message"]["tool_calls"][0]["function"]
             return dict(json.loads(call["arguments"]))
         except (KeyError, IndexError, TypeError, json.JSONDecodeError) as exc:
-            raise ProviderError(f"{self.name} returned no usable tool call for {tool['name']}: {exc}") from exc
+            try:
+                finish = data["choices"][0].get("finish_reason")
+            except (KeyError, IndexError, TypeError, AttributeError):
+                finish = None
+            raise ProviderError(
+                f"{self.name} returned no usable tool call for {tool['name']} (finish_reason={finish}): {exc}"
+            ) from exc
 
 
 class FallbackLLM:
