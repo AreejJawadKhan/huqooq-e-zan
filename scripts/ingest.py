@@ -131,8 +131,9 @@ def split_sections(text: str) -> list[Section]:
             body_lines = body_lines[1:]
         # headings in gazette text end at the first full stop or dash; keep the short title only
         heading = re.sub(r"\d{1,2}\[|\]", "", heading)
-        title = re.split(r"[\.—–]-?\s", heading, maxsplit=1)[0].strip(" .-—")
-        remainder = heading[len(title):].strip(" .-—") if heading.startswith(title) else ""
+        m_split = re.match(r"^(.*?)(?:[\.\u2014\u2013\u2015\u2012\-]{1,4}|[\.\u2014\u2013\u2015\u2012\-\u200e\u200f\uf02d\s]*[\.\u2014\u2013\u2015\u2012\-]+[\.\u2014\u2013\u2015\u2012\-\u200e\u200f\uf02d\s]*)\s*(.*)$", heading)
+        title = m_split.group(1).strip(" .-—\u200e\u200f\uf02d") if (m_split and m_split.group(1).strip()) else re.split(r"[\.—–]-?\s", heading, maxsplit=1)[0].strip(" .-—")
+        remainder = m_split.group(2).strip() if (m_split and m_split.group(1).strip()) else (heading[len(title):].strip(" .-—") if heading.startswith(title) else "")
         body = _collapse(" ".join([remainder, *body_lines]))
         sections.append(Section(str(num), _collapse(title)[:140], body))
     if sched_line is not None:

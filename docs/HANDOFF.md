@@ -19,9 +19,9 @@ Browser (React/Vite/TS, `frontend/`) -> FastAPI (`backend/app/`). Pipeline in `p
 - **Resilience**: `TRUSTED_PROXY_HOPS` (default 0; set 1 on Cloud Run) so spoofed X-Forwarded-For can't dodge the limit; `MAX_INFLIGHT`, `GLOBAL_RPM`; `REQUEST_DEADLINE_S` (25) via `deadline.py`; answer cache (only `answered` responses); `Pipeline.ask_degraded` answers from law text with no model; `/api/ask` always returns 200 and sets `X-Huqooq-Degraded: busy|deadline|no_model|unavailable`. Demo-cache answers get caveats/helplines/wage refreshed (`refresh_fixed_parts`).
 - **Roman Urdu / code-mixed**: `lexicon.py` (Roman Urdu + Urdu script + English loanwords, fuzzy spellings, provinces, out-of-scope cues, `detect_register`), `answer_roman` response field, `urduize()` guarantees `answer_ur` has no Latin letters (needed for TTS), prompts teach code-mixing and gender-neutral phrasing. Frontend: Roman answer first for Roman users, busy-vs-broken notice with Try again, mic language choice (`ur-PK` default / `en-IN`), read-aloud fallback for Roman answers.
 - **Legal claims sourced**: Punjab "60 days" cites s.4; unsourced "delays reported" removed; ICT court-status caveat states only what Federal Ombudsman orders record (WP 529/2021; ICA 85/2023; no dates); letter "as amended in 2022" is correct (HRW/Dawn/Tribune/Geo). Scope messages no longer claim tenancy.
-- Demo cache: `data/demo_cache.json` has 9/10 entries; the property question WITHOUT a province is missing (quota). `python scripts/build_demo_cache.py` fills only missing entries. Serve with `DEMO_CACHE=1`.
+- Demo cache: `data/demo_cache.json` now has 10/10 entries, including the property question WITHOUT a province. `python scripts/build_demo_cache.py` fills only missing entries. Serve with `DEMO_CACHE=1`.
 
-### API contract changes (NOT yet written into docs/API.md: do this first)
+### API contract changes (documented in `docs/API.md`)
 Add to `docs/API.md`: `AskResponse.answer_roman` (string, "" unless the user wrote Roman Urdu); `detected.language` values `ur|roman_ur|en|mixed`; `/api/ask` never returns 502 for provider failure: it returns 200 built from law text with header `X-Huqooq-Degraded` (and `X-Huqooq-Cache: hit` on cached answers); per-client limit returns 429 `{"detail":..., "code":"rate_limited"}`. `frontend/src/types.ts` already mirrors `answer_roman`.
 
 ## 3. What needs to be done (priority order)
@@ -34,7 +34,7 @@ Add to `docs/API.md`: `AskResponse.answer_roman` (string, "" unless the user wro
 7. Known gaps from the review: stemming in retrieval; 26% of sections >1800 chars are truncated for the model and 75% are truncated at 420 chars in the UI under "Exact text of the law" (show full text); no numeric-consistency guard on wage figures; no circuit breaker (a 429'd provider is retried every request); `/docs` public; free-tier Gemini may train on prompts (real users need a paid/no-training tier); lawyer review of letters/caveats.
 
 ## 4. The new data files (commit `bc66534`, `data/raw/`) and what to do with them
-None are in `data/sources.yaml` yet, so none are indexed. All PDFs have extractable text (no OCR needed). Identified by reading page 1:
+The new candidates are now registered in `data/sources.yaml` with `enabled: false`, so none are indexed yet. All PDFs have extractable text (no OCR needed). Identified by reading page 1:
 
 | File | What it is | Note |
 | --- | --- | --- |

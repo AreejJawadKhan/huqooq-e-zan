@@ -45,7 +45,7 @@ sources:
     url: "https://lpr.adb.org/sites/default/files/2024-07/pakistan-enforcement-of-women%27s-property-rights-act-2020.pdf"
     enabled: true
     status: found
-    notes: "Validity was challenged in the Islamabad High Court (WP 529/2021); ruling suspended 16 Mar 2023. Keep the caveat in the UI."
+    notes: "Validity was challenged in the Islamabad High Court (WP 529/2021); the current status and any suspension date are not confirmed here. Keep the caveat in the UI."
 
   - id: property_kp_2019
     act: "Khyber Pakhtunkhwa Enforcement of Women's Property Rights Act, 2019"
@@ -98,5 +98,60 @@ sources:
     enabled: true
     status: found
     notes: "Old federal text (PakSearch copy). Provinces have their own versions; do not present this as the Punjab text."
+
+  # ---- Family and violence laws (disabled until topics, lexicon, referrals and caveats are reviewed) ----
+  - id: violence_punjab_2016
+    act: "Punjab Protection of Women against Violence Act, 2016"
+    jurisdiction: punjab
+    topic: violence
+    file: "2634.pdf"
+    enabled: false
+    status: opened
+    notes: "2634 (1).pdf is an identical duplicate. Add the violence topic and complete a legal review before enabling."
+
+  - id: mflo_1961
+    act: "Muslim Family Laws Ordinance, 1961"
+    jurisdiction: pakistan
+    topic: family
+    file: "777a.pdf"
+    enabled: false
+    status: found
+    notes: "Three copies are present; compare sections 4, 6, 7, 9 and 10 before enabling one. Applies to Muslim personal law only."
+
+  - id: dissolution_1939
+    act: "Dissolution of Muslim Marriages Act, 1939"
+    jurisdiction: pakistan
+    topic: family
+    file: administratorfb32d6015ae887e6d6b85018961842ea.pdf
+    enabled: false
+    status: found
+    notes: "Review and add the family topic before enabling."
+
+  - id: family_courts_1964
+    act: "West Pakistan Family Courts Act, 1964"
+    jurisdiction: pakistan
+    topic: family
+    file: "THE WEST PAKISTAN FAMILY COURTS ACT, 1964.pdf"
+    enabled: false
+    status: found
+    notes: "Review and add the family topic before enabling."
+
+  - id: guardians_wards_1890
+    act: "Guardians and Wards Act, 1890"
+    jurisdiction: pakistan
+    topic: family
+    file: "THE GUARDIANS AND WARDS ACT, 1890.pdf"
+    enabled: false
+    status: found
+    notes: "Review and add the family topic before enabling."
+
+  - id: dowry_1976
+    act: "Dowry and Bridal Gifts (Restriction) Act, 1976"
+    jurisdiction: pakistan
+    topic: family
+    file: administrator359d2ddc2ad3cb8f4a5bfa3c263e5ba1.pdf
+    enabled: false
+    status: found
+    notes: "Review and add the family topic before enabling."
 
   # TODO: Sindh Minimum Wages Act 2015, KP Minimum Wages Act 2013, Balochistan Minimum Wages Act 2021.

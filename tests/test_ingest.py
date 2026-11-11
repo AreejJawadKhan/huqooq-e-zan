@@ -77,3 +77,20 @@ def test_bracketed_amendment_headings_are_sections():
     nums = [s.num for s in split_sections(text)]
     assert nums == ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
     assert [s.heading for s in split_sections(text) if s.num == "8"] == ["Ombudsperson to enquire into complaint"]
+
+
+def test_heading_split_handles_direction_marks_and_multi_dashes():
+    text = "\n".join([
+        "1. Short title, extent and commencement .\u200e–\u200e (1) This Act may be cited as Punjab Act.",
+        "2. Definitions . (1) In this Act, expressions mean x.",
+        "3. Procedure..-- (1) Any complaint may be filed.",
+    ])
+    secs = split_sections(text)
+    assert len(secs) == 3
+    assert secs[0].heading == "Short title, extent and commencement"
+    assert "Punjab Act" in secs[0].body
+    assert secs[1].heading == "Definitions"
+    assert "expressions mean x" in secs[1].body
+    assert secs[2].heading == "Procedure"
+    assert "Any complaint may be filed" in secs[2].body
+

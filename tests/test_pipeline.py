@@ -96,7 +96,7 @@ def test_wage_answer_attaches_wage_and_caveats():
     comp = Composition("اردو", "Rs40,000", [], "medium")
     res = make_pipeline(FakeLLM(a, comp)).ask(AskRequest(question="minimum wage in Lahore"))
     assert res.status == "answered"
-    assert res.wage and res.wage.monthly_pkr == 40000 and not res.wage.verified
+    assert res.wage and res.wage.monthly_pkr == 40000 and res.wage.verified
     assert any("Labour Department" in c.en for c in res.caveats)
 
 

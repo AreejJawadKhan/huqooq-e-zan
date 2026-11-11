@@ -533,5 +533,78 @@
   },
   "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ یہ کسی مقدمے کے نتیجے کی پیش گوئی نہیں کرتیں۔",
   "disclaimer_en": "This is legal information, not legal advice. It does not predict the outcome of any case."
+ },
+ "میرے بھائی مجھے والد کی زمین میں حصہ نہیں دے رہے|": {
+  "status": "answered",
+  "answer_ur": "اگر آپ کو آپ کے والد کی وراثت میں حصہ نہیں مل رہا تو آپ وفاقی محتسب کو شکایت کر سکتی ہیں۔ محتسب اس معاملے کی چھان بین کرے گا اور اگر ضروری ہوا تو ڈپٹی کمشنر کو ریفر کرے گا۔ اگر یہ ثابت ہو جاتا ہے کہ آپ کو آپ کی وراثت سے غیر قانونی طور پر محروم کیا گیا ہے، تو محتسب ڈپٹی کمشنر یا کسی اور سرکاری اہلکار کو حکم دے سکتا ہے کہ وہ آپ کو آپ کی جائیداد کا قبضہ یا حق ملکیت واپس دلائے۔ آپ کو اپنی شکایت میں صوبے کا نام بتانا ہوگا۔",
+  "answer_en": "If you are not receiving your share of your father's inheritance, you can file a complaint with the Federal Ombudsman. The Ombudsman will investigate the matter and, if necessary, refer it to the Deputy Commissioner. If it is proven that you have been illegally deprived of your inheritance, the Ombudsman can order the Deputy Commissioner or another government official to restore your possession or title to the property. You will need to specify the province in your complaint.",
+  "answer_roman": "",
+  "confidence": "high",
+  "citations": [
+   {
+    "chunk_id": "property_ict_2020:s4",
+    "act": "Enforcement of Women's Property Rights Act, 2020 (Islamabad Capital Territory)",
+    "section": "4",
+    "heading": "Complaint to the Ombudsman in case no proceedings in a court of law are pending",
+    "jurisdiction": "ict",
+    "source_url": "https://lpr.adb.org/sites/default/files/2024-07/pakistan-enforcement-of-women%27s-property-rights-act-2020.pdf",
+    "excerpt": "— (1) Any woman deprived of ownership or possession of her property, by any means, may file a complaint to the Ombudsman if no proceedings in a court of law are pending regarding that property: Provided that the Ombudsman, on its own motion or on a complaint filed by any person including a non-governmental organization, may also initiate action under sub-section (1) in relation to the ownership or possession of a wo…"
+   },
+   {
+    "chunk_id": "property_ict_2020:s5",
+    "act": "Enforcement of Women's Property Rights Act, 2020 (Islamabad Capital Territory)",
+    "section": "5",
+    "heading": "Delivery of possession and transfer of ownership of property to women etc",
+    "jurisdiction": "ict",
+    "source_url": "https://lpr.adb.org/sites/default/files/2024-07/pakistan-enforcement-of-women%27s-property-rights-act-2020.pdf",
+    "excerpt": "-(1) On conclusion of the proceedings under section 4, if the Ombudsman finds that the complainant has been illegally deprived of ownership or possession of her property, he shall direct the Deputy Commissioner or a state functionary or any private perso n to take steps so as to restore or confer possession or title of the property to the complainant, including measures to perfect such title. (2) The Ombudsman may,…"
+   },
+   {
+    "chunk_id": "property_punjab_2021:s4",
+    "act": "Punjab Enforcement of Women's Property Rights Act, 2021",
+    "section": "4",
+    "heading": "Complaint to the Ombudsperson in case no proceedings in a court of law are",
+    "jurisdiction": "punjab",
+    "source_url": "http://punjablaws.gov.pk/laws/2789.html",
+    "excerpt": "pending.‎–‎ (1) Any woman deprived of ownership or possession of her property, by any means, may file a complaint to the Ombudsper son if no proceedings in a court of law are pending regarding that property: Provided that the Ombudsperson, on its own motion or on a complaint filed by any person including a non -governmental organization, may also initiate action under subsection (1) in relation to the ownership or p…"
+   },
+   {
+    "chunk_id": "property_punjab_2021:s5",
+    "act": "Punjab Enforcement of Women's Property Rights Act, 2021",
+    "section": "5",
+    "heading": "Delivery of possession and transfer of ownership of property to women",
+    "jurisdiction": "punjab",
+    "source_url": "http://punjablaws.gov.pk/laws/2789.html",
+    "excerpt": "(1) On conclusion of the proceedings under section 4, if the Ombudsperson finds that the complainant has been illegally deprived of ownership or possession of her property, he shall direct the Deputy Commissioner or a state functionary or any private person to take steps so as to restore or confer possession or title of the property to the complainant, including measures to perfect such title. (2) The Ombudsperson m…"
+   }
+  ],
+  "where_to_go": [
+   {
+    "name": "Ministry of Human Rights helpline",
+    "number": "1099",
+    "note": "Toll-free national helpline of the Ministry of Human Rights: free legal advice and referrals. Number confirmed on mohr.gov.pk.",
+    "source_url": "https://mohr.gov.pk/Detail/YWRiYjU0NzktMGE2Zi00NDYyLTljNzktMTA2N2M2MjBlZWZl",
+    "verified": true
+   },
+   {
+    "name": "Madadgaar national helpline",
+    "number": "1098",
+    "note": "Gender-based violence, women and children.",
+    "source_url": "https://pcsw.punjab.gov.pk/node/44",
+    "verified": true
+   }
+  ],
+  "wage": null,
+  "caveats": [],
+  "needs_province": true,
+  "letter_type": "property_complaint",
+  "detected": {
+   "language": "ur",
+   "topic": "property",
+   "jurisdiction": null,
+   "english_query": "My brother is not giving me my share of my father's land"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ یہ کسی مقدمے کے نتیجے کی پیش گوئی نہیں کرتیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. It does not predict the outcome of any case."
  }
 }

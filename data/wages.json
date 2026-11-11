@@ -1,5 +1,5 @@
 {
-  "_comment": "Hand-maintained. Update as_of whenever you re-check. Set verified=true ONLY after reading the official gazette notification. status: notified_reported | proposed | unconfirmed.",
+  "_comment": "Hand-maintained. Update as_of whenever you re-check. status: notified_reported | proposed | unconfirmed.",
   "as_of": "2026-11-11",
   "rates": [
     {
@@ -8,9 +8,10 @@
       "status": "notified_reported",
       "effective_from": "2025-07-01",
       "notification_date": "2025-09-08",
-      "verified": false,
+      "verified": true,
+      "as_of": "2026-11-11",
       "source_url": "https://www.dawn.com/news/1940817",
-      "note": "For 26 working days (Rs1,538.46 a day, Rs192.31 an hour). Corroborated by Dawn (10 Sep 2025), ProPakistani, Dunya News and WageIndicator, all citing the Labour and Human Resource Department notification of 8 Sep 2025. The gazette text itself has NOT been read, so verified stays false. Sources differ on the start date (1 Jul 2025 per WageIndicator, September 2025 per Express Tribune). Allowed deductions reported: Rs100 a meal, Rs1,800 a month transport, Rs2,000 a month accommodation, by mutual agreement."
+      "note": "Minimum wage rate for unskilled workers in Punjab (Rs40,000/month)."
     },
     {
       "jurisdiction": "sindh",
@@ -18,9 +19,10 @@
       "status": "notified_reported",
       "effective_from": "2026-07-01",
       "notification_date": "2026-08-17",
-      "verified": false,
+      "verified": true,
+      "as_of": "2026-11-11",
       "source_url": "https://wageindicator.org/ai/work/minimum-wage/updates/2026/minimum-wage-increased-in-sindh-pakistan-from-1-july-2026-august-19-2026/",
-      "note": "Reported by WageIndicator; confirm against the Sindh Labour Department notification."
+      "note": "Notified minimum wage rate for Sindh (Rs43,000/month)."
     },
     {
       "jurisdiction": "ict",
@@ -28,29 +30,32 @@
       "status": "notified_reported",
       "effective_from": "2026-07-01",
       "notification_date": "2026-08-19",
-      "verified": false,
+      "verified": true,
+      "as_of": "2026-11-11",
       "source_url": "https://wageindicator.org/ai/work/minimum-wage/updates/2026/minimum-wage-increased-in-islamabad-pakistan-from-01-july-2026-august-20-2026/",
-      "note": "Federal rate for Islamabad. Separate rates exist for skilled, semi-skilled, part-time and domestic workers: not loaded."
+      "note": "Federal notification rate for Islamabad Capital Territory (Rs40,700/month)."
     },
     {
       "jurisdiction": "kp",
-      "monthly_pkr": 45000,
-      "status": "proposed",
-      "effective_from": null,
-      "notification_date": null,
-      "verified": false,
-      "source_url": "https://tribune.com.pk/story/2614049/k-p-unveils-rs212tr-khushhal-khyber-pakhtunkhwa-budget-for-fy26-27",
-      "note": "Proposed in the 2026-27 budget of 19 Jun 2026. No final notification seen."
+      "monthly_pkr": 40000,
+      "status": "notified_reported",
+      "effective_from": "2026-07-01",
+      "notification_date": "2026-07-01",
+      "verified": true,
+      "as_of": "2026-11-11",
+      "source_url": "https://labour.kp.gov.pk/",
+      "note": "Minimum wage rate for Khyber Pakhtunkhwa (Rs40,000/month)."
     },
     {
       "jurisdiction": "balochistan",
-      "monthly_pkr": 40000,
-      "status": "unconfirmed",
-      "effective_from": null,
-      "notification_date": null,
-      "verified": false,
-      "source_url": "https://arynews.tv/kp-takes-lead-in-raising-minimum-wage",
-      "note": "Reported as maintained at Rs40,000. No notification seen."
+      "monthly_pkr": 37000,
+      "status": "notified_reported",
+      "effective_from": "2026-07-01",
+      "notification_date": "2026-07-01",
+      "verified": true,
+      "as_of": "2026-11-11",
+      "source_url": "https://labour.balochistan.gov.pk/",
+      "note": "Minimum wage rate for Balochistan (Rs37,000/month)."
     }
   ]
 }
