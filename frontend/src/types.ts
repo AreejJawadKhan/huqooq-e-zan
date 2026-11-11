@@ -57,6 +57,8 @@ export interface AskResponse {
   status: Status;
   answer_ur: string;
   answer_en: string;
+  /** Roman Urdu answer, only when the person wrote Roman Urdu; absent or "" otherwise. */
+  answer_roman?: string;
   confidence: Confidence;
   citations: Citation[];
   where_to_go: Referral[];
@@ -81,3 +83,9 @@ export interface LetterRequest {
   relief?: string;
   legal_basis?: string[];
 }
+
+/** Why a response was built from the law text alone (no model). From the X-Huqooq-Degraded response header. */
+export type Degraded = "busy" | "deadline" | "no_model" | "unavailable";
+
+/** An AskResponse plus what the transport added. */
+export type AskResult = AskResponse & { degraded?: Degraded };

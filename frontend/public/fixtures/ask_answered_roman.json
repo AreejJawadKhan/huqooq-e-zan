@@ -1,0 +1,51 @@
+{
+  "status": "answered",
+  "answer_ur": "آپ اپنے آفس کی انکوائری کمیٹی یا محتسب کو تحریری شکایت کر سکتے ہیں۔ دفعہ 8 کے مطابق پہلے کمیٹی میں شکایت دیں۔ [نمونہ جواب]",
+  "answer_en": "You can make a written complaint to your workplace Inquiry Committee. If that does not help, you can go to the Ombudsperson. [sample answer]",
+  "confidence": "high",
+  "citations": [
+    {
+      "chunk_id": "harassment_2010_fospah:s8",
+      "act": "Protection against Harassment of Women at the Workplace Act 2010",
+      "section": "8",
+      "heading": "Procedure for filing a complaint",
+      "jurisdiction": "pakistan",
+      "source_url": "https://fospah.gov.pk/SiteImage/Misc/FOSPAH%20Laws%20and%20Rules.pdf",
+      "excerpt": "SAMPLE EXCERPT: a complaint may be made to the Inquiry Committee or the Ombudsperson. (Fixture text, not the statute.)"
+    }
+  ],
+  "where_to_go": [
+    {
+      "name": "Punjab Women's Toll-Free Helpline",
+      "number": "1043",
+      "note": "24/7. Discrimination, harassment, violence and denied legal rights. Punjab residents.",
+      "source_url": "https://pcsw.punjab.gov.pk/node/61",
+      "verified": false
+    },
+    {
+      "name": "Ministry of Human Rights helpline",
+      "number": "1099",
+      "note": "Legal advice and referrals. Hours 10am to 10pm.",
+      "source_url": "",
+      "verified": false
+    }
+  ],
+  "wage": null,
+  "caveats": [
+    {
+      "en": "Laws differ by province and change over time.",
+      "ur": "قوانین صوبے کے لحاظ سے مختلف ہوتے ہیں اور بدلتے رہتے ہیں۔"
+    }
+  ],
+  "needs_province": false,
+  "letter_type": "harassment_complaint",
+  "detected": {
+    "language": "roman_ur",
+    "topic": "harassment",
+    "jurisdiction": null,
+    "english_query": "workplace harassment complaint inquiry committee"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ قوانین بدلتے رہتے ہیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. Laws change.",
+  "answer_roman": "Aap apne office ke Inquiry Committee ya Ombudsperson ko written shikayat kar sakte hain. Section 8 ke mutabiq pehle committee mein complaint dein; agar madad na mile to Ombudsperson ke paas ja sakte hain. [namoona jawab]"
+}
