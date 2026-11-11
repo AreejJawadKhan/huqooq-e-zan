@@ -1,4 +1,4 @@
-.PHONY: setup ingest dev-backend dev-frontend test eval demo-cache check-models
+.PHONY: setup ingest dev-backend dev-frontend test eval eval-save demo-cache check-models
 
 setup:
 	python3 -m venv .venv
@@ -21,6 +21,10 @@ test:
 
 eval:
 	.venv/bin/python scripts/run_eval.py -v
+
+# Full run on the shipped default models, paced for free tiers; records data/eval_baseline.json (the eval gate).
+eval-save:
+	.venv/bin/python scripts/run_eval.py --pace 15 --save
 
 demo-cache:
 	.venv/bin/python scripts/build_demo_cache.py

@@ -8,11 +8,19 @@ from backend.app.config import Settings
 from backend.app.llm import Analysis
 from backend.app.providers import (
     DEFAULT_MODELS,
+    STATS,
     FallbackLLM,
+    StageRouter,
     GeminiLLM,
     OpenAICompatLLM,
     ProviderError,
+    _short_error,
     build_llm,
+    config_fingerprint,
+    default_fingerprints,
+    default_stages,
+    describe_stages,
+    smoke_test,
 )
 
 ANALYSIS_ARGS = {
@@ -189,14 +197,141 @@ def test_settings_pick_first_provider_with_key_and_fallbacks():
     assert s.llm_provider == "gemini" and s.llm_fallbacks == ["groq"]
 
 
-def test_build_llm_returns_none_without_keys_and_wraps_when_two():
-    none = Settings(gemini_api_key="", groq_api_key="", anthropic_api_key="", llm_provider_setting="", llm_fallback_setting="")
-    assert build_llm(none) is None
-    two = Settings(gemini_api_key="x", groq_api_key="g", anthropic_api_key="", llm_provider_setting="", llm_fallback_setting="")
-    llm = build_llm(two)
+def _settings(**kw):
+    base = dict(gemini_api_key="", groq_api_key="", anthropic_api_key="", llm_provider_setting="", llm_fallback_setting="")
+    base.update(kw)
+    return Settings(**base)
+
+
+def test_build_llm_returns_none_without_keys():
+    assert build_llm(_settings()) is None
+
+
+def test_build_llm_with_one_key_is_a_chain_of_one():
+    llm = build_llm(_settings(gemini_api_key="x"))
+    assert isinstance(llm, FallbackLLM) and [type(p) for p in llm.providers] == [GeminiLLM]
+
+
+def test_build_llm_with_two_keys_routes_analyzer_to_groq_and_answer_to_gemini_by_default():
+    llm = build_llm(_settings(gemini_api_key="x", groq_api_key="g"))
+    assert isinstance(llm, StageRouter)
+    assert [p.name for p in llm.analyzer_chain.providers] == ["groq", "gemini"]
+    assert [p.name for p in llm.answer_chain.providers] == ["gemini", "groq"]
+
+
+def test_explicit_llm_provider_keeps_one_chain_for_both_stages():
+    llm = build_llm(_settings(gemini_api_key="x", groq_api_key="g", llm_provider_setting="gemini"))
     assert isinstance(llm, FallbackLLM) and [p.name for p in llm.providers] == ["gemini", "groq"]
-    one = Settings(gemini_api_key="x", groq_api_key="", anthropic_api_key="", llm_provider_setting="", llm_fallback_setting="")
-    assert isinstance(build_llm(one), GeminiLLM)
+
+
+def test_stage_overrides_and_same():
+    both = dict(gemini_api_key="x", groq_api_key="g", anthropic_api_key="a")
+    # force the analyzer onto gemini; the answer stays on its default chain
+    s = _settings(**both, analyzer_provider_setting="gemini")
+    assert s.stage_chain("analyzer") == ["gemini", "groq", "anthropic"]
+    assert s.stage_chain("answer")[0] == "gemini"
+    # "same" follows the global provider for that stage
+    s = _settings(**both, analyzer_provider_setting="same")
+    assert s.stage_chain("analyzer")[0] == s.llm_provider == "gemini"
+    # a forced provider without a key is skipped, not an error
+    s = _settings(gemini_api_key="x", answer_provider_setting="anthropic")
+    assert s.stage_chain("answer") == ["gemini"]
+
+
+def test_auto_routing_skips_providers_without_keys():
+    assert _settings(groq_api_key="g").stage_chain("analyzer") == ["groq"]
+    assert _settings(groq_api_key="g").stage_chain("answer") == ["groq"]
+    assert _settings(gemini_api_key="x", anthropic_api_key="a").stage_chain("analyzer") == ["gemini", "anthropic"]
+
+
+class _Named:
+    def __init__(self, name):
+        self.name = name
+
+    def analyze(self, *a):
+        return Analysis(topic="harassment", english_query=self.name)
+
+    def compose(self, *a):
+        return self.name
+
+
+def test_stage_router_sends_each_stage_to_its_own_chain():
+    r = StageRouter(FallbackLLM([_Named("groq")]), FallbackLLM([_Named("gemini")]))
+    assert r.analyze("q", None).english_query == "groq"
+    assert r.compose("q", None, [], []) == "gemini"
+
+
+@pytest.fixture
+def clean_stats():
+    STATS.reset()
+    yield STATS
+    STATS.reset()
+
+
+def test_fallback_warns_loudly_and_counts_when_a_later_provider_serves(caplog, clean_stats):
+    import logging
+
+    with caplog.at_level(logging.WARNING, logger="huqooq.providers"):
+        assert FallbackLLM([_Boom(), _Ok()]).analyze("q", None).topic == "wages"
+    assert any("FALLBACK USED: ok served the analyzer stage after boom failed" in r.message for r in caplog.records)
+    snap = clean_stats.snapshot()
+    assert snap["boom:analyzer"]["fail"] == 1 and snap["boom:analyzer"]["last_error"] == "ProviderError"
+    assert snap["ok:analyzer"]["ok"] == 1 and snap["ok:analyzer"]["served_as_fallback"] == 1
+
+
+def test_no_fallback_warning_when_the_first_provider_serves(caplog, clean_stats):
+    import logging
+
+    with caplog.at_level(logging.WARNING, logger="huqooq.providers"):
+        FallbackLLM([_Ok(), _Boom()]).analyze("q", None)
+    assert not any("FALLBACK USED" in r.message for r in caplog.records)
+    assert clean_stats.snapshot()["ok:analyzer"]["served_as_fallback"] == 0
+
+
+def test_short_error_labels_never_include_provider_messages():
+    assert _short_error(ProviderError('HTTP 429: {"error": "quota for key AIza..."}')) == "HTTP 429"
+    assert _short_error(ProviderError("gemini returned no tool call for x (finishReason=MAX_TOKENS)")) == "no_tool_call"
+    assert _short_error(ValueError("secret detail")) == "ValueError"
+
+
+def test_describe_stages_reflects_routing_and_models():
+    d = describe_stages(_settings(gemini_api_key="x", groq_api_key="g"))
+    assert d["analyzer"] == [
+        {"provider": "groq", "model": DEFAULT_MODELS["groq"][0]},
+        {"provider": "gemini", "model": DEFAULT_MODELS["gemini"][0]},
+    ]
+    assert d["answer"][0] == {"provider": "gemini", "model": DEFAULT_MODELS["gemini"][1]}
+
+
+def test_default_fingerprints_change_when_a_default_model_changes(monkeypatch):
+    before = default_fingerprints()["models"]
+    assert before == config_fingerprint(default_stages())
+    monkeypatch.setitem(DEFAULT_MODELS, "groq", ("some/other-model", DEFAULT_MODELS["groq"][1]))
+    assert default_fingerprints()["models"] != before
+
+
+def test_smoke_test_reports_ok_limited_and_fail_per_model(monkeypatch):
+    class Fake:
+        def __init__(self, behaviour):
+            self.behaviour = behaviour
+
+        def _tool_call(self, model, system, user, tool, max_tokens=1500):
+            kind = self.behaviour[model]
+            if kind == "ok":
+                return {"ok": True}
+            raise ProviderError("HTTP 429: quota" if kind == "429" else "HTTP 404: model_not_found")
+
+    s = _settings(gemini_api_key="x", groq_api_key="g")
+    fakes = {
+        "gemini": Fake({DEFAULT_MODELS["gemini"][0]: "ok", DEFAULT_MODELS["gemini"][1]: "429"}),
+        "groq": Fake({DEFAULT_MODELS["groq"][0]: "ok", DEFAULT_MODELS["groq"][1]: "404"}),
+    }
+    monkeypatch.setattr("backend.app.providers.build_provider", lambda name, settings: fakes.get(name))
+    rows = {(r["provider"], r["stage"]): r for r in smoke_test(s)}
+    assert rows[("gemini", "analyzer")]["status"] == "ok"
+    assert rows[("gemini", "answer")]["status"] == "limited"
+    assert rows[("groq", "analyzer")]["status"] == "ok"
+    assert rows[("groq", "answer")]["status"] == "fail" and rows[("groq", "answer")]["error"] == "HTTP 404"
 
 
 def test_model_env_override(monkeypatch):

@@ -17,7 +17,7 @@ from .demo_cache import DemoCache
 from .safety import detect_danger
 from .letters import build_letter
 from .pipeline import Pipeline
-from .providers import build_llm
+from .providers import STATS, build_llm, config_fingerprint, describe_stages, prompts_fingerprint, smoke_test
 from .retrieval import Retriever
 from .schemas import AskRequest, AskResponse, LetterRequest, Referral, WageInfo
 
@@ -91,17 +91,44 @@ def create_app(pipeline: Optional[Pipeline] = None, settings: Optional[Settings]
             app.state.pipeline = build_pipeline(settings)
         return app.state.pipeline
 
+    chunk_count: dict[str, int] = {}
+    deep_cache: dict = {"at": 0.0, "rows": []}
+
     @app.get("/api/health")
-    def health():
-        n = len(Retriever.from_jsonl(settings.chunks_path)) if app.state.pipeline is None else len(app.state.pipeline.retriever)
-        return {
+    def health(deep: bool = False):
+        """Liveness plus a view of the model setup. Cheap by default: nothing here calls a model. `deep=1` (only
+        when HEALTH_DEEP=1) makes one tiny real call per configured model, cached for 60 s."""
+        if "n" not in chunk_count:  # building the BM25 index is slow: do it once, not on every health check
+            chunk_count["n"] = (
+                len(app.state.pipeline.retriever) if app.state.pipeline is not None else len(Retriever.from_jsonl(settings.chunks_path))
+            )
+        n = chunk_count["n"]
+        stages = describe_stages(settings)
+        body = {
             "status": "ok",
             "chunks_indexed": n,
             "api_key_set": settings.any_llm_key or app.state.pipeline is not None,
             "demo_cache_entries": len(demo),
             "provider": settings.llm_provider if settings.any_llm_key else None,
             "hint": None if n else "No chunks yet: put source files in data/raw and run `make ingest`.",
+            "providers": {
+                "stages": stages,  # chain and model per stage, in the order they are tried
+                "model_config": config_fingerprint(stages),
+                "prompts": prompts_fingerprint(),
+                # live counters since this process started: ok / fail / served_as_fallback / last_error per provider:stage
+                "stats": STATS.snapshot(),
+            },
         }
+        if deep:
+            if not settings.health_deep:
+                body["providers"]["deep"] = "disabled: set HEALTH_DEEP=1 to allow live model checks"
+            else:
+                now = time.monotonic()
+                if now - deep_cache["at"] > 60:
+                    deep_cache["rows"] = smoke_test(settings)
+                    deep_cache["at"] = now
+                body["providers"]["deep"] = deep_cache["rows"]
+        return body
 
     @app.post("/api/ask", response_model=AskResponse)
     def ask(req: AskRequest):

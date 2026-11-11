@@ -41,5 +41,5 @@ Response: a `.docx` file download. `downloadLetter()` in `frontend/src/api.ts` h
 
 - `/api/wages`: all rates with `as_of`, `status`, `verified`.
 - `/api/referrals?topic=harassment&jurisdiction=punjab&danger=false`
-- `/api/health`: `chunks_indexed` (0 means ingest has not been run) and `api_key_set`.
+- `/api/health`: `chunks_indexed` (0 means ingest has not been run), `api_key_set`, and `providers`: the provider order and model per stage (`stages`), fingerprints of the model setup and prompts, and live per-provider counters (`stats`: `ok`, `fail`, `served_as_fallback`, `last_error`). `?deep=1` runs a real call per model when `HEALTH_DEEP=1` (cached 60 s). Nothing here reveals provider error messages or keys.
 - `/api/debug/search?q=...&topic=...` exists only when `DEBUG=1`; use it to tune retrieval.

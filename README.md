@@ -29,6 +29,8 @@ make dev-backend           # http://localhost:8000  (docs at /docs)
 make dev-frontend          # http://localhost:5173  (in a second terminal)
 make test                  # offline tests, no API key needed
 make eval                  # the 15 acceptance questions against the real models
+make check-models          # one real call per configured model: catches retired model names
+make eval-save             # eval on the shipped models, records data/eval_baseline.json (the eval gate)
 ```
 
 Check `http://localhost:8000/api/health`: `chunks_indexed` must be above 0.
@@ -97,15 +99,30 @@ docs/API.md      the contract between frontend and backend
 
 ## Choosing a model provider
 
-Put at least one key in `.env`. The first provider with a key is used; any other provider with a key becomes the automatic fallback if the first one rate-limits or fails.
+Put at least one key in `.env`. With two or more keys the app routes each pipeline stage to the provider that suits it:
+
+| Stage | What it does | Default order | Why |
+| --- | --- | --- | --- |
+| Analyzer | classifies the question, finds the province, writes English search terms | Groq `openai/gpt-oss-20b` -> Gemini `gemini-3.5-flash-lite` | small structured job; Groq answers in about 1 s |
+| Answer | writes the grounded Urdu and English answer | Gemini `gemini-3.5-flash` -> Groq `openai/gpt-oss-120b` | best Urdu |
+
+Anthropic (`claude-haiku-5-5` / `claude-sonnet-5-5`, paid) is the last fallback for both stages when `ANTHROPIC_API_KEY` is set. Providers without a key are skipped.
 
 | Provider | Key | Cost | Notes |
 | --- | --- | --- | --- |
-| Gemini | `GEMINI_API_KEY` ([AI Studio](https://aistudio.google.com/apikey)) | Free tier | Default. Free-tier prompts may be used to improve Google products, so demo with synthetic questions only. |
-| Groq | `GROQ_API_KEY` ([console](https://console.groq.com/keys)) | Free plan | Good fallback; its per-minute token limit is small. |
+| Gemini | `GEMINI_API_KEY` ([AI Studio](https://aistudio.google.com/apikey)) | Free tier | Free-tier prompts may be used to improve Google products: demo with synthetic questions only. `gemini-3.5-flash` has a very small free quota. |
+| Groq | `GROQ_API_KEY` ([console](https://console.groq.com/keys)) | Free plan | Fast; weaker Urdu (sometimes Latin letters inside Urdu text). |
 | Anthropic | `ANTHROPIC_API_KEY` | Paid | Use for real user data. |
 
-Set `LLM_PROVIDER` and `LLM_FALLBACK` to force an order. Model names change often: override them with `GEMINI_ANSWER_MODEL` and friends (see `.env.example`). Run `make eval` with each provider and keep the one that passes more of the 15 questions in Urdu.
+Override the routing with `LLM_PROVIDER` (one chain for both stages), `ANALYZER_PROVIDER` / `ANSWER_PROVIDER` (`auto`, `same`, or a provider name) and `LLM_FALLBACK`. Override model names with `GEMINI_ANALYZER_MODEL`, `GROQ_ANSWER_MODEL` and friends (see `.env.example`).
+
+### Model names expire. Do not trust them: check them
+
+Providers retire model names without warning (Gemini 2.5 and Groq Llama 3.x both disappeared, and the dead Groq fallback went unnoticed). Three safeguards:
+
+1. `make check-models` makes one real tool call per configured model (a model being *listed* proves nothing: `gemini-2.5-flash-lite` is listed but returns 404). `--list` shows what each provider offers. HTTP 429 is reported as "rate-limited", not "dead".
+2. `GET /api/health` shows the model and provider order per stage, plus live counters per provider and stage (`ok`, `fail`, `served_as_fallback`, `last_error`). Set `HEALTH_DEEP=1` to allow `GET /api/health?deep=1`, which runs the check live (cached for 60 s). Whenever a fallback provider has to serve a request, the log gets a `FALLBACK USED` warning: a dead or struggling primary is visible instead of hidden behind answers that still arrive.
+3. **Eval gate.** `data/eval_baseline.json` records the 15-question result together with fingerprints of the default models, the prompts and the retrieval settings. `tests/test_eval_baseline.py` fails when any of them changes without a new `make eval-save`, so a new model or an edited prompt cannot change answers unnoticed. `make eval-save` refuses to record a run in which a fallback provider answered (the result would mix models); on a free tier it paces requests, because a 429 turns into a fallback answer. Until the first baseline is committed the gate is skipped with a loud message.
 
 ## Hackathon notes
 
