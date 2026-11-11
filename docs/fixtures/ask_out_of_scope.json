@@ -1,0 +1,28 @@
+{
+  "status": "out_of_scope",
+  "answer_ur": "میں صرف کام کی جگہ پر ہراسانی، خواتین کی جائیداد اور کم از کم اجرت کے بارے میں معلومات دیتا ہوں۔ [نمونہ جواب]",
+  "answer_en": "I only cover workplace harassment, women's property rights and minimum wage. [sample answer]",
+  "confidence": "none",
+  "citations": [],
+  "where_to_go": [
+    {
+      "name": "Ministry of Human Rights helpline",
+      "number": "1099",
+      "note": "Legal advice and referrals. Hours 10am to 10pm.",
+      "source_url": "",
+      "verified": false
+    }
+  ],
+  "wage": null,
+  "caveats": [],
+  "needs_province": false,
+  "letter_type": null,
+  "detected": {
+    "language": "en",
+    "topic": "other",
+    "jurisdiction": null,
+    "english_query": ""
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ قوانین بدلتے رہتے ہیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. Laws change."
+}

@@ -1,0 +1,64 @@
+/* Huqooq design tokens, generated from the Huqooq Design System (tokens.json). */
+
+:root,
+[data-theme="light"] {
+  --surface-100: #faf7f2;
+  --surface-200: #ffffff;
+  --surface-300: #efe9df;
+  --line: #8a8f86;
+  --line-soft: #d9d1c3;
+  --ink: #1d2523;
+  --muted: #55605c;
+  --brand: #0f6b60;
+  --on-brand: #ffffff;
+  --accent: #8a5200;
+  --info-bg: #e3f1ee;
+  --caution-bg: #fff3d6;
+  --caution-ink: #6b4300;
+  --danger-bg: #fbe9e7;
+  --danger-ink: #8c1d18;
+  --danger-solid: #b3261e;
+  --on-danger: #ffffff;
+  --focus: #1a56db;
+  --shadow-card: 0 1px 2px rgba(29,37,35,0.08), 0 4px 12px rgba(29,37,35,0.06);
+}
+
+[data-theme="dark"] {
+  --surface-100: #14201e;
+  --surface-200: #1c2b29;
+  --surface-300: #101a19;
+  --line: #7d8d86;
+  --line-soft: #34443f;
+  --ink: #eef2ef;
+  --muted: #aab7b1;
+  --brand: #5cc2b3;
+  --on-brand: #0b1715;
+  --accent: #f0b45a;
+  --info-bg: #17332f;
+  --caution-bg: #3a2e10;
+  --caution-ink: #f5cf85;
+  --danger-bg: #3a1a18;
+  --danger-ink: #ffb4ab;
+  --danger-solid: #ff8a80;
+  --on-danger: #2a0b09;
+  --focus: #8ab4ff;
+  --shadow-card: none;
+}
+
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --touch: 48px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+  --font-urdu: "Noto Nastaliq Urdu", "Noto Naskh Arabic", serif;
+  --font-urdu-ui: "Noto Naskh Arabic", "Noto Nastaliq Urdu", serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+}

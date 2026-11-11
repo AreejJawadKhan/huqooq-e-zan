@@ -1,0 +1,43 @@
+{
+  "status": "answered",
+  "answer_ur": "جواب صوبے پر منحصر ہے۔ براہ کرم اپنا صوبہ بتائیں۔ [نمونہ جواب]",
+  "answer_en": "The answer depends on your province. Please tell us which province you are in. [sample answer]",
+  "confidence": "low",
+  "citations": [
+    {
+      "chunk_id": "harassment_2010_fospah:s8",
+      "act": "Protection against Harassment of Women at the Workplace Act 2010",
+      "section": "8",
+      "heading": "Procedure for filing a complaint",
+      "jurisdiction": "pakistan",
+      "source_url": "https://fospah.gov.pk/SiteImage/Misc/FOSPAH%20Laws%20and%20Rules.pdf",
+      "excerpt": "SAMPLE EXCERPT: a complaint may be made to the Inquiry Committee or the Ombudsperson. (Fixture text, not the statute.)"
+    }
+  ],
+  "where_to_go": [
+    {
+      "name": "Ministry of Human Rights helpline",
+      "number": "1099",
+      "note": "Legal advice and referrals. Hours 10am to 10pm.",
+      "source_url": "",
+      "verified": false
+    }
+  ],
+  "wage": null,
+  "caveats": [
+    {
+      "en": "Laws differ by province and change over time.",
+      "ur": "قوانین صوبے کے لحاظ سے مختلف ہوتے ہیں اور بدلتے رہتے ہیں۔"
+    }
+  ],
+  "needs_province": true,
+  "letter_type": null,
+  "detected": {
+    "language": "en",
+    "topic": "wages",
+    "jurisdiction": null,
+    "english_query": "minimum wage"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ قوانین بدلتے رہتے ہیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. Laws change."
+}

@@ -1,0 +1,22 @@
+.hq{font-family:var(--font-sans);color:var(--ink);box-sizing:border-box}
+.hq *{box-sizing:border-box}
+.hq-ur{font-family:var(--font-urdu);font-size:22px;line-height:2.1;direction:rtl;text-align:right}
+.hq-ul{font-family:var(--font-urdu-ui);font-size:16px;line-height:1.9;direction:rtl}
+.hq-en{font-size:16px;line-height:24px;color:var(--muted);direction:ltr;text-align:left}
+.hq-card{background:var(--surface-200);border:1px solid var(--line-soft);border-radius:var(--radius-lg);padding:var(--space-6);box-shadow:var(--shadow-card);max-width:560px}
+.hq-btn{min-height:var(--touch);padding:0 var(--space-6);border-radius:var(--radius-md);border:2px solid var(--brand);background:var(--brand);color:var(--on-brand);font:600 16px var(--font-sans);display:inline-flex;align-items:center;gap:var(--space-2);cursor:pointer}
+.hq-btn.ghost{background:transparent;color:var(--brand)}
+.hq-btn.danger{background:var(--danger-solid);border-color:var(--danger-solid);color:var(--on-danger)}
+.hq :focus-visible,.hq-btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.hq-chip{display:inline-flex;align-items:center;gap:var(--space-1);padding:2px var(--space-2);border-radius:var(--radius-sm);background:var(--info-bg);color:var(--brand);font:600 14px/20px var(--font-sans)}
+.hq-notice{border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);font:400 14px/20px var(--font-sans)}
+.hq-notice.caution{background:var(--caution-bg);color:var(--caution-ink)}
+.hq-notice.danger{background:var(--danger-bg);color:var(--danger-ink)}
+.hq-mic{width:72px;height:72px;border-radius:var(--radius-full);border:0;background:var(--brand);color:var(--on-brand);display:inline-grid;place-items:center;cursor:pointer}
+.hq-mic svg{width:32px;height:32px}
+.hq-mic[aria-pressed=true]{outline:4px solid var(--focus);outline-offset:3px}
+.hq-excerpt{background:var(--surface-300);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);font:400 14px/20px var(--font-sans);color:var(--ink)}
+.hq-list{list-style:none;margin:0;padding:0;display:grid;gap:var(--space-3)}
+.hq-list li{display:flex;justify-content:space-between;gap:var(--space-3);align-items:center;padding:var(--space-3) 0;border-bottom:1px solid var(--line-soft)}
+.hq-wage{display:inline-flex;flex-direction:column;gap:2px;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);border:1px solid var(--line)}
+.hq-wage b{font:700 24px/30px var(--font-sans);color:var(--accent)}
