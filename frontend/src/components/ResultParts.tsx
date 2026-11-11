@@ -22,11 +22,22 @@ export function NotVerified() {
 }
 
 export function CitationChip({ c }: { c: Citation }) {
+  const href = safeUrl(c.source_url);
   return (
     <details className="hq-cite">
-      <summary><span className="hq-chip">{c.act}, s.{c.section}{c.heading ? ` (${c.heading})` : ""}</span></summary>
-      <div className="hq-excerpt">{c.excerpt}</div>
-      {safeUrl(c.source_url) && <a href={safeUrl(c.source_url)!} target="_blank" rel="noopener noreferrer">{T.source} / Source</a>}
+      <summary>
+        <span className="hq-chip">{c.act}, s.{c.section}</span>
+      </summary>
+      <div className="hq-quote">
+        {c.heading && <div className="hq-ref-name">s.{c.section}: {c.heading}</div>}
+        <p className="hq-quote-label"><Bi inline ur={T.exactText} en={T.exactTextEn} /></p>
+        <blockquote className="hq-excerpt" lang="en" dir="ltr">{c.excerpt}</blockquote>
+        {href ? (
+          <a href={href} target="_blank" rel="noopener noreferrer"><Bi inline ur={T.officialSource} en="Official source" /></a>
+        ) : (
+          <p className="hq-ref-note">Source link not available yet.</p>
+        )}
+      </div>
     </details>
   );
 }

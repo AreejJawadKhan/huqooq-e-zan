@@ -16,6 +16,13 @@ export const EXAMPLES: string[] = [
 ];
 
 export const T = {
+  listen: "جواب سنیں",
+  stopListening: "رکیں",
+  exactText: "قانون کا اصل متن",
+  exactTextEn: "Exact text of the law",
+  basedOn: "یہ جواب درج ذیل دفعات پر مبنی ہے",
+  basedOnEn: "This answer is based on these sections of law",
+  officialSource: "سرکاری ماخذ",
   topics: [
     { ur: "ہراسانی", en: "Harassment" },
     { ur: "اجرت", en: "Wages" },

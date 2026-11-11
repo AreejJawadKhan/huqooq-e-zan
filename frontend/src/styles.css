@@ -50,3 +50,6 @@ dialog.hq-dialog::backdrop { background: rgba(0, 0, 0, 0.45); }
 .section-title .bi, h2 .bi, h3 .bi { align-items: flex-start; text-align: start; }
 .app-brand h1 { flex-direction: column; align-items: flex-start; gap: 0; font-size: 26px; line-height: 32px; }
 .app-brand h1 .hq-ur { font-size: 26px; line-height: 1.7; }
+.hq-quote { display: grid; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-inline-start: 4px solid var(--brand); background: var(--surface-300); border-radius: var(--radius-md); }
+.hq-quote-label { margin: 0; font: 600 14px/20px var(--font-sans); color: var(--muted); }
+blockquote.hq-excerpt { margin: 0; }

@@ -1,6 +1,7 @@
 import type { AskResponse, Jurisdiction } from "../types";
 import { PROVINCES, T } from "../strings";
 import Bi from "./Bi";
+import SpeakButton from "./SpeakButton";
 import { CaveatNote, CitationChip, ReferralList, WageChip } from "./ResultParts";
 
 function Disclaimer({ r }: { r: AskResponse }) {
@@ -53,6 +54,7 @@ export default function ResultView({
   return (
     <div className="hq-card wide">
       <p className="hq-ur" lang="ur">{r.answer_ur}</p>
+      <div><SpeakButton text={r.answer_ur} /></div>
       <p className="hq-en">{r.answer_en}</p>
       {r.caveats.map((c, i) => <CaveatNote key={i} c={c} />)}
       {r.wage && <WageChip w={r.wage} />}
@@ -67,7 +69,7 @@ export default function ResultView({
         </div>
       )}
       <div>
-        <h3 className="hq-section-title"><Bi ur={T.legalBasis} en="Legal basis" /></h3>
+        <h3 className="hq-section-title"><Bi ur={T.basedOn} en={T.basedOnEn} /></h3>
         <div className="hq-stack">{r.citations.map((c) => <CitationChip key={c.chunk_id} c={c} />)}</div>
       </div>
       <ReferralList items={r.where_to_go} />
