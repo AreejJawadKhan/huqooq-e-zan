@@ -26,6 +26,7 @@ export default defineConfig({
   plugins: [react(), cspPlugin()],
   server: {
     port: 5173,
-    proxy: { "/api": "http://localhost:8000" },
+    // Match Uvicorn's explicit IPv4 bind on Windows; `localhost` may resolve to ::1.
+    proxy: { "/api": "http://127.0.0.1:8000" },
   },
 });
