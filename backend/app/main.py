@@ -7,17 +7,19 @@ import time
 from collections import defaultdict, deque
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException, Query, Request
+from fastapi import FastAPI, HTTPException, Query, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 
 from .config import Settings, get_settings
 from .data import ReferralTable, WageTable
-from .demo_cache import DemoCache
+from .deadline import request_deadline
+from .demo_cache import DemoCache, cache_key
+from .limits import Admission, AnswerCache, client_ip
 from .safety import detect_danger
 from .letters import build_letter
 from .pipeline import Pipeline
-from .providers import STATS, build_llm, config_fingerprint, describe_stages, prompts_fingerprint, smoke_test
+from .providers import STATS, build_llm, failure_reason, config_fingerprint, describe_stages, prompts_fingerprint, smoke_test
 from .retrieval import Retriever
 from .schemas import AskRequest, AskResponse, LetterRequest, Referral, WageInfo
 
@@ -58,24 +60,30 @@ def create_app(pipeline: Optional[Pipeline] = None, settings: Optional[Settings]
         allow_origins=settings.cors_origins,
         allow_methods=["GET", "POST"],
         allow_headers=["Content-Type"],
-        expose_headers=["Content-Disposition"],
+        expose_headers=["Content-Disposition", "X-Huqooq-Degraded"],
     )
     app.state.pipeline = pipeline
     demo = DemoCache.load(settings.demo_cache_path) if settings.demo_cache else DemoCache({})
     hits: dict[str, deque] = defaultdict(deque)
+    admission = Admission(settings.max_inflight, settings.global_rpm)
+    answers = AnswerCache(settings.answer_cache_ttl_s, settings.answer_cache_size)
 
     @app.middleware("http")
     async def guard(request: Request, call_next):
         if request.method == "POST" and request.url.path in _RATE_PATHS:
-            # Behind a proxy set the first X-Forwarded-For hop; otherwise the socket peer.
-            fwd = request.headers.get("x-forwarded-for", "").split(",")[0].strip()
-            who = fwd or (request.client.host if request.client else "unknown")
+            # X-Forwarded-For is only trusted for the hops our own proxies add (TRUSTED_PROXY_HOPS); by default the
+            # socket address is used, so a spoofed header cannot reset the limit.
+            who = client_ip(
+                request.headers.get("x-forwarded-for", ""),
+                request.client.host if request.client else "unknown",
+                settings.trusted_proxy_hops,
+            )
             now = time.monotonic()
             q = hits[who]
             while q and now - q[0] > RATE_WINDOW_S:
                 q.popleft()
             if len(q) >= RATE_LIMIT:
-                return JSONResponse({"detail": "Too many requests. Please wait a minute and try again."}, status_code=429, headers={"Retry-After": str(RATE_WINDOW_S)})
+                return JSONResponse({"detail": "Too many requests. Please wait a minute and try again.", "code": "rate_limited"}, status_code=429, headers={"Retry-After": str(RATE_WINDOW_S)})
             q.append(now)
             if len(hits) > 5000:  # bound memory
                 for k in [k for k, v in hits.items() if not v or now - v[-1] > RATE_WINDOW_S]:
@@ -131,21 +139,42 @@ def create_app(pipeline: Optional[Pipeline] = None, settings: Optional[Settings]
         return body
 
     @app.post("/api/ask", response_model=AskResponse)
-    def ask(req: AskRequest):
-        # Danger messages always take the deterministic path, never the cache.
-        if len(demo) and not detect_danger(req.question):
+    def ask(req: AskRequest, response: Response):
+        """Always answers. If no model can (rate-limited, out of time, no key, at the request cap) the response is built
+        from the law text alone and carries `X-Huqooq-Degraded: busy | deadline | no_model | unavailable`, so the UI can
+        tell "busy, try again" from "broken" and still show the user something useful."""
+        pipeline = get_pipeline()
+        # Danger messages always take the deterministic path: no cache, no model, no admission needed.
+        if detect_danger(req.question):
+            return pipeline.ask(req)
+
+        key = cache_key(req.question, req.jurisdiction)
+        if len(demo):
             cached = demo.get(req.question, req.jurisdiction)
             if cached is not None:
-                return cached
+                return pipeline.refresh_fixed_parts(cached)
+        remembered = answers.get(key)
+        if remembered is not None:
+            response.headers["X-Huqooq-Cache"] = "hit"
+            return remembered
+
+        if not admission.enter():
+            response.headers["X-Huqooq-Degraded"] = "busy"
+            return pipeline.ask_degraded(req, "busy")
         try:
-            return get_pipeline().ask(req)
-        except HTTPException:
-            raise
-        except Exception as exc:  # surface model/API failures as a clean 502 for the UI
+            with request_deadline(settings.request_deadline_s):
+                result = pipeline.ask(req)
+            answers.put(key, result)
+            return result
+        except Exception as exc:  # noqa: BLE001 - never show the provider's error; answer from the law text instead
+            reason = failure_reason(exc)
             # Never echo provider errors to the browser (they can contain request details). Log server-side only.
-            log.error("ask failed: %s", type(exc).__name__)
+            log.warning("ask degraded (%s): %s", reason, type(exc).__name__)
             log.debug("ask failure detail", exc_info=True)
-            raise HTTPException(status_code=502, detail="The answer service is temporarily unavailable. Please try again in a moment.") from exc
+            response.headers["X-Huqooq-Degraded"] = reason
+            return pipeline.ask_degraded(req, reason)
+        finally:
+            admission.leave()
 
     @app.post("/api/letter")
     def letter(req: LetterRequest):

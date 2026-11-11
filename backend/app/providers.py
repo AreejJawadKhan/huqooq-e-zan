@@ -20,6 +20,7 @@ from typing import Optional
 
 import httpx
 
+from .deadline import MAX_CALL_S, MIN_CALL_BUDGET_S, time_left
 from .llm import Analysis, AnthropicLLM, Composition, LLM, ToolLLM
 from .retrieval import Chunk
 from .schemas import WageInfo
@@ -57,16 +58,25 @@ class ProviderError(RuntimeError):
 
 
 def _post_with_retry(client: httpx.Client, url: str, *, retries: int = 1, **kwargs) -> httpx.Response:
-    """POST; on 429/503 wait (honouring Retry-After, capped) and retry once, then raise ProviderError."""
+    """POST; on 429/503 wait (honouring Retry-After, capped) and retry once, then raise ProviderError. Respects the
+    per-request deadline: the call's timeout is the time left, and no retry starts without time for it."""
     for attempt in range(retries + 1):
+        left = time_left()
+        if left is not None:
+            if left < MIN_CALL_BUDGET_S:
+                raise ProviderError("deadline exceeded before the call")
+            kwargs["timeout"] = min(left, MAX_CALL_S)
         resp = client.post(url, **kwargs)
         if resp.status_code in (429, 503) and attempt < retries:
             try:
                 wait = float(resp.headers.get("retry-after", "2"))
             except ValueError:
                 wait = 2.0
-            time.sleep(min(max(wait, 0.5), 8.0))
-            continue
+            wait = min(max(wait, 0.5), 8.0)
+            left = time_left()
+            if left is None or left - wait >= MIN_CALL_BUDGET_S + 1:
+                time.sleep(wait)
+                continue
         if resp.status_code >= 400:
             raise ProviderError(f"HTTP {resp.status_code}: {resp.text[:300]}")
         return resp
@@ -220,6 +230,29 @@ def _short_error(exc: Exception) -> str:
     return type(exc).__name__
 
 
+class AllProvidersFailed(ProviderError):
+    """Every provider in a chain failed. `errors` holds short codes (HTTP 429, no_tool_call, ...) for classification."""
+
+    def __init__(self, message: str, errors: list[str]):
+        super().__init__(message)
+        self.errors = errors
+
+
+def failure_reason(exc: BaseException) -> str:
+    """Why a model-backed request failed, as a short code the UI can act on:
+    busy (a provider is rate-limited), deadline (out of time), no_model (no key configured), unavailable (anything else)."""
+    status = getattr(exc, "status_code", None)
+    if status == 503 and "No model API key" in str(getattr(exc, "detail", "")):
+        return "no_model"
+    codes = list(getattr(exc, "errors", [])) or [_short_error(exc)]
+    text = " ".join(codes) + " " + str(exc)
+    if "deadline" in text:
+        return "deadline"
+    if "HTTP 429" in text:
+        return "busy"
+    return "unavailable"
+
+
 class ProviderStats:
     """In-memory, per-process counters per provider and stage. They turn silent failures (a dead fallback, a model
     that keeps being skipped) into something visible in /api/health and in the logs."""
@@ -282,21 +315,29 @@ class FallbackLLM:
         stage = _STAGE_OF_METHOD.get(method, method)
         last: Optional[Exception] = None
         failed: list[str] = []
+        errors: list[str] = []
         for i, p in enumerate(self.providers):
             name = getattr(p, "name", str(p))
+            if i > 0:
+                left = time_left()
+                if left is not None and left < MIN_CALL_BUDGET_S:
+                    log.warning("no time left for %s on %s (deadline)", name, method)
+                    errors.append("deadline")
+                    break
             try:
                 out = getattr(p, method)(*args)
             except Exception as exc:  # noqa: BLE001 - any provider failure should try the next one
                 log.warning("provider %s failed on %s: %s", name, method, exc)
                 STATS.record_failure(name, stage, exc)
                 failed.append(name)
+                errors.append(_short_error(exc))
                 last = exc
                 continue
             STATS.record_ok(name, stage, fallback=i > 0)
             if i > 0:
                 log.warning("FALLBACK USED: %s served the %s stage after %s failed", name, stage, ", ".join(failed))
             return out
-        raise ProviderError(f"All providers failed. Last error: {last}")
+        raise AllProvidersFailed(f"All providers failed. Last error: {last}", errors)
 
     def analyze(self, question: str, jurisdiction_hint: Optional[str]) -> Analysis:
         return self._run("analyze", question, jurisdiction_hint)

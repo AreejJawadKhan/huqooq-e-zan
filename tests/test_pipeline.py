@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
+from backend.app import messages as M
 from backend.app.config import Settings
 from backend.app.data import ReferralTable, WageTable
 from backend.app.llm import Analysis, Composition
@@ -130,7 +131,12 @@ def test_danger_works_without_api_key():
     client = TestClient(create_app(pipeline=build_pipeline(Settings(anthropic_api_key="", gemini_api_key="", groq_api_key="")), settings=Settings()))
     r = client.post("/api/ask", json={"question": "mera shohar mujhe maar peet karta hai"})
     assert r.status_code == 200 and r.json()["status"] == "danger"
-    assert client.post("/api/ask", json={"question": "minimum wage in Lahore"}).status_code == 503
+    # No model at all: the question is still answered from the law text (retrieval only), flagged as degraded.
+    r = client.post("/api/ask", json={"question": "minimum wage in Lahore"})
+    assert r.status_code == 200 and r.headers["x-huqooq-degraded"] == "no_model"
+    body = r.json()
+    assert body["status"] == "answered" and body["confidence"] == "low" and body["citations"]
+    assert body["answer_en"] == M.DEGRADED_EN and body["letter_type"] is None
 
 
 def property_analysis():
@@ -177,3 +183,43 @@ def test_pipeline_cleans_answer_ur_but_leaves_answer_en_untouched():
     res = make_pipeline(FakeLLM(harassment_analysis(), comp)).ask(AskRequest(question="manager harassment complaint"))
     assert res.answer_ur == "شکایت کریں میں۔"
     assert res.answer_en == "File it with the Inquiry Committee (IC)."
+
+
+def test_self_harm_gets_its_own_message_and_helplines():
+    res = make_pipeline(FakeLLM(harassment_analysis())).ask(AskRequest(question="I want to die"))
+    assert res.status == "danger"
+    assert "harming yourself" in res.answer_en and "You are not alone" in res.answer_en
+    numbers = [r.number for r in res.where_to_go]
+    assert numbers[0] == "15" and "1099" in numbers
+    umang = next(r for r in res.where_to_go if r.name.startswith("Umang"))
+    assert umang.verified is False  # NOT verified: the UI must show "Not yet verified" on it
+    assert "1043" not in numbers  # the Punjab violence helpline is not the self-harm list
+    assert res.citations == [] and res.letter_type is None
+
+
+def test_violence_still_gets_the_general_danger_message_even_if_self_harm_is_also_mentioned():
+    res = make_pipeline(FakeLLM(harassment_analysis())).ask(
+        AskRequest(question="My husband beats me and I want to die", jurisdiction="punjab")
+    )
+    assert res.status == "danger" and "harming yourself" not in res.answer_en
+    assert any(r.number == "1043" for r in res.where_to_go)
+
+
+def test_every_unverified_referral_is_flagged_unverified_in_the_response():
+    res = make_pipeline(FakeLLM(harassment_analysis())).ask(AskRequest(question="mujhe khudkushi ka khayal aata hai"))
+    assert res.status == "danger" and all(isinstance(r.verified, bool) for r in res.where_to_go)
+
+
+def test_caveats_state_only_sourced_claims():
+    from backend.app import messages as M
+
+    punjab = M.caveats_for("property", "punjab", None)[0]
+    assert "60 days" in punjab.en and "section 4" in punjab.en and "target, not a guarantee" in punjab.en
+    assert "delay" not in (punjab.en + punjab.ur).lower()  # "delays have been reported" had no source
+
+    ict = M.caveats_for("property", "ict", None)[0]
+    assert "529/2021" in ict.en and "ICA 85/2023" in ict.en and "confirm its current status" in ict.en
+    assert "2023" not in ict.en.replace("ICA 85/2023", "")  # the unverified suspension date is not stated
+
+    sindh = M.caveats_for("property", "sindh", None)[0]
+    assert "does not hold" in sindh.en and "was found" not in sindh.en  # says what the app holds, not what exists in law

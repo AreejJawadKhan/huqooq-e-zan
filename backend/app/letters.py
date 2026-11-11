@@ -15,6 +15,11 @@ from docx.shared import Pt
 
 from .schemas import LetterRequest
 
+# SOURCING: "(as amended in 2022)" is the Protection against Harassment of Women at the Workplace (Amendment) Act, 2022:
+# passed by the National Assembly on 14 Jan 2022, assent 21 Jan, notified 28 Jan 2022 (HRW 20 Jan 2022
+# https://www.hrw.org/news/2022/01/20/pakistans-new-law-aims-protect-women-workplace ; Tribune, Geo, Dawn). The other
+# template lines (recipient offices, requested relief) are generic drafting, not statements of law, and the footer of
+# every letter tells the person to check it. They have NOT been reviewed by a lawyer.
 _TEMPLATES = {
     "harassment_complaint": {
         "to": "The Chairperson, Inquiry Committee\n(or, where applicable, the Ombudsperson for Protection against Harassment of Women at the Workplace)",

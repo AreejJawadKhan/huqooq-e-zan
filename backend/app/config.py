@@ -41,6 +41,16 @@ class Settings:
     # or a provider name to force that stage. Providers without a key are skipped.
     analyzer_provider_setting: str = field(default_factory=lambda: os.getenv("ANALYZER_PROVIDER", "").strip().lower())
     answer_provider_setting: str = field(default_factory=lambda: os.getenv("ANSWER_PROVIDER", "").strip().lower())
+    # Resilience. TRUSTED_PROXY_HOPS = how many reverse proxies sit in front of the app (0 = none: X-Forwarded-For is
+    # ignored and the socket address is used; Cloud Run = 1). MAX_INFLIGHT / GLOBAL_RPM cap model-backed requests for all
+    # clients together; beyond them, requests are answered from the law text without a model. REQUEST_DEADLINE_S is the
+    # total time one /api/ask may spend on model calls.
+    trusted_proxy_hops: int = field(default_factory=lambda: int(os.getenv("TRUSTED_PROXY_HOPS", "0")))
+    max_inflight: int = field(default_factory=lambda: int(os.getenv("MAX_INFLIGHT", "6")))
+    global_rpm: int = field(default_factory=lambda: int(os.getenv("GLOBAL_RPM", "90")))
+    request_deadline_s: float = field(default_factory=lambda: float(os.getenv("REQUEST_DEADLINE_S", "25")))
+    answer_cache_ttl_s: float = field(default_factory=lambda: float(os.getenv("ANSWER_CACHE_TTL_S", "3600")))
+    answer_cache_size: int = field(default_factory=lambda: int(os.getenv("ANSWER_CACHE_SIZE", "500")))
     # HEALTH_DEEP=1 lets GET /api/health?deep=1 make one tiny real call per configured model (cached for 60 s).
     health_deep: bool = field(default_factory=lambda: os.getenv("HEALTH_DEEP", "0") == "1")
     chunks_path: Path = field(
