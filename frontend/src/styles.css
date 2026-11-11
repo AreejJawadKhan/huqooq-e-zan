@@ -40,6 +40,9 @@ body { margin: 0; background: var(--surface-100); color: var(--ink); font-family
 @keyframes pulse { from { transform: scale(0.9); opacity: 0.9; } to { transform: scale(1.35); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .hq-mic-hero.is-listening::after { animation: none; opacity: 0.7; } .hq-mic.hq-mic-hero { transition: none; } }
 .mic-label { font: 600 18px/1.9 var(--font-urdu-ui); color: var(--ink); text-align: center; }
+.mic-heard { width: 100%; box-sizing: border-box; display: grid; gap: var(--space-1); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); background: var(--info-bg); color: var(--ink); font: 400 16px/1.9 var(--font-urdu-ui); }
+.mic-heard p { margin: 0; }
+.mic-heard p:last-child { font: 400 14px/20px var(--font-sans); color: var(--muted); }
 .ask-or { display: flex; align-items: center; gap: var(--space-3); color: var(--muted); font: 500 15px var(--font-urdu-ui); }
 .ask-or::before, .ask-or::after { content: ""; flex: 1; height: 1px; background: var(--line-soft); }
 .hq-label { display: grid; gap: var(--space-1); font: 600 14px/20px var(--font-sans); }
