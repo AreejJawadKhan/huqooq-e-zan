@@ -34,7 +34,7 @@ Consequently, thousands of women either receive inaccurate informal advice or ab
 ## 4. Technical Architecture & Google Technology
 - **AI Models (Google Gemini):**
   - Query Analyzer: `gemini-3.5-flash-lite` (translates colloquial Urdu into legal taxonomy, extracts jurisdiction and topic).
-  - Grounded Composer: `gemini-2.5-flash` (synthesizes bilingual explanation strictly bound to retrieved statute excerpts).
+  - Grounded Composer: `gemini-3.5-flash` (synthesizes bilingual explanation strictly bound to retrieved statute excerpts).
   - Resilience: Automatic per-call fallback to Groq (`openai/gpt-oss-20b` / `openai/gpt-oss-120b`).
 - **Retrieval Engine:** BM25 (`rank-bm25`) indexing 133 section-level chunks across 5 core statutes. Zero black-box embeddings; transparent score thresholds.
 - **Backend Service:** FastAPI, Python 3.14, `python-docx` for automated legal drafting, per-client rate limiting, security headers, demo caching (`DEMO_CACHE=1`).

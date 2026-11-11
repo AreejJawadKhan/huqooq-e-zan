@@ -43,7 +43,7 @@
 
 * **Default (`LLM_PROVIDER`):** `gemini`
   * Analyzer Model: `gemini-3.5-flash-lite` (low latency, accurate legal entity classification)
-  * Answer Composer: `gemini-2.5-flash` (faithful citations, high quality Urdu & English answers)
+  * Answer Composer: `gemini-3.5-flash` (faithful citations, high quality Urdu & English answers)
 * **Automatic Fallback (`LLM_FALLBACK`):** `groq`
   * Analyzer Model: `openai/gpt-oss-20b`
   * Answer Composer: `openai/gpt-oss-120b`
