@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { T } from "../strings";
-import { En } from "../prefs";
+import { En, usePrefs, type MicLang } from "../prefs";
 import { IconMic } from "./Icons";
 
 type SR = {
@@ -19,6 +19,7 @@ export default function MicButton({ onText, onHint }: { onText: (t: string) => v
   const [listening, setListening] = useState(false);
   const [blocked, setBlocked] = useState(false);
   const [heard, setHeard] = useState("");
+  const { micLang, setMicLang } = usePrefs();
   const ref = useRef<SR | null>(null);
   const lastText = useRef("");
   const supported = recognitionCtor() !== null;
@@ -31,7 +32,7 @@ export default function MicButton({ onText, onHint }: { onText: (t: string) => v
     if (listening) { ref.current?.stop(); return; }
     const Ctor = recognitionCtor()!;
     const rec = new Ctor();
-    rec.lang = "ur-PK";
+    rec.lang = micLang; // ur-PK hears Urdu and Urdu-English mixes best; en-IN is for speakers who mostly use English words
     rec.interimResults = true;
     rec.continuous = false;
     rec.onresult = (e: any) => {
@@ -60,6 +61,15 @@ export default function MicButton({ onText, onHint }: { onText: (t: string) => v
         <IconMic size={44} />
       </button>
       <span className="mic-label" lang="ur" dir="rtl" aria-live="polite">{listening ? T.micListening : T.micPrompt}</span>
+      <div className="mic-lang" role="radiogroup" aria-label={`${T.micLangTitle} / ${T.micLangTitleEn}`}>
+        {([["ur-PK", T.micLangUr], ["en-IN", T.micLangEn]] as [MicLang, string][]).map(([value, label]) => (
+          <button key={value} type="button" role="radio" aria-checked={micLang === value} disabled={listening}
+            className={micLang === value ? "mic-lang-btn is-on" : "mic-lang-btn"} onClick={() => setMicLang(value)}>
+            <span lang={value === "ur-PK" ? "ur" : "en"} dir={value === "ur-PK" ? "rtl" : "ltr"}>{label}</span>
+          </button>
+        ))}
+      </div>
+      <p className="hq-hint mic-lang-hint"><span lang="ur" dir="rtl">{T.micLangHint}</span> <En>{T.micLangHintEn}</En></p>
       {heard && !listening && (
         <div className="mic-heard" role="status">
           <p lang="ur" dir="rtl"><b>{T.heardLabel}</b> «{heard}»</p>

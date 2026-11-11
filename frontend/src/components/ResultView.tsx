@@ -1,10 +1,28 @@
-import type { AskResponse, Jurisdiction } from "../types";
+import type { AskResponse, AskResult, Jurisdiction } from "../types";
 import { PROVINCES, T } from "../strings";
 import { En } from "../prefs";
 import Bi from "./Bi";
 import SpeakButton from "./SpeakButton";
 import { IconDoc } from "./Icons";
 import { CaveatNote, CitationChip, ReferralList, StatusBar, WageChip, groupCitations } from "./ResultParts";
+
+/** Shown when the server had no model to write an explanation (busy, out of time, down): says which, and offers a retry. */
+function DegradedBar({ r, onRetry }: { r: AskResult; onRetry: () => void }) {
+  if (!r.degraded) return null;
+  const busy = r.degraded === "busy" || r.degraded === "deadline";
+  return (
+    <div className="hq-notice caution degraded-bar" role="status">
+      <Bi ur={busy ? T.degradedBusy : T.degradedDown} en={busy ? T.degradedBusyEn : T.degradedDownEn} />
+      <button type="button" className="hq-btn ghost" onClick={onRetry}><Bi inline ur={T.tryAgain} en={T.tryAgainEn} /></button>
+    </div>
+  );
+}
+
+/** Roman Urdu answer, for people who wrote Roman Urdu. Latin letters, left to right. */
+function Roman({ text }: { text?: string }) {
+  if (!text) return null;
+  return <p className="hq-roman" lang="ur-Latn" dir="ltr">{text}</p>;
+}
 
 function Disclaimer({ r }: { r: AskResponse }) {
   return (
@@ -33,11 +51,13 @@ function DangerBanner({ r }: { r: AskResponse }) {
 }
 
 /** `uncited`: the model answered without a citation, so its text is never shown; the fixed message is used instead. */
-function Plain({ r, kind, uncited = false }: { r: AskResponse; kind: "not_found" | "out_of_scope"; uncited?: boolean }) {
+function Plain({ r, kind, uncited = false, onRetry }: { r: AskResult; kind: "not_found" | "out_of_scope"; uncited?: boolean; onRetry: () => void }) {
   return (
     <div className="result-card result-in">
       <StatusBar kind={kind} />
       <div className="result-body">
+        <DegradedBar r={r} onRetry={onRetry} />
+        {!uncited && <Roman text={r.answer_roman} />}
         <p className="hq-ur" lang="ur">{(!uncited && r.answer_ur) || T.notFoundTitle}</p>
         <En as="p" className="hq-en">{(!uncited && r.answer_en) || T.notFoundTitleEn}</En>
         {kind === "out_of_scope" && (
@@ -54,20 +74,22 @@ function Plain({ r, kind, uncited = false }: { r: AskResponse; kind: "not_found"
 }
 
 export default function ResultView({
-  r, onProvince, onLetter,
-}: { r: AskResponse; onProvince: (j: Jurisdiction) => void; onLetter: () => void }) {
+  r, onProvince, onLetter, onRetry,
+}: { r: AskResult; onProvince: (j: Jurisdiction) => void; onLetter: () => void; onRetry: () => void }) {
   if (r.status === "danger") return <DangerBanner r={r} />;
-  if (r.status === "out_of_scope") return <Plain r={r} kind="out_of_scope" />;
+  if (r.status === "out_of_scope") return <Plain r={r} kind="out_of_scope" onRetry={onRetry} />;
   // An answer with no citation is never shown as an answer.
-  if (r.status === "not_found") return <Plain r={r} kind="not_found" />;
-  if (r.citations.length === 0) return <Plain r={r} kind="not_found" uncited />;
+  if (r.status === "not_found") return <Plain r={r} kind="not_found" onRetry={onRetry} />;
+  if (r.citations.length === 0) return <Plain r={r} kind="not_found" uncited onRetry={onRetry} />;
 
   return (
     <div className="result-card result-in">
       <StatusBar kind="answered" />
       <div className="result-body">
+        <DegradedBar r={r} onRetry={onRetry} />
+        <Roman text={r.answer_roman} />
         <p className="hq-ur answer-ur" lang="ur">{r.answer_ur}</p>
-        <SpeakButton text={r.answer_ur} />
+        <SpeakButton text={r.answer_ur} roman={r.answer_roman} />
         <En as="p" className="hq-en answer-en">{r.answer_en}</En>
         {r.caveats.map((c, i) => <CaveatNote key={i} c={c} />)}
         {r.wage && <WageChip w={r.wage} />}
