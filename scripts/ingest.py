@@ -136,7 +136,9 @@ def split_sections(text: str) -> list[Section]:
         body = _collapse(" ".join([remainder, *body_lines]))
         sections.append(Section(str(num), _collapse(title)[:140], body))
     if sched_line is not None:
-        sections.append(Section("Schedule", "Schedule", _collapse(" ".join(lines[sched_line:]))))
+        sched_text = _collapse(" ".join(lines[sched_line:]))
+        sched_heading = "Schedule: Code of Conduct" if "code of conduct" in sched_text[:300].lower() else "Schedule"
+        sections.append(Section("Schedule", sched_heading, sched_text))
     return sections
 
 

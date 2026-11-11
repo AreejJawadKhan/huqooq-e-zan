@@ -13,6 +13,8 @@ from fastapi.responses import JSONResponse, StreamingResponse
 
 from .config import Settings, get_settings
 from .data import ReferralTable, WageTable
+from .demo_cache import DemoCache
+from .safety import detect_danger
 from .letters import build_letter
 from .pipeline import Pipeline
 from .providers import build_llm
@@ -59,6 +61,7 @@ def create_app(pipeline: Optional[Pipeline] = None, settings: Optional[Settings]
         expose_headers=["Content-Disposition"],
     )
     app.state.pipeline = pipeline
+    demo = DemoCache.load(settings.demo_cache_path) if settings.demo_cache else DemoCache({})
     hits: dict[str, deque] = defaultdict(deque)
 
     @app.middleware("http")
@@ -95,12 +98,18 @@ def create_app(pipeline: Optional[Pipeline] = None, settings: Optional[Settings]
             "status": "ok",
             "chunks_indexed": n,
             "api_key_set": settings.any_llm_key or app.state.pipeline is not None,
+            "demo_cache_entries": len(demo),
             "provider": settings.llm_provider if settings.any_llm_key else None,
             "hint": None if n else "No chunks yet: put source files in data/raw and run `make ingest`.",
         }
 
     @app.post("/api/ask", response_model=AskResponse)
     def ask(req: AskRequest):
+        # Danger messages always take the deterministic path, never the cache.
+        if len(demo) and not detect_danger(req.question):
+            cached = demo.get(req.question, req.jurisdiction)
+            if cached is not None:
+                return cached
         try:
             return get_pipeline().ask(req)
         except HTTPException:
