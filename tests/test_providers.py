@@ -351,11 +351,11 @@ def test_groq_defaults_are_the_verified_models_not_the_retired_llama_names():
     analyzer, answer = DEFAULT_MODELS["groq"]
     assert (analyzer, answer) == ("openai/gpt-oss-20b", "openai/gpt-oss-120b")
     assert not any("llama-3" in m for pair in DEFAULT_MODELS.values() for m in pair)  # retired on Groq, model_not_found
-    # gemini-2.5-flash is the verified composer model (handles forced tool calls reliably);
+    # gemini-3.5-flash is the verified composer model;
     # gemini-2.5-flash-lite (analyzer) returned 404 on 2026-11-11 so we use gemini-3.5-flash-lite for analysis.
     analyzer, gem_answer = DEFAULT_MODELS["gemini"]
     assert "flash-lite" in analyzer  # fast analyzer (3.5 or similar)
-    assert "gemini-2.5-flash" == gem_answer  # composer: verified working
+    assert "gemini-3.5-flash" == gem_answer  # composer: verified working
 
 
 def test_openai_compat_gives_reasoning_models_headroom_and_low_effort():

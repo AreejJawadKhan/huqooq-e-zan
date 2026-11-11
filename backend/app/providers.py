@@ -32,7 +32,7 @@ GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 # Model names change often. Check AI Studio / Groq console and override with the *_MODEL env vars.
 DEFAULT_MODELS = {
-    "gemini": ("gemini-3.5-flash-lite", "gemini-2.5-flash"),  # lite=analyzer (fast), 2.5-flash=composer (reliable forced tool call)
+    "gemini": ("gemini-3.5-flash-lite", "gemini-3.5-flash"),  # lite=analyzer (fast), 3.5-flash=composer
     # Groq retired the Llama 3.x names above (model_not_found, 2026-11-11). gpt-oss-20b/120b verified working with
     # forced tool calls; qwen/qwen3.8-27b was tried and rejected (invented a tool name). Re-check with scripts/check_models.py.
     "groq": ("openai/gpt-oss-20b", "openai/gpt-oss-120b"),
