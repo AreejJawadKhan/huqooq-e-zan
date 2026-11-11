@@ -1,0 +1,537 @@
+{
+ "میرا مینیجر مجھے کام پر تنگ کرتا ہے میں کیا کر سکتی ہوں|": {
+  "status": "answered",
+  "answer_ur": "تحفظ باہم ہراسانی خواتین بمقام کار ایکٹ 2010 کے تحت آپ کو یہ اختیار حاصل ہے کہ آپ اپنے ادارے کی انکوائری کمیٹی یا محتسب کو شکایت درج کروا سکتی ہیں۔ آجر کے لیے لازمی ہے کہ وہ ادارے میں انکوائری کمیٹی قائم کرے اور ضابطہ اخلاق کو نمایاں جگہ پر آویزاں کرے۔ اگر آپ پہلے غیر رسمی طریقہ اپنایا چاہتی ہیں تو آپ کسی نگراں یا کمیٹی کے رکن سے محرمانہ مشورہ یا مصالحت کے لیے بات کر سکتی ہیں۔ تحقیقات کے دوران آجر کو چاہیے کہ وہ عارضی انتظام کرے تاکہ آپ کو مینیجر سے کاروباری رابطے نہ کرنے پڑیں۔\n\nاگلے اقدامات:\n- اپنے ادارے میں قائم انکوائری کمیٹی یا آویزاں ضابطہ اخلاق کے بارے میں معلومات حاصل کریں۔\n- انکوائری کمیٹی یا محتسب کے پاس تحریری شکایت جمع کروائیں یا غیر رسمی حل کے لیے رابطہ کریں۔",
+  "answer_en": "Under the Protection against Harassment of Women at the Workplace Act, 2010 (as amended), you have the option to submit a complaint either directly to the Inquiry Committee set up within your organization or to the Ombudsperson. Employers are legally required to establish an Inquiry Committee and display the Code of Conduct at the workplace. If you prefer an informal approach first, you may report the incident to a supervisor or a member of the Inquiry Committee for confidential advice or mediation. During an investigation, the employer should make temporary adjustments so you do not have to interact with the manager for official purposes.\n\nNext Steps:\n- Check if your organization has an Inquiry Committee or Code of Conduct displayed.\n- Consider filing a formal written complaint with the Inquiry Committee or the Ombudsperson, or talk to a trusted member for an informal resolution.",
+  "confidence": "high",
+  "citations": [
+   {
+    "chunk_id": "harassment_2010_fospah:s8",
+    "act": "Protection against Harassment of Women at the Workplace Act, 2010 (amended 2022)",
+    "section": "8",
+    "heading": "Ombudsperson to enquire into complaint",
+    "jurisdiction": "pakistan",
+    "source_url": "https://www.fospah.gov.pk/SiteImage/Misc/files/PAHAW_amend_2022.pdf",
+    "excerpt": "– (1) Any employee shall have the option to prefer a complaint either to the 6[Ombudsperson] or the Inquiry Committee. (2) The 7[Ombudsperson] shall within 3 days of receiving a complaint issue a written show cause notice to the accused. The accused after the receipt of written notice, shall submit written defense to the 8[Ombudsperson] within five days and his failure to do so without reasonable cause the 9[Ombudsp…"
+   },
+   {
+    "chunk_id": "harassment_2010_fospah:s11",
+    "act": "Protection against Harassment of Women at the Workplace Act, 2010 (amended 2022)",
+    "section": "11",
+    "heading": "Responsibility of employer",
+    "jurisdiction": "pakistan",
+    "source_url": "https://www.fospah.gov.pk/SiteImage/Misc/files/PAHAW_amend_2022.pdf",
+    "excerpt": "– (1) It shall be the responsibility of the employer to ensure implementation of this Act, including but not limited to incor porate the Code of Conduct for protection against harassment at the workplace as a part of their management policy and to form Inquiry Committee referred to in section 3 and designate a competent authority referred to in section 4. (2) The management shal l display copies of the Code in Engli…"
+   },
+   {
+    "chunk_id": "harassment_2010_fospah:sSchedule:p2",
+    "act": "Protection against Harassment of Women at the Workplace Act, 2010 (amended 2022)",
+    "section": "Schedule",
+    "heading": "Schedule: Code of Conduct",
+    "jurisdiction": "pakistan",
+    "source_url": "https://www.fospah.gov.pk/SiteImage/Misc/files/PAHAW_amend_2022.pdf",
+    "excerpt": "The typical “hostile environment” claim, in general, requires finding of a pattern of offensive conduct, however, in cases where the harassment is particularly severe, such as in cases involving physical contact, a single offensive incident will constitute a violation. (c) Retaliation The refusa l to grant a sexual favor can result in retaliation, which may include limiting the employee ’s options for future promoti…"
+   },
+   {
+    "chunk_id": "harassment_2010_fospah:sSchedule:p3",
+    "act": "Protection against Harassment of Women at the Workplace Act, 2010 (amended 2022)",
+    "section": "Schedule",
+    "heading": "Schedule: Code of Conduct",
+    "jurisdiction": "pakistan",
+    "source_url": "https://www.fospah.gov.pk/SiteImage/Misc/files/PAHAW_amend_2022.pdf",
+    "excerpt": "The Committee member approached is obligated to initiate the process of investigation. The supervisor shall facilitate the process and is obligated not to cover up or obstruct the inquiry; (ix) Assistance in the inquiry procedure can be sought from any member of the organization who should be contacted to assist in such a case; (x) The employer shall do its best to temporarily make adjustments so that the accused an…"
+   }
+  ],
+  "where_to_go": [
+   {
+    "name": "Ministry of Human Rights helpline",
+    "number": "1099",
+    "note": "Toll-free national helpline of the Ministry of Human Rights: free legal advice and referrals. Number confirmed on mohr.gov.pk.",
+    "source_url": "https://mohr.gov.pk/Detail/YWRiYjU0NzktMGE2Zi00NDYyLTljNzktMTA2N2M2MjBlZWZl",
+    "verified": true
+   },
+   {
+    "name": "Madadgaar national helpline",
+    "number": "1098",
+    "note": "Gender-based violence, women and children.",
+    "source_url": "https://pcsw.punjab.gov.pk/node/44",
+    "verified": false
+   }
+  ],
+  "wage": null,
+  "caveats": [],
+  "needs_province": false,
+  "letter_type": "harassment_complaint",
+  "detected": {
+   "language": "ur",
+   "topic": "harassment",
+   "jurisdiction": "pakistan",
+   "english_query": "My manager harasses me at work, what can I do?"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ یہ کسی مقدمے کے نتیجے کی پیش گوئی نہیں کرتیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. It does not predict the outcome of any case."
+ },
+ "پنجاب میں کم از کم اجرت کتنی ہے|": {
+  "status": "answered",
+  "answer_ur": "11 نومبر 2026 تک کی معلومات کے مطابق پنجاب میں غیر ہنر مند مزدوروں کے لیے بتائی گئی کم از کم ماہانہ اجرت 40000 روپے ہے۔ یہ شرح 8 ستمبر 2025 کے نوٹیفکیشن کی اطلاعات پر مبنی ہے۔ چونکہ گزٹ کے اصل متن کی تصدیق نہیں ہو سکی ہے، اس لیے اس شرح کی تصدیق صوبائی لیبر ڈیپارٹمنٹ سے کر لینی چاہیے۔ \n\nیاد رہے کہ مزدور کی مہارت، زمرے اور شعبے کے حساب سے مقررہ اجرت مختلف ہو سکتی ہے۔ پنجاب کم از کم اجرت ایکٹ 2019 کی دفعہ 11 کے تحت کوئی بھی مالکان اپنے ملازم کو مقررہ کم از کم اجرت سے کم رقم نہیں دے سکتے۔ اگر آپ کو اس سے کم اجرت مل رہی ہے تو مزید معلومات اور رہنمائی کے لیے لیبر ڈیپارٹمنٹ سے رابطہ کریں۔",
+  "answer_en": "As of November 11, 2026, the reported minimum wage for unskilled workers in Punjab is PKR 40,000 per month. This rate is based on notification reports dated September 8, 2025. Because the official gazette text has not been directly verified, you should confirm this rate with the provincial Labour Department. \n\nPlease note that the exact applicable rate may vary depending on the specific worker category, skill level, or industry sector. Under Section 11 of the Punjab Minimum Wages Act, 2019, an employer is prohibited from paying wages lower than the notified minimum rate. If you are receiving less than the required rate, you may verify your specific employment details with the Labour Department or consult a legal professional regarding your rights under the Act.",
+  "confidence": "high",
+  "citations": [
+   {
+    "chunk_id": "wages_punjab_2019:s11",
+    "act": "Punjab Minimum Wages Act, 2019",
+    "section": "11",
+    "heading": "Prohibition to pay wages at a rate below the minimum rates of wages .",
+    "jurisdiction": "punjab",
+    "source_url": "",
+    "excerpt": "(1) Subject to such deductions as may be authorized under this Act or under any other law for the time being in force, no employer shall pay any worker including unskilled worker, the wages at a rate lower than the rate declared under this Act to be the minimum rate of wages for such worker. (2) Nothing in subsection (1) shall be deemed to: (a) require or authorize an employer to reduce the rate of wages of any work…"
+   }
+  ],
+  "where_to_go": [
+   {
+    "name": "Ministry of Human Rights helpline",
+    "number": "1099",
+    "note": "Toll-free national helpline of the Ministry of Human Rights: free legal advice and referrals. Number confirmed on mohr.gov.pk.",
+    "source_url": "https://mohr.gov.pk/Detail/YWRiYjU0NzktMGE2Zi00NDYyLTljNzktMTA2N2M2MjBlZWZl",
+    "verified": true
+   },
+   {
+    "name": "Provincial Labour Department",
+    "number": null,
+    "note": "File a minimum wage or unpaid wage complaint with the labour office of your province or district.",
+    "source_url": "",
+    "verified": false
+   }
+  ],
+  "wage": {
+   "jurisdiction": "punjab",
+   "monthly_pkr": 40000,
+   "status": "notified_reported",
+   "effective_from": "2025-07-01",
+   "notification_date": "2025-09-08",
+   "as_of": "2026-11-11",
+   "verified": false,
+   "source_url": "https://www.dawn.com/news/1940817",
+   "note": "For 26 working days (Rs1,538.46 a day, Rs192.31 an hour). Corroborated by Dawn (10 Sep 2025), ProPakistani, Dunya News and WageIndicator, all citing the Labour and Human Resource Department notification of 8 Sep 2025. The gazette text itself has NOT been read, so verified stays false. Sources differ on the start date (1 Jul 2025 per WageIndicator, September 2025 per Express Tribune). Allowed deductions reported: Rs100 a meal, Rs1,800 a month transport, Rs2,000 a month accommodation, by mutual agreement."
+  },
+  "caveats": [
+   {
+    "en": "Minimum wage rates are revised every year. Confirm the current rate with your provincial Labour Department.",
+    "ur": "کم از کم اجرت ہر سال تبدیل ہوتی ہے۔ موجودہ شرح اپنے صوبے کے محکمۂ محنت سے تصدیق کریں۔"
+   }
+  ],
+  "needs_province": false,
+  "letter_type": null,
+  "detected": {
+   "language": "ur",
+   "topic": "wages",
+   "jurisdiction": "punjab",
+   "english_query": "What is the minimum wage in Punjab?"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ یہ کسی مقدمے کے نتیجے کی پیش گوئی نہیں کرتیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. It does not predict the outcome of any case."
+ },
+ "میرے بھائی مجھے والد کی زمین میں حصہ نہیں دے رہے|punjab": {
+  "status": "answered",
+  "answer_ur": "پنجاب میں خواتین کے حقوق ملکیت کے تحفظ کے قانون 2021 کے تحت اگر کسی خاتون کو اس کی جائیداد کی ملکیت یا قبضے سے محروم کیا جائے تو وہ محتسب کو درخواست دے سکتی ہے۔ اگر یہ بات ثابت ہو جائے کہ آپ کو جائیداد کے حق سے محروم رکھا گیا ہے تو محتسب ڈپٹی کمشنر کو قبضہ یا ملکیت بحال کرنے کا حکم دے سکتا ہے۔ اس کے علاوہ محتسب جائیداد سے محروم رکھنے والے فرد کو اس عرصے کا کرایہ ادا کرنے کا حکم بھی دے سکتا ہے۔ آپ اپنے حق کے حصول کے لیے پنجاب کی زنانی محتسب (وومن محتسب) کے پاس تحریری شکایت درج کروا سکتی ہیں۔",
+  "answer_en": "Under the Punjab Enforcement of Women's Property Rights Act, 2021, if a woman is deprived of ownership or possession of her property (including inherited property), she can file a complaint with the Ombudsperson (Section 4). If the Ombudsperson finds that you have been illegally deprived of your property rights, they can direct the Deputy Commissioner or state authorities to restore your possession or title (Section 5). Furthermore, under Section 8, the Ombudsperson can direct the person depriving you of the property to pay rent for the period you were deprived of its use. You can submit a written complaint to the Punjab Women Ombudsperson to initiate proceedings.",
+  "confidence": "high",
+  "citations": [
+   {
+    "chunk_id": "property_punjab_2021:s4",
+    "act": "Punjab Enforcement of Women's Property Rights Act, 2021",
+    "section": "4",
+    "heading": "Complaint to the Ombudsperson in case no proceedings in a court of law are",
+    "jurisdiction": "punjab",
+    "source_url": "http://punjablaws.gov.pk/laws/2789.html",
+    "excerpt": "pending.‎–‎ (1) Any woman deprived of ownership or possession of her property, by any means, may file a complaint to the Ombudsper son if no proceedings in a court of law are pending regarding that property: Provided that the Ombudsperson, on its own motion or on a complaint filed by any person including a non -governmental organization, may also initiate action under subsection (1) in relation to the ownership or p…"
+   },
+   {
+    "chunk_id": "property_punjab_2021:s5",
+    "act": "Punjab Enforcement of Women's Property Rights Act, 2021",
+    "section": "5",
+    "heading": "Delivery of possession and transfer of ownership of property to women .‎–‎ (1) On",
+    "jurisdiction": "punjab",
+    "source_url": "http://punjablaws.gov.pk/laws/2789.html",
+    "excerpt": "conclusion of the proceedings under section 4, if the Ombudsperson finds that the complainant has been illegally deprived of ownership or possession of her property, he shall direct the Deputy Commissioner or a state functionary or any private person to take steps so as to restore or confer possession or title of the property to the complainant, including measures to perfect such title. (2) The Ombudsperson may, whe…"
+   },
+   {
+    "chunk_id": "property_punjab_2021:s8",
+    "act": "Punjab Enforcement of Women's Property Rights Act, 2021",
+    "section": "8",
+    "heading": "Loss o f rent .‎–‎ On culmination of proceedings under section 5, the Ombudsperson",
+    "jurisdiction": "punjab",
+    "source_url": "http://punjablaws.gov.pk/laws/2789.html",
+    "excerpt": "may also direct the complainant to be paid by the person depriving the said complainant of the use of the property, the amount equivalent to the rent that the property would fetch a t the prevalent market rate, for the duration for which the complainant was deprived of the use of such property."
+   }
+  ],
+  "where_to_go": [
+   {
+    "name": "Punjab Women's Toll-Free Helpline",
+    "number": "1043",
+    "note": "24/7. Discrimination, harassment, violence and denied legal rights. Punjab residents.",
+    "source_url": "https://pcsw.punjab.gov.pk/node/61",
+    "verified": false
+   },
+   {
+    "name": "Ministry of Human Rights helpline",
+    "number": "1099",
+    "note": "Toll-free national helpline of the Ministry of Human Rights: free legal advice and referrals. Number confirmed on mohr.gov.pk.",
+    "source_url": "https://mohr.gov.pk/Detail/YWRiYjU0NzktMGE2Zi00NDYyLTljNzktMTA2N2M2MjBlZWZl",
+    "verified": true
+   },
+   {
+    "name": "Madadgaar national helpline",
+    "number": "1098",
+    "note": "Gender-based violence, women and children.",
+    "source_url": "https://pcsw.punjab.gov.pk/node/44",
+    "verified": false
+   },
+   {
+    "name": "Ombudsperson Punjab (workplace harassment and women's property rights)",
+    "number": "042 9923 3348 to 50",
+    "note": "Complaints under the harassment Act and the Punjab women's property Act.",
+    "source_url": "https://www.af.org.pk/Resouce%20Directory/DIRECTORY%20OF%20SERVICE%20PROVIDERS-updated.pdf",
+    "verified": false
+   }
+  ],
+  "wage": null,
+  "caveats": [
+   {
+    "en": "The law aims for a decision preferably within 60 days, but delays at the Ombudsperson's office have been reported.",
+    "ur": "قانون کا مقصد ہے کہ فیصلہ ترجیحاً 60 دن میں ہو، لیکن محتسب کے دفتر میں تاخیر کی اطلاعات ہیں۔"
+   }
+  ],
+  "needs_province": false,
+  "letter_type": "property_complaint",
+  "detected": {
+   "language": "ur",
+   "topic": "property",
+   "jurisdiction": "punjab",
+   "english_query": "My brothers are not giving me my share in our father's land"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ یہ کسی مقدمے کے نتیجے کی پیش گوئی نہیں کرتیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. It does not predict the outcome of any case."
+ },
+ "my manager keeps sending me unwelcome messages what can i do|": {
+  "status": "answered",
+  "answer_ur": "کام کی جگہ پر خواتین کو ہراساں کرنے کے خلاف تحفظ کے قانون 2010 کے شیڈول کے تحت، غیر چاہیدہ تحریری یا زبانی پیغام یا جنسی نوعیت کا رویہ ہراسگی میں شامل ہے۔ اس کے حل کے لیے آپ غیر رسمی یا رسمی طریقہ اپنا سکتے ہیں۔ شیڈول کے مطابق، آپ اپنے نگران یا انکوائری کمیٹی کے رکن کو زبانی یا تحریری طور پر غیر رسمی اطلاع دے سکتے ہیں۔ اس کے علاوہ دفعہ 8 کے تحت آپ کو انکوائری کمیٹی یا محتسب کو براہ راست باضابطہ شکایت درج کرانے کا اختیار حاصل ہے۔ آپ ان تمام ناپسندیدہ پیغامات کا ریکارڈ محفوظ رکھیں اور اپنے ادارے کی کمیٹی یا محتسب سے رجوع کریں۔",
+  "answer_en": "Under the Protection against Harassment of Women at the Workplace Act, 2010 (Schedule), harassment includes unwelcome verbal or written communication of a sexual nature, sexual advances, or sexually demeaning attitudes that create an intimidating, hostile, or offensive work environment. \n\nYou have options for how to address this:\n1. Informal Approach: Under the Code of Conduct (Schedule), you may report the incident informally to a supervisor or a member of the workplace Inquiry Committee orally or in writing. This can lead to confidential mediation, advice, or counseling.\n2. Formal Complaint: Under Section 8(1), an employee has the option to submit a formal complaint either to the workplace Inquiry Committee or directly to the Ombudsperson.\n\nNext Steps:\n- Keep copies/screenshots of all unwelcome messages and note down dates and details.\n- Consider reporting the conduct informally to your supervisor or Inquiry Committee member, or lodge a formal complaint with the Inquiry Committee or the Ombudsperson.",
+  "confidence": "high",
+  "citations": [
+   {
+    "chunk_id": "harassment_2010_fospah:sSchedule:p1",
+    "act": "Protection against Harassment of Women at the Workplace Act, 2010 (amended 2022)",
+    "section": "Schedule",
+    "heading": "Schedule: Code of Conduct",
+    "jurisdiction": "pakistan",
+    "source_url": "https://www.fospah.gov.pk/SiteImage/Misc/files/PAHAW_amend_2022.pdf",
+    "excerpt": "SCHEDULE [See sections 2(c) and 11] CODE OF CONDUCT FOR PROTECTION AGAINST HARASSMENT OF WOMEN AT THE WORKPLACE Whereas it is expedient to make the Code of Conduct at the Workplace etc . to provide protection and safety to women against harassment, it is hereby provided as under:- (i) The Code provides a guideline for behavior of all employees, including management, and the owners of an organization to ensure a work…"
+   },
+   {
+    "chunk_id": "harassment_2010_fospah:s8",
+    "act": "Protection against Harassment of Women at the Workplace Act, 2010 (amended 2022)",
+    "section": "8",
+    "heading": "Ombudsperson to enquire into complaint",
+    "jurisdiction": "pakistan",
+    "source_url": "https://www.fospah.gov.pk/SiteImage/Misc/files/PAHAW_amend_2022.pdf",
+    "excerpt": "– (1) Any employee shall have the option to prefer a complaint either to the 6[Ombudsperson] or the Inquiry Committee. (2) The 7[Ombudsperson] shall within 3 days of receiving a complaint issue a written show cause notice to the accused. The accused after the receipt of written notice, shall submit written defense to the 8[Ombudsperson] within five days and his failure to do so without reasonable cause the 9[Ombudsp…"
+   },
+   {
+    "chunk_id": "harassment_2010_fospah:sSchedule:p2",
+    "act": "Protection against Harassment of Women at the Workplace Act, 2010 (amended 2022)",
+    "section": "Schedule",
+    "heading": "Schedule: Code of Conduct",
+    "jurisdiction": "pakistan",
+    "source_url": "https://www.fospah.gov.pk/SiteImage/Misc/files/PAHAW_amend_2022.pdf",
+    "excerpt": "The typical “hostile environment” claim, in general, requires finding of a pattern of offensive conduct, however, in cases where the harassment is particularly severe, such as in cases involving physical contact, a single offensive incident will constitute a violation. (c) Retaliation The refusa l to grant a sexual favor can result in retaliation, which may include limiting the employee ’s options for future promoti…"
+   }
+  ],
+  "where_to_go": [
+   {
+    "name": "Ministry of Human Rights helpline",
+    "number": "1099",
+    "note": "Toll-free national helpline of the Ministry of Human Rights: free legal advice and referrals. Number confirmed on mohr.gov.pk.",
+    "source_url": "https://mohr.gov.pk/Detail/YWRiYjU0NzktMGE2Zi00NDYyLTljNzktMTA2N2M2MjBlZWZl",
+    "verified": true
+   },
+   {
+    "name": "Madadgaar national helpline",
+    "number": "1098",
+    "note": "Gender-based violence, women and children.",
+    "source_url": "https://pcsw.punjab.gov.pk/node/44",
+    "verified": false
+   }
+  ],
+  "wage": null,
+  "caveats": [],
+  "needs_province": false,
+  "letter_type": "harassment_complaint",
+  "detected": {
+   "language": "en",
+   "topic": "harassment",
+   "jurisdiction": null,
+   "english_query": "My manager keeps sending me unwelcome messages. What can I do?"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ یہ کسی مقدمے کے نتیجے کی پیش گوئی نہیں کرتیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. It does not predict the outcome of any case."
+ },
+ "what is the minimum wage in lahore|": {
+  "status": "answered",
+  "answer_ur": "لاہور (پنجاب) میں 11 نومبر 2026 کے مطابق غیر ہنر مند مزدوروں کے لیے کم از کم ماہانہ اجرت 40,000 روپے بتائی گئی ہے۔ چونکہ اس شرح کی حتمی تصدیق نہیں ہوئی ہے، اس لیے صوبائی محکمہ محنت سے اس کی تصدیق کی جانی چاہیے۔ پنجاب کم از کم اجرت ایکٹ 2019 کی دفعہ 11 کے تحت کوئی بھی مالکان اپنے کسی بھی مزدور کو مقرر کردہ کم از کم اجرت سے کم ادائیگی نہیں کر سکتے۔ یہ بات ذہن میں رکھیں کہ مہارت کی قسم یا صنعت کے لحاظ سے اجرت کی شرح مختلف ہو سکتی ہے۔ اگر آپ کو مقررہ شرح سے کم اجرت دی جا رہی ہے تو دفعہ 12 کے تحت چھ ماہ کے اندر متعلقہ اتھارٹی کو درخواست دی جا سکتی ہے۔",
+  "answer_en": "In Lahore (Punjab), as of November 11, 2026, the reported minimum wage rate for unskilled workers is 40,000 PKR per month. Because this rate is unverified, it should be confirmed directly with the provincial Labour Department. Under Section 11 of the Punjab Minimum Wages Act, 2019, an employer must not pay any worker below the declared minimum rate. Please note that the exact applicable wage may vary depending on the skill category or specific industry sector. If you are being paid less than the applicable minimum wage, you or an authorized representative may file a claim for the wage difference with the designated Authority within six months under Section 12 of the Act.",
+  "confidence": "high",
+  "citations": [
+   {
+    "chunk_id": "wages_punjab_2019:s11",
+    "act": "Punjab Minimum Wages Act, 2019",
+    "section": "11",
+    "heading": "Prohibition to pay wages at a rate below the minimum rates of wages .",
+    "jurisdiction": "punjab",
+    "source_url": "",
+    "excerpt": "(1) Subject to such deductions as may be authorized under this Act or under any other law for the time being in force, no employer shall pay any worker including unskilled worker, the wages at a rate lower than the rate declared under this Act to be the minimum rate of wages for such worker. (2) Nothing in subsection (1) shall be deemed to: (a) require or authorize an employer to reduce the rate of wages of any work…"
+   },
+   {
+    "chunk_id": "wages_punjab_2019:s12:p1",
+    "act": "Punjab Minimum Wages Act, 2019",
+    "section": "12",
+    "heading": "Claims arising out of wages paid lower than the minimum wages and",
+    "jurisdiction": "punjab",
+    "source_url": "",
+    "excerpt": "penalty for malicious or vexatious claims . (1) The Authority shall hear and decided all claims arising out of payment of wages lower than the minimum wages to a worker including unskilled worker in that area, whose minimum rates of wages have been declared under the provisions of this Act. (2) Where contrary to the provisions of this Act, wages of any worker including unskil led worker have been paid lower than th…"
+   }
+  ],
+  "where_to_go": [
+   {
+    "name": "Ministry of Human Rights helpline",
+    "number": "1099",
+    "note": "Toll-free national helpline of the Ministry of Human Rights: free legal advice and referrals. Number confirmed on mohr.gov.pk.",
+    "source_url": "https://mohr.gov.pk/Detail/YWRiYjU0NzktMGE2Zi00NDYyLTljNzktMTA2N2M2MjBlZWZl",
+    "verified": true
+   },
+   {
+    "name": "Provincial Labour Department",
+    "number": null,
+    "note": "File a minimum wage or unpaid wage complaint with the labour office of your province or district.",
+    "source_url": "",
+    "verified": false
+   }
+  ],
+  "wage": {
+   "jurisdiction": "punjab",
+   "monthly_pkr": 40000,
+   "status": "notified_reported",
+   "effective_from": "2025-07-01",
+   "notification_date": "2025-09-08",
+   "as_of": "2026-11-11",
+   "verified": false,
+   "source_url": "https://www.dawn.com/news/1940817",
+   "note": "For 26 working days (Rs1,538.46 a day, Rs192.31 an hour). Corroborated by Dawn (10 Sep 2025), ProPakistani, Dunya News and WageIndicator, all citing the Labour and Human Resource Department notification of 8 Sep 2025. The gazette text itself has NOT been read, so verified stays false. Sources differ on the start date (1 Jul 2025 per WageIndicator, September 2025 per Express Tribune). Allowed deductions reported: Rs100 a meal, Rs1,800 a month transport, Rs2,000 a month accommodation, by mutual agreement."
+  },
+  "caveats": [
+   {
+    "en": "Minimum wage rates are revised every year. Confirm the current rate with your provincial Labour Department.",
+    "ur": "کم از کم اجرت ہر سال تبدیل ہوتی ہے۔ موجودہ شرح اپنے صوبے کے محکمۂ محنت سے تصدیق کریں۔"
+   }
+  ],
+  "needs_province": false,
+  "letter_type": null,
+  "detected": {
+   "language": "en",
+   "topic": "wages",
+   "jurisdiction": "punjab",
+   "english_query": "What is the minimum wage in Lahore?"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ یہ کسی مقدمے کے نتیجے کی پیش گوئی نہیں کرتیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. It does not predict the outcome of any case."
+ },
+ "my brothers took my share of our father s land in lahore|": {
+  "status": "answered",
+  "answer_ur": "پنجاب انفورسمنٹ آف ومنز پراپرٹی رائٹس ایکٹ 2021 کی دفعہ 4 کے تحت اگر کسی خاتون کو اس کی جائیداد کے مالکانہ حقوق یا قبضے سے محروم کیا گیا ہو تو وہ محتسب کے پاس شکایت درج کروا سکتی ہے۔ اگر محتسب یہ پاتا ہے کہ آپ کو غیر قانونی طور پر جائیداد سے محروم کیا گیا ہے تو دفعہ 5 کے تحت وہ ڈپٹی کمشنر کو ملکیت یا قبضہ بحال کرنے کا حکم دے سکتا ہے۔ دفعہ 8 کے تحت محتسب جائیداد پر قبضہ کرنے والے شخص کو یہ ہدایت بھی دے سکتا ہے کہ وہ آپ کو اس عرصے کا مارکیٹ ریٹ کے مطابق کرایہ ادا کرے۔ اگلا قدم یہ ہے کہ آپ والد کی جائیداد کے کاغذات اور شناختی اسناد جمع کریں اور محتسب کے دفتر میں شکایت جمع کروائیں۔ آپ اس پلیٹ فارم کے ذریعے بھی شکایت نامہ تیار کر سکتی ہیں۔",
+  "answer_en": "Under the Punjab Enforcement of Women's Property Rights Act, 2021 (Section 4), if you are a woman who has been deprived of ownership or possession of your property in Punjab, you can file a complaint with the Provincial Ombudsperson, provided no court case is currently pending regarding the property. If a court case is already pending, you can also file a complaint under Section 7. \n\nIf the Ombudsperson finds that you have been illegally deprived of your property, they can order the Deputy Commissioner or state functionaries to restore your ownership or possession (Section 5). Additionally, under Section 8, the Ombudsperson may order the person who deprived you of your property to pay you rent equivalent to the prevailing market rate for the period you were deprived of its use. \n\nNext Steps:\n1. Gather your father's property documents, family registration certificate (FRC), and relevant records.\n2. File a formal complaint with the Punjab Ombudsperson's office for the enforcement of your property rights.\n3. You can generate a complaint letter using this platform to assist you in submitting your claim.",
+  "confidence": "high",
+  "citations": [
+   {
+    "chunk_id": "property_punjab_2021:s4",
+    "act": "Punjab Enforcement of Women's Property Rights Act, 2021",
+    "section": "4",
+    "heading": "Complaint to the Ombudsperson in case no proceedings in a court of law are",
+    "jurisdiction": "punjab",
+    "source_url": "http://punjablaws.gov.pk/laws/2789.html",
+    "excerpt": "pending.‎–‎ (1) Any woman deprived of ownership or possession of her property, by any means, may file a complaint to the Ombudsper son if no proceedings in a court of law are pending regarding that property: Provided that the Ombudsperson, on its own motion or on a complaint filed by any person including a non -governmental organization, may also initiate action under subsection (1) in relation to the ownership or p…"
+   },
+   {
+    "chunk_id": "property_punjab_2021:s5",
+    "act": "Punjab Enforcement of Women's Property Rights Act, 2021",
+    "section": "5",
+    "heading": "Delivery of possession and transfer of ownership of property to women .‎–‎ (1) On",
+    "jurisdiction": "punjab",
+    "source_url": "http://punjablaws.gov.pk/laws/2789.html",
+    "excerpt": "conclusion of the proceedings under section 4, if the Ombudsperson finds that the complainant has been illegally deprived of ownership or possession of her property, he shall direct the Deputy Commissioner or a state functionary or any private person to take steps so as to restore or confer possession or title of the property to the complainant, including measures to perfect such title. (2) The Ombudsperson may, whe…"
+   },
+   {
+    "chunk_id": "property_punjab_2021:s8",
+    "act": "Punjab Enforcement of Women's Property Rights Act, 2021",
+    "section": "8",
+    "heading": "Loss o f rent .‎–‎ On culmination of proceedings under section 5, the Ombudsperson",
+    "jurisdiction": "punjab",
+    "source_url": "http://punjablaws.gov.pk/laws/2789.html",
+    "excerpt": "may also direct the complainant to be paid by the person depriving the said complainant of the use of the property, the amount equivalent to the rent that the property would fetch a t the prevalent market rate, for the duration for which the complainant was deprived of the use of such property."
+   },
+   {
+    "chunk_id": "property_punjab_2021:s7:p1",
+    "act": "Punjab Enforcement of Women's Property Rights Act, 2021",
+    "section": "7",
+    "heading": "Complaint to the Ombudsperson in case proceedings in a court of law are",
+    "jurisdiction": "punjab",
+    "source_url": "http://punjablaws.gov.pk/laws/2789.html",
+    "excerpt": "pending.‎–‎ (1) Where proceedings in a c ourt of law are pending in relation to the ownership or possession of any property claimed to be owned by a woman, she may file a complaint under this subsection to the Ombudsperson: Provided that the Ombudsperson, on its own motion or on a complaint file d by any person including a non -governmental organization may also initiate action under subsection (1) in relation to th…"
+   }
+  ],
+  "where_to_go": [
+   {
+    "name": "Punjab Women's Toll-Free Helpline",
+    "number": "1043",
+    "note": "24/7. Discrimination, harassment, violence and denied legal rights. Punjab residents.",
+    "source_url": "https://pcsw.punjab.gov.pk/node/61",
+    "verified": false
+   },
+   {
+    "name": "Ministry of Human Rights helpline",
+    "number": "1099",
+    "note": "Toll-free national helpline of the Ministry of Human Rights: free legal advice and referrals. Number confirmed on mohr.gov.pk.",
+    "source_url": "https://mohr.gov.pk/Detail/YWRiYjU0NzktMGE2Zi00NDYyLTljNzktMTA2N2M2MjBlZWZl",
+    "verified": true
+   },
+   {
+    "name": "Madadgaar national helpline",
+    "number": "1098",
+    "note": "Gender-based violence, women and children.",
+    "source_url": "https://pcsw.punjab.gov.pk/node/44",
+    "verified": false
+   },
+   {
+    "name": "Ombudsperson Punjab (workplace harassment and women's property rights)",
+    "number": "042 9923 3348 to 50",
+    "note": "Complaints under the harassment Act and the Punjab women's property Act.",
+    "source_url": "https://www.af.org.pk/Resouce%20Directory/DIRECTORY%20OF%20SERVICE%20PROVIDERS-updated.pdf",
+    "verified": false
+   }
+  ],
+  "wage": null,
+  "caveats": [
+   {
+    "en": "The law aims for a decision preferably within 60 days, but delays at the Ombudsperson's office have been reported.",
+    "ur": "قانون کا مقصد ہے کہ فیصلہ ترجیحاً 60 دن میں ہو، لیکن محتسب کے دفتر میں تاخیر کی اطلاعات ہیں۔"
+   }
+  ],
+  "needs_province": false,
+  "letter_type": "property_complaint",
+  "detected": {
+   "language": "en",
+   "topic": "property",
+   "jurisdiction": "punjab",
+   "english_query": "My brothers took my share of our father's land in Lahore."
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ یہ کسی مقدمے کے نتیجے کی پیش گوئی نہیں کرتیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. It does not predict the outcome of any case."
+ },
+ "my brothers took my share of our father s land in karachi|": {
+  "status": "not_found",
+  "answer_ur": "مجھے اپنے پاس موجود قوانین میں اس سوال کا جواب نہیں ملا۔ براہِ کرم نیچے دی گئی سروسز سے رابطہ کریں یا کسی وکیل سے مشورہ کریں۔",
+  "answer_en": "I could not find the answer to this in the laws I have. Please contact one of the services below or speak to a lawyer.",
+  "confidence": "none",
+  "citations": [],
+  "where_to_go": [
+   {
+    "name": "Ministry of Human Rights helpline",
+    "number": "1099",
+    "note": "Toll-free national helpline of the Ministry of Human Rights: free legal advice and referrals. Number confirmed on mohr.gov.pk.",
+    "source_url": "https://mohr.gov.pk/Detail/YWRiYjU0NzktMGE2Zi00NDYyLTljNzktMTA2N2M2MjBlZWZl",
+    "verified": true
+   },
+   {
+    "name": "Madadgaar national helpline",
+    "number": "1098",
+    "note": "Gender-based violence, women and children.",
+    "source_url": "https://pcsw.punjab.gov.pk/node/44",
+    "verified": false
+   }
+  ],
+  "wage": null,
+  "caveats": [],
+  "needs_province": false,
+  "letter_type": null,
+  "detected": {
+   "language": "en",
+   "topic": "property",
+   "jurisdiction": "sindh",
+   "english_query": "My brothers took my share of our father's land in Karachi."
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ یہ کسی مقدمے کے نتیجے کی پیش گوئی نہیں کرتیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. It does not predict the outcome of any case."
+ },
+ "how much of the inheritance does each heir get|": {
+  "status": "out_of_scope",
+  "answer_ur": "یہ سوال اس ایپ کے دائرے سے باہر ہے۔ میں کام کی جگہ پر ہراسانی، کم از کم اجرت، خواتین کے جائیداد کے حقوق اور کرایہ داری کے بارے میں قانون بتا سکتا ہوں اور یہ کہ کہاں رجوع کریں۔ میں حصوں کا حساب، کسی مقدمے پر رائے، یا غیر قانونی کام میں مدد نہیں دے سکتا۔",
+  "answer_en": "This question is outside what this app covers. I can explain what the law says on workplace harassment, minimum wage, women's property rights and tenancy, and where to go. I cannot calculate shares, give opinions on a case, or help with anything unlawful.",
+  "confidence": "none",
+  "citations": [],
+  "where_to_go": [
+   {
+    "name": "Ministry of Human Rights helpline",
+    "number": "1099",
+    "note": "Toll-free national helpline of the Ministry of Human Rights: free legal advice and referrals. Number confirmed on mohr.gov.pk.",
+    "source_url": "https://mohr.gov.pk/Detail/YWRiYjU0NzktMGE2Zi00NDYyLTljNzktMTA2N2M2MjBlZWZl",
+    "verified": true
+   },
+   {
+    "name": "Madadgaar national helpline",
+    "number": "1098",
+    "note": "Gender-based violence, women and children.",
+    "source_url": "https://pcsw.punjab.gov.pk/node/44",
+    "verified": false
+   }
+  ],
+  "wage": null,
+  "caveats": [],
+  "needs_province": false,
+  "letter_type": null,
+  "detected": {
+   "language": "en",
+   "topic": "property",
+   "jurisdiction": null,
+   "english_query": "How much of the inheritance does each heir get?"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ یہ کسی مقدمے کے نتیجے کی پیش گوئی نہیں کرتیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. It does not predict the outcome of any case."
+ },
+ "will i win my case|": {
+  "status": "out_of_scope",
+  "answer_ur": "میں یہ نہیں بتا سکتا کہ آپ کا مقدمہ جیتا جائے گا یا نہیں۔ میں یہ بتا سکتا ہوں کہ قانون کیا کہتا ہے اور شکایت کہاں درج کرائی جائے۔",
+  "answer_en": "I cannot predict whether you will win a case. I can tell you what the law says and where to file a complaint.",
+  "confidence": "none",
+  "citations": [],
+  "where_to_go": [
+   {
+    "name": "Ministry of Human Rights helpline",
+    "number": "1099",
+    "note": "Toll-free national helpline of the Ministry of Human Rights: free legal advice and referrals. Number confirmed on mohr.gov.pk.",
+    "source_url": "https://mohr.gov.pk/Detail/YWRiYjU0NzktMGE2Zi00NDYyLTljNzktMTA2N2M2MjBlZWZl",
+    "verified": true
+   }
+  ],
+  "wage": null,
+  "caveats": [],
+  "needs_province": false,
+  "letter_type": null,
+  "detected": {
+   "language": "en",
+   "topic": "other",
+   "jurisdiction": null,
+   "english_query": "Will I win my case?"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ یہ کسی مقدمے کے نتیجے کی پیش گوئی نہیں کرتیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. It does not predict the outcome of any case."
+ }
+}
