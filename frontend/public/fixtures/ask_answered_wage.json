@@ -1,0 +1,53 @@
+{
+  "status": "answered",
+  "answer_ur": "پنجاب میں غیر ہنر مند مزدور کی کم از کم ماہانہ اجرت 40,000 روپے رپورٹ ہوئی ہے۔ [نمونہ جواب]",
+  "answer_en": "The reported monthly minimum wage for unskilled workers in Punjab is Rs 40,000. [sample answer]",
+  "confidence": "medium",
+  "citations": [
+    {
+      "chunk_id": "wages_punjab_2019:s4",
+      "act": "Punjab Minimum Wages Act 2019",
+      "section": "4",
+      "heading": "Recommendation of minimum wages",
+      "jurisdiction": "pakistan",
+      "source_url": "https://fospah.gov.pk/SiteImage/Misc/FOSPAH%20Laws%20and%20Rules.pdf",
+      "excerpt": "SAMPLE EXCERPT (fixture text)."
+    }
+  ],
+  "where_to_go": [
+    {
+      "name": "Ministry of Human Rights helpline",
+      "number": "1099",
+      "note": "Legal advice and referrals. Hours 10am to 10pm.",
+      "source_url": "",
+      "verified": false
+    }
+  ],
+  "wage": {
+    "jurisdiction": "punjab",
+    "monthly_pkr": 40000,
+    "status": "notified_reported",
+    "effective_from": "2025-07-01",
+    "notification_date": "2025-09-08",
+    "as_of": "2026-11-11",
+    "verified": false,
+    "source_url": "https://www.dawn.com/news/1940817",
+    "note": "For 26 working days."
+  },
+  "caveats": [
+    {
+      "en": "Laws differ by province and change over time.",
+      "ur": "قوانین صوبے کے لحاظ سے مختلف ہوتے ہیں اور بدلتے رہتے ہیں۔"
+    }
+  ],
+  "needs_province": false,
+  "letter_type": "wage_complaint",
+  "detected": {
+    "language": "en",
+    "topic": "wages",
+    "jurisdiction": "punjab",
+    "english_query": "minimum wage punjab"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ قوانین بدلتے رہتے ہیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. Laws change."
+}
