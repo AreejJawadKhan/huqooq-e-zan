@@ -58,3 +58,22 @@ def test_pack_splits_long_sections_on_subsections():
     parts = pack(body, max_words=200)
     assert len(parts) > 1
     assert all(len(p.split()) <= 300 for p in parts)
+
+
+def test_bracketed_amendment_headings_are_sections():
+    text = "\n".join(
+        [
+            "1. Short title. – This Act.",
+            "2. Definitions. – In this Act.",
+            "3[7. Ombudsperson.– The Government shall appoint.",
+            "(2) A person shall be qualified.]",
+            "8. 5[Ombudsperson] to enquire into complaint. – (1) Any employee.",
+            "9. Representation. – x",
+        ]
+    ).replace("1. Short", "1. Short").replace("2. Definitions", "2. Definitions")
+    # sequence must be contiguous, so add 3..6 placeholders
+    extra = "\n".join(f"{n}. Heading {n}. – body text {n}." for n in (3, 4, 5, 6))
+    text = text.replace("3[7.", extra + "\n3[7.")
+    nums = [s.num for s in split_sections(text)]
+    assert nums == ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+    assert [s.heading for s in split_sections(text) if s.num == "8"] == ["Ombudsperson to enquire into complaint"]

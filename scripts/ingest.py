@@ -41,7 +41,8 @@ _NOISE = [
     re.compile(r"^\s*\d{1,3}\s*$"),  # lone page numbers
     re.compile(r"^\s*(?:Page\s+)?\d+\s+of\s+\d+\s*$", re.I),
 ]
-_HEADING = re.compile(r"^\s*(\d{1,3})\s*\.\s*(.*)$")
+# Gazette amendments wrap a heading as "3[7. Ombudsperson.– ..." so allow an optional "N[" prefix.
+_HEADING = re.compile(r"^\s*(?:\d{1,2}\s*\[\s*)?(\d{1,3})\s*\.\s*(.*)$")
 _SCHEDULE = re.compile(r"^\s*(?:THE\s+)?SCHEDULE\b")
 
 
@@ -129,6 +130,7 @@ def split_sections(text: str) -> list[Section]:
             heading = body_lines[0].strip()
             body_lines = body_lines[1:]
         # headings in gazette text end at the first full stop or dash; keep the short title only
+        heading = re.sub(r"\d{1,2}\[|\]", "", heading)
         title = re.split(r"[\.—–]-?\s", heading, maxsplit=1)[0].strip(" .-—")
         remainder = heading[len(title):].strip(" .-—") if heading.startswith(title) else ""
         body = _collapse(" ".join([remainder, *body_lines]))

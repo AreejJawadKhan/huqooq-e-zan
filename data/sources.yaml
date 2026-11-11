@@ -14,7 +14,7 @@ sources:
     url: https://www.fospah.gov.pk/SiteImage/Misc/files/PAHAW_amend_2022.pdf
     enabled: true
     status: opened
-    notes: "Gazette footnotes mixed into body; s.7(2) garbled. Compare with the SJA copy below."
+    notes: "File is the copy with Punjab adaptation footnotes (Governor, Punjab Amendment Act 2012). Federal text is in raw/FOSPAH Laws and Rules.pdf. Footnotes are mixed into the body; compare s.7 and s.9 against the federal text and hand-correct if needed."
 
   - id: harassment_2010_sja
     act: "Protection against Harassment of Women at the Workplace Act, 2010 (amended 2022)"
@@ -78,7 +78,25 @@ sources:
     status: found
     notes: ""
 
-  # ---- Wages: statute texts NOT located yet ------------------------------------------------------
-  # TODO (data owner): find the texts of the Punjab Minimum Wages Act 2019, Sindh Minimum Wages Act 2015,
-  # KP Minimum Wages Act 2013, Balochistan Minimum Wages Act 2021 and the Payment of Wages Act 1936, add them
-  # here with topic: wages, and enable them. Wage AMOUNTS live in data/wages.json, not here.
+  # ---- Wages: statute texts. Wage AMOUNTS live in data/wages.json, not here. -----------------------
+  - id: wages_punjab_2019
+    act: "Punjab Minimum Wages Act, 2019"
+    jurisdiction: punjab
+    topic: wages
+    file: wages_punjab_2019.pdf
+    url: ""
+    enabled: true
+    status: found
+    notes: "Text supplied by team; confirm it is the current official text."
+
+  - id: wages_pwa_1936
+    act: "Payment of Wages Act, 1936"
+    jurisdiction: pakistan
+    topic: wages
+    file: wages_pwa_1936.pdf
+    url: ""
+    enabled: true
+    status: found
+    notes: "Old federal text (PakSearch copy). Provinces have their own versions; do not present this as the Punjab text."
+
+  # TODO: Sindh Minimum Wages Act 2015, KP Minimum Wages Act 2013, Balochistan Minimum Wages Act 2021.
