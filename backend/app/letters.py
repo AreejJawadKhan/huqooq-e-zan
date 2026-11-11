@@ -6,6 +6,7 @@ edit it. Recipients are generic on purpose: the user (or the where_to_go list) s
 from __future__ import annotations
 
 import io
+import re
 from datetime import date
 
 from docx import Document
@@ -36,7 +37,20 @@ _TEMPLATES = {
 }
 
 
+_CONTROL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\ufffe\uffff]")
+
+
+def _clean(value):
+    """python-docx rejects XML-illegal control characters (it raised ValueError -> HTTP 500); strip them."""
+    if isinstance(value, str):
+        return _CONTROL.sub("", value)
+    if isinstance(value, list):
+        return [_clean(v) for v in value]
+    return value
+
+
 def build_letter(req: LetterRequest) -> bytes:
+    req = req.model_copy(update={k: _clean(v) for k, v in req.model_dump().items()})
     t = _TEMPLATES[req.letter_type]
     doc = Document()
     style = doc.styles["Normal"]
