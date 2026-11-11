@@ -171,17 +171,18 @@ def test_english_in_brackets_is_removed_from_the_urdu_answer_only():
 
     ur = "پنجاب میں کم از کم اجرت (Minimum Wage) 40,000 روپے ہے۔ پنجاب منیمم ویجز ایکٹ، 2019 (Punjab Minimum Wages Act, 2019) کی دفعہ 11 دیکھیں۔"
     cleaned = clean_urdu(ur)
+    assert cleaned != M.URDU_UNAVAILABLE_UR
     assert "Minimum" not in cleaned and "Punjab Minimum" not in cleaned
     assert "40,000" in cleaned and "دفعہ 11" in cleaned and "  " not in cleaned
     # brackets that hold Urdu or numbers are kept
     assert clean_urdu("دفعہ 11 (ذیلی دفعہ 2) دیکھیں") == "دفعہ 11 (ذیلی دفعہ 2) دیکھیں"
-    assert clean_urdu("رقم (40,000) روپے") == "رقم (40,000) روپے"
+    assert clean_urdu("کم از کم ماہانہ اجرت (40,000) روپے ہے") == "کم از کم ماہانہ اجرت (40,000) روپے ہے"
 
 
 def test_pipeline_cleans_answer_ur_but_leaves_answer_en_untouched():
-    comp = Composition("شکایت کریں (Inquiry Committee) میں۔", "File it with the Inquiry Committee (IC).", ["h:s3"], "high")
+    comp = Composition("آپ اپنی شکایت دفتر کی کمیٹی (Inquiry Committee) میں تحریری طور پر جمع کروا سکتے ہیں۔", "File it with the Inquiry Committee (IC).", ["h:s3"], "high")
     res = make_pipeline(FakeLLM(harassment_analysis(), comp)).ask(AskRequest(question="manager harassment complaint"))
-    assert res.answer_ur == "شکایت کریں میں۔"
+    assert res.answer_ur == "آپ اپنی شکایت دفتر کی کمیٹی میں تحریری طور پر جمع کروا سکتے ہیں۔"
     assert res.answer_en == "File it with the Inquiry Committee (IC)."
 
 
@@ -223,3 +224,14 @@ def test_caveats_state_only_sourced_claims():
 
     sindh = M.caveats_for("property", "sindh", None)[0]
     assert "does not hold" in sindh.en and "was found" not in sindh.en  # says what the app holds, not what exists in law
+
+
+def test_an_english_answer_in_the_urdu_field_never_becomes_an_empty_answer():
+    comp = Composition("You have the right to complain to the Inquiry Committee.", "English", ["h:s3"], "high")
+    res = make_pipeline(FakeLLM(harassment_analysis(), comp)).ask(AskRequest(question="manager harassment complaint"))
+    assert res.status == "answered" and res.answer_ur == M.URDU_UNAVAILABLE_UR and res.answer_ur.strip()
+
+
+def test_khudkushi_in_roman_urdu_gets_the_self_harm_message():
+    res = make_pipeline(FakeLLM(harassment_analysis())).ask(AskRequest(question="mujhe khudkushi ka khayal aata hai"))
+    assert res.status == "danger" and "harming yourself" in res.answer_en

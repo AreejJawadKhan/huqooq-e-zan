@@ -64,7 +64,7 @@ _PATTERNS: dict[str, str] = {
         r"|\bma+r+\s*(pe+t|pi+t)\w*"
         r"|\bmaa?r\s*(dal|dun|denge|dengi|dega|degi|doon|doonga|dungi|dunga|diya|dala)\w*"
     ),
-    "ru_threat": r"\bdhamk(i|ee)\w*|\bjaan\s+(ka|se|ko)\b|\bkhudkushi\b|\bzabardasti\b",
+    "ru_threat": r"\bdhamk(i|ee)\w*|\bjaan\s+(ka|se|ko)\b|\bzabardasti\b",
     "ru_selfharm": (
         r"\bkhud\s*kushi\b|\bkhud\s*ko\s+(khatam|maar)\w*|\bapni\s+jaan\b|\bmarna\s+chah\w*"
         r"|\bmar\s*(jana|jaana|jaon|jaun)\s+chah\w*|\bzindagi\s+khatam\w*|\b(jeena|jina)\s+nahi\w*"
@@ -78,7 +78,7 @@ _PATTERNS: dict[str, str] = {
         r"مار\s*پیٹ|مارتا|مارتی|مارتے|پٹائی|تشدد|قتل|قاتلانہ|تیزاب"
         r"|مار\s*(ڈال|دو|دے|دوں|دیں|دیا)\w*|جان\s*سے\s*مار|گلا\s*(گھونٹ|دبا)\w*|جلا\s*(دیا|دوں|دے)\w*"
     ),
-    "ur_threat": r"دھمکی|دھمکیاں|دھمکا\w*|جان\s*(کو|سے|کا)|خودکشی|زبردستی",
+    "ur_threat": r"دھمکی|دھمکیاں|دھمکا\w*|جان\s*(کو|سے|کا)|زبردستی",
     "ur_selfharm": (
         r"خودکشی|مرنا\s*چاہ\w*|مر\s*جانا\s*چاہ\w*|مر\s*جاؤں|جان\s*دے\s*د\w*|جینا\s*نہیں"
         r"|زندگی\s*ختم|اپنی\s*جان|خود\s*کو\s*(ختم|مار)\w*"

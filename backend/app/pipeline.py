@@ -52,8 +52,12 @@ def drop_boilerplate(cited: list[Chunk]) -> list[Chunk]:
 
 def clean_urdu(text: str) -> str:
     """answer_ur must contain no Latin letters (see lexicon.urduize): bracketed English is removed, known terms are
-    written in Urdu script, anything else in Latin letters is dropped."""
-    return lexicon.urduize(text)
+    written in Urdu script, anything else in Latin letters is dropped. If a fallback model wrote the "Urdu" answer in
+    English, nothing readable is left: show a fixed note instead of an empty answer."""
+    out = lexicon.urduize(text)
+    if len(re.findall(r"[؀-ۿ]", out)) < 15:
+        return M.URDU_UNAVAILABLE_UR
+    return out
 
 
 _URDU_LETTER = re.compile(r"[\u0600-\u06ff]")
