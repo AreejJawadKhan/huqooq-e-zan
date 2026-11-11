@@ -24,18 +24,22 @@ function DangerBanner({ r }: { r: AskResponse }) {
         <En as="p" className="hq-en">{r.answer_en}</En>
         <a className="hq-btn danger call-big" href="tel:15"><Bi inline ur={T.call15} en={T.call15En} /></a>
       </div>
-      <div className="result-card"><ReferralList items={r.where_to_go.filter((x) => x.number !== "15")} /></div>
+      <div className="result-card">
+        <ReferralList items={r.where_to_go.filter((x) => x.number !== "15")} />
+        <Disclaimer r={r} />
+      </div>
     </div>
   );
 }
 
-function Plain({ r, kind }: { r: AskResponse; kind: "not_found" | "out_of_scope" }) {
+/** `uncited`: the model answered without a citation, so its text is never shown; the fixed message is used instead. */
+function Plain({ r, kind, uncited = false }: { r: AskResponse; kind: "not_found" | "out_of_scope"; uncited?: boolean }) {
   return (
     <div className="result-card result-in">
       <StatusBar kind={kind} />
       <div className="result-body">
-        <p className="hq-ur" lang="ur">{r.answer_ur || T.notFoundTitle}</p>
-        <En as="p" className="hq-en">{r.answer_en || T.notFoundTitleEn}</En>
+        <p className="hq-ur" lang="ur">{(!uncited && r.answer_ur) || T.notFoundTitle}</p>
+        <En as="p" className="hq-en">{(!uncited && r.answer_en) || T.notFoundTitleEn}</En>
         {kind === "out_of_scope" && (
           <div className="hq-notice caution">
             <div lang="ur" dir="rtl" className="hq-ul">{T.covers}</div>
@@ -55,7 +59,8 @@ export default function ResultView({
   if (r.status === "danger") return <DangerBanner r={r} />;
   if (r.status === "out_of_scope") return <Plain r={r} kind="out_of_scope" />;
   // An answer with no citation is never shown as an answer.
-  if (r.status === "not_found" || r.citations.length === 0) return <Plain r={r} kind="not_found" />;
+  if (r.status === "not_found") return <Plain r={r} kind="not_found" />;
+  if (r.citations.length === 0) return <Plain r={r} kind="not_found" uncited />;
 
   return (
     <div className="result-card result-in">

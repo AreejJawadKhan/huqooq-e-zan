@@ -1,0 +1,50 @@
+{
+  "status": "answered",
+  "answer_ur": "پنجاب میں اگر کوئی آپ کو جائیداد کے حصے سے محروم کرے تو آپ محتسب کو شکایت کر سکتی ہیں۔ [نمونہ جواب]",
+  "answer_en": "In Punjab, if someone keeps you from your share of property, you can complain to the Ombudsperson. [sample answer]",
+  "confidence": "high",
+  "citations": [
+    {
+      "chunk_id": "property_punjab_2021:s4",
+      "act": "Punjab Enforcement of Women's Property Rights Act, 2021",
+      "section": "4",
+      "heading": "Complaint to the Ombudsperson",
+      "jurisdiction": "punjab",
+      "source_url": "http://punjablaws.gov.pk/laws/2789.html",
+      "excerpt": "SAMPLE EXCERPT: a woman deprived of her property may complain to the Ombudsperson. (Fixture text, not the statute.)"
+    }
+  ],
+  "where_to_go": [
+    {
+      "name": "Ombudsperson Punjab (workplace harassment and women's property rights)",
+      "number": "042 9923 3348 to 50",
+      "note": "Complaints under the harassment Act and the Punjab women's property Act.",
+      "source_url": "https://www.af.org.pk/Resouce%20Directory/DIRECTORY%20OF%20SERVICE%20PROVIDERS-updated.pdf",
+      "verified": false
+    },
+    {
+      "name": "Ministry of Human Rights helpline",
+      "number": "1099",
+      "note": "Legal advice and referrals. Hours 10am to 10pm.",
+      "source_url": "",
+      "verified": false
+    }
+  ],
+  "wage": null,
+  "caveats": [
+    {
+      "en": "Laws differ by province and change over time.",
+      "ur": "قوانین صوبے کے لحاظ سے مختلف ہوتے ہیں اور بدلتے رہتے ہیں۔"
+    }
+  ],
+  "needs_province": false,
+  "letter_type": "property_complaint",
+  "detected": {
+    "language": "ur",
+    "topic": "property",
+    "jurisdiction": "punjab",
+    "english_query": "women inheritance share property brothers refuse"
+  },
+  "disclaimer_ur": "یہ قانونی معلومات ہیں، قانونی مشورہ نہیں۔ قوانین بدلتے رہتے ہیں۔",
+  "disclaimer_en": "This is legal information, not legal advice. Laws change."
+}

@@ -49,7 +49,7 @@ body { margin: 0; background: var(--surface-100); color: var(--ink); font-family
 textarea.hq-input { padding: var(--space-3); min-height: 120px; }
 .hq-field:focus-visible, .hq-input:focus-visible, .hq-chip-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .hq-chips { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.hq-chip-btn { min-height: var(--touch); padding: var(--space-1) var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-full); background: var(--surface-100); color: var(--ink); font: 400 16px/1.8 var(--font-urdu-ui); cursor: pointer; text-align: start; }
+.hq-chip-btn { min-height: var(--touch); padding: var(--space-2) var(--space-4); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface-100); color: var(--ink); font: 400 16px/1.8 var(--font-urdu-ui); cursor: pointer; text-align: start; }
 .hq-chip-btn:hover { border-color: var(--brand); background: var(--info-bg); }
 .ask-row { display: grid; gap: var(--space-3); }
 .ask-submit { min-height: 56px; justify-content: center; font-size: 18px; }
@@ -93,7 +93,14 @@ h2 .bi, h3 .bi { align-items: flex-start; text-align: start; }
 .hq-cite { display: grid; gap: var(--space-2); }
 .hq-cite summary { list-style: none; cursor: pointer; display: inline-flex; min-height: var(--touch); align-items: center; }
 .hq-cite summary::-webkit-details-marker { display: none; }
-.hq-cite a { color: var(--brand); font: 600 14px var(--font-sans); }
+.hq-cite a { color: var(--brand); font: 600 14px var(--font-sans); display: inline-flex; align-items: center; min-height: var(--touch); justify-self: start; }
+/* Review fixes: English labels at least 14px, the "Not yet verified" chip wraps cleanly, bilingual form labels read start-aligned, answers keep paragraph breaks. */
+.bi-en { font-size: max(14px, 0.85em); }
+.hq-chip .bi-inline { flex-wrap: wrap; column-gap: var(--space-2); row-gap: 0; }
+.hq-chip .bi-inline > span { white-space: nowrap; }
+.hq-label .bi, .hq-hint .bi { align-items: stretch; text-align: start; }
+.hq-btn .bi { align-items: center; }
+.result-body > p.hq-ur, .result-body > p.hq-en, .hq-banner p { white-space: pre-line; }
 .hq-quote { display: grid; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-inline-start: 4px solid var(--brand); background: var(--surface-300); border-radius: var(--radius-md); }
 .hq-quote-label { margin: 0; font: 600 14px/20px var(--font-sans); color: var(--muted); }
 blockquote.hq-excerpt { margin: 0; }

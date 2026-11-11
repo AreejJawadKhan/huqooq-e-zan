@@ -4,6 +4,11 @@ import type { AskResponse } from "../types";
 import { T } from "../strings";
 import Bi from "./Bi";
 
+/** Bilingual field label; required fields get a visible marker in both languages. */
+function Lbl({ k, req = false }: { k: keyof typeof T.f; req?: boolean }) {
+  return <Bi ur={T.f[k].ur + (req ? ` (${T.required})` : "")} en={T.f[k].en + (req ? " *" : "")} />;
+}
+
 export default function LetterDialog({ r, question, open, onClose }: { r: AskResponse; question: string; open: boolean; onClose: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
   const [f, setF] = useState({ name: "", address: "", cnic: "", respondent: "", details: "", city: "", facts: question, relief: "" });
@@ -38,7 +43,7 @@ export default function LetterDialog({ r, question, open, onClose }: { r: AskRes
         relief: f.relief || undefined,
         legal_basis: r.citations.map((c) => `${c.act}, s.${c.section}`),
       });
-      setMsg("Letter downloaded. Please check every detail before use.");
+      setMsg("ok");
     } catch (ex) {
       setErr(ex instanceof Error ? ex.message : String(ex));
     } finally {
@@ -50,24 +55,28 @@ export default function LetterDialog({ r, question, open, onClose }: { r: AskRes
     <dialog ref={ref} className="hq hq-dialog" aria-labelledby="letter-title" onClose={onClose}>
       <form className="hq-stack" onSubmit={submit}>
         <h2 id="letter-title" style={{ margin: 0 }}><Bi ur={T.letter} en={T.letterEn} /></h2>
-        <label className="hq-label">Your full name *<input className="hq-input" required value={f.name} onChange={set("name")} autoComplete="name" /></label>
-        <label className="hq-label">Address<input className="hq-input" value={f.address} onChange={set("address")} autoComplete="street-address" /></label>
-        <label className="hq-label">CNIC<input className="hq-input" inputMode="numeric" value={f.cnic} onChange={set("cnic")} /></label>
-        <label className="hq-label">Other party's name<input className="hq-input" value={f.respondent} onChange={set("respondent")} /></label>
-        <label className="hq-label">Other party's details (job title, workplace)<input className="hq-input" value={f.details} onChange={set("details")} /></label>
-        <label className="hq-label">City<input className="hq-input" value={f.city} onChange={set("city")} /></label>
-        <label className="hq-label">What happened * (5 to 6000 characters)
-          <textarea className="hq-input" required minLength={5} maxLength={6000} value={f.facts} onChange={set("facts")} />
+        <label className="hq-label"><Lbl k="name" req /><input className="hq-input" required value={f.name} onChange={set("name")} autoComplete="name" /></label>
+        <label className="hq-label"><Lbl k="address" /><input className="hq-input" value={f.address} onChange={set("address")} autoComplete="street-address" /></label>
+        <label className="hq-label"><Lbl k="cnic" /><input className="hq-input" inputMode="numeric" dir="ltr" value={f.cnic} onChange={set("cnic")} /></label>
+        <label className="hq-label"><Lbl k="respondent" /><input className="hq-input" value={f.respondent} onChange={set("respondent")} /></label>
+        <label className="hq-label"><Lbl k="details" /><input className="hq-input" value={f.details} onChange={set("details")} /></label>
+        <label className="hq-label"><Lbl k="city" /><input className="hq-input" value={f.city} onChange={set("city")} /></label>
+        <label className="hq-label"><Lbl k="facts" req />
+          <textarea className="hq-input" dir="auto" required minLength={5} maxLength={6000} value={f.facts} onChange={set("facts")} />
         </label>
-        <label className="hq-label">What you want (relief)<textarea className="hq-input" value={f.relief} onChange={set("relief")} /></label>
-        <p className="hq-hint">Legal basis added from the answer: {r.citations.map((c) => `${c.act}, s.${c.section}`).join("; ")}. Do not include details you are not comfortable sharing with the model provider.</p>
+        <label className="hq-label"><Lbl k="relief" /><textarea className="hq-input" dir="auto" value={f.relief} onChange={set("relief")} /></label>
+        <div className="hq-hint">
+          <Bi ur={T.legalBasisAdded} en={T.legalBasisAddedEn} />
+          <p dir="ltr" lang="en" style={{ margin: "4px 0" }}>{r.citations.map((c) => `${c.act}, s.${c.section}`).join("; ")}</p>
+          <p style={{ margin: 0 }}><span lang="ur" dir="rtl">{T.letterPrivacy}</span> {T.letterPrivacyEn}</p>
+        </div>
         <div aria-live="polite">
-          {msg && <p className="hq-notice caution">{msg}</p>}
+          {msg && <p className="hq-notice caution"><Bi ur={T.downloaded} en={T.downloadedEn} /></p>}
           {err && <p className="hq-notice danger" role="alert">{err}</p>}
         </div>
         <div className="hq-actions">
-          <button type="submit" className="hq-btn" disabled={busy || !f.name.trim() || !factsOk}>{busy ? "…" : "Download .docx"}</button>
-          <button type="button" className="hq-btn ghost" onClick={onClose}>Close</button>
+          <button type="submit" className="hq-btn" disabled={busy || !f.name.trim() || !factsOk}>{busy ? "…" : <Bi inline ur={T.download} en={T.downloadEn} />}</button>
+          <button type="button" className="hq-btn ghost" onClick={onClose}><Bi inline ur={T.close} en={T.closeEn} /></button>
         </div>
       </form>
     </dialog>

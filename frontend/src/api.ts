@@ -15,6 +15,7 @@ export const MOCK = new URLSearchParams(window.location.search).get("mock") === 
 function mockFixture(q: string): string {
   if (/danger|beat|hit me|kill|threat|suicide|خطر|مار|دھمک/i.test(q)) return "ask_danger";
   if (/wage|salary|pay|تنخواہ|اجرت/i.test(q)) return "ask_answered_wage";
+  if (/property|inherit|land|share|جائیداد|زمین|وراثت|حصہ/i.test(q)) return "ask_answered_property";
   if (/province|which law/i.test(q)) return "ask_needs_province";
   if (/xyz/i.test(q)) return "ask_not_found";
   if (/cook|recipe|weather|football|کھانا/i.test(q)) return "ask_out_of_scope";
@@ -25,7 +26,9 @@ export async function ask(req: AskRequest): Promise<AskResponse> {
   if (MOCK) {
     await new Promise((r) => setTimeout(r, 600));
     const res = await fetch(`/fixtures/${mockFixture(req.question)}.json`);
-    return res.json();
+    const body: AskResponse = await res.json();
+    // "nocite" simulates an answer that arrived without citations (must render as not found).
+    return /nocite/i.test(req.question) ? { ...body, citations: [] } : body;
   }
   const res = await fetch("/api/ask", {
     method: "POST",
