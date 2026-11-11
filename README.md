@@ -106,3 +106,7 @@ Put at least one key in `.env`. The first provider with a key is used; any other
 | Anthropic | `ANTHROPIC_API_KEY` | Paid | Use for real user data. |
 
 Set `LLM_PROVIDER` and `LLM_FALLBACK` to force an order. Model names change often: override them with `GEMINI_ANSWER_MODEL` and friends (see `.env.example`). Run `make eval` with each provider and keep the one that passes more of the 15 questions in Urdu.
+
+## Hackathon notes
+
+Built for Build with Google (GDGoC CUI, FA'26). See `docs/SUBMISSION.md` for the title, problem statement, SDG alignment, stack, responsible-AI disclosure and limitations.
